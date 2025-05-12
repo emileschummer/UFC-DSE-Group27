@@ -8,7 +8,7 @@ CLmax = 2
 CL0 = 0.1
 CLalpha = 0.1 #degrees
 Tmax = 300 #N
-A = 0.0008
+A = 0.3
 eta = 0.8
 prop_efficiency = 0.8
 numberengines_vertical = 4
@@ -31,5 +31,4 @@ def calculate_power_UFC_MMA_4(incline,V,rho):
     P = (Tvertical**(3/2)/(eta*(2*rho*A)**0.5))*(numberengines_vertical/eta)+ (Thorizontal**(3/2)/(eta*(2*rho*A)**0.5))*(numberengines_horizontal/eta)
     Vstall = ((2*W)/(1.225*CLmax*S))**0.5 #m/s
     alphastall = (CLmax - CL0)/CLalpha *np.pi/180 #radians
-    print('Vstall:', Vstall, 'alphastall:', alphastall)
     return P

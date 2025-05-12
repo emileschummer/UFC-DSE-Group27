@@ -8,10 +8,10 @@ CLmax = 2
 CL0 = 0.1
 CLalpha = 0.1 #degrees
 Tmax = 300 #N
-A = 0.0008
+A = 0.3
 eta = 0.8
 numberengines = 2
-
+N = 2
 def calculate_power_UFC_MMA_3(incline,V,rho):
 
     L = np.cos(incline)*W
@@ -26,8 +26,5 @@ def calculate_power_UFC_MMA_3(incline,V,rho):
         Tvertical = np.cos(incline)*W - L
         Thorizontal = 0.5*rho*CD*S*V**2 + np.sin(incline)*W
         T = (Tvertical**2 + Thorizontal**2)**0.5/numberengines
-    P = (T**(3/2)/(eta*(2*rho*A)**0.5))*numberengines
-    Vstall = ((2*W)/(1.225*CLmax*S))**0.5 #m/s
-    alphastall = (CLmax - CL0)/CLalpha *np.pi/180 #radians
-    print('Vstall:', Vstall, 'alphastall:', alphastall)
+    P = (T**3/(2*rho*A))**0.5*(numberengines/eta)
     return P
