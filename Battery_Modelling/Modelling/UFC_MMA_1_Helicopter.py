@@ -15,7 +15,7 @@ A = 0.0008
 eta = 0.8
 numberengines = 2
 
-def calculate_power_UFC_MMA_3(incline,V,rho):
+def calculate_power_UFC_MMA_1(incline,V,rho):
 
     L = np.cos(incline)*W
     CL = 2*L/(rho*S*V**2)
