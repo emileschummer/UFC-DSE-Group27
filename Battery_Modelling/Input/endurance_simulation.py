@@ -8,7 +8,7 @@ from Modelling.DSE_osprey import *
 
 energy = 0
 t = 0
-print(data)
+
 for i in data:
     P = calculate_power(i[2],i[1],i[3])
     time = i[0]-t

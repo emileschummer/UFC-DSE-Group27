@@ -9,7 +9,8 @@ CLmax = 2
 CL0 = 0.1
 CLalpha = 0.1 #degrees
 Tmax = 300 #N
-#Vstall = ((2*W)/(rho*CLmax*S))**0.5 #m/s
+Vstall = ((2*W)/(1.225*CLmax*S))**0.5 #m/s
+print(Vstall)
 alphastall = (CLmax - CL0)/CLalpha *np.pi/180 #radians
 A = 0.0008
 eta = 0.8
@@ -21,7 +22,7 @@ def calculate_power(incline,V,rho):
     CL = 2*L/(rho*S*V**2)
     if CL <= CLmax:
         CD = CD0 + CL**2/piAe
-        T = 0.5*rho*CD*S*V**2 + np.sin(incline)*W
+        T = (0.5*rho*CD*S*V**2 + np.sin(incline)*W)/numberengines
     else:
         CL = CLmax
         CD = CD0 + CL**2/piAe
@@ -31,5 +32,3 @@ def calculate_power(incline,V,rho):
         T = (Tvertical**2 + Thorizontal**2)**0.5/numberengines
     P = (T**(3/2)/(eta*(2*rho*A)**0.5))*numberengines
     return P
-
-print(calculate_power(0,1,1))
