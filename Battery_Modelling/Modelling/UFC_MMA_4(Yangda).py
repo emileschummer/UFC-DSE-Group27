@@ -14,7 +14,7 @@ prop_efficiency = 0.8
 numberengines_vertical = 4
 numberengines_horizontal = 1
 
-def calculate_power(incline,V,rho):
+def calculate_power_UFC_MMA_4(incline,V,rho):
 
     L = np.cos(incline)*W
     CL = 2*L/(rho*S*V**2)
