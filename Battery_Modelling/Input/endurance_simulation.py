@@ -1,6 +1,6 @@
 
 
-from DSE_strava import *
+from Battery_Modelling.Input.Strava_input import *
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'C:\\Users\\tijnp\\OneDrive\\Documenten\\Phyton\\DSE\\UFC-DSE-Group27\\Battery_Modelling')))
