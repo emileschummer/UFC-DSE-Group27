@@ -69,11 +69,14 @@ for i in range(len(bike_data)):
         delta_longitude = longitude2 - longitude1
         distance = 2*R*np.arcsin((np.sin(delta_latitude/2)**2+np.cos(latitude1)*np.sin(latitude2)*np.sin(delta_longitude)**2)**0.5)
         velocity = distance/(t2 - t1)
-        incline = np.arctan((altitude2 - altitude1)/distance)
+        if distance != 0:
+            incline = np.arctan((altitude2 - altitude1) / distance)
+        else:
+            incline = 0  
         rho = air_density_isa(altitude2)
         time_data.append(t1)
         velocity_data.append(velocity)
         incline_data.append(incline)  
         density_data.append(rho)
-        data.append([t1,velocity,incline,rho])
+        data.append([t2,velocity,incline,rho])
 
