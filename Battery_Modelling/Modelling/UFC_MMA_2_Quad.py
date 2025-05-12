@@ -8,10 +8,10 @@ A = 0.3
 eta = 0.8
 numberengines = 4
 S = numberengines*A
-def calculate_power_UFC_MMA_1(incline,V,rho):
+def calculate_power_UFC_MMA_2(incline,V,rho):
     D = 0.5*rho*S*CD*V**2
     Tvertical = np.cos(incline)*W/numberengines
     Thorizontal = (D + np.sin(incline)*W)/numberengines
     T = (Tvertical**2 + Thorizontal**2)**0.5
-    P = (T**3/(2*rho*A))**0.5*(numberengines/eta)
+    P = (abs(T)**3/(2*rho*A))**0.5*(numberengines/eta)
     return P

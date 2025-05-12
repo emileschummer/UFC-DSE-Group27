@@ -22,13 +22,14 @@ def calculate_power_UFC_MMA_4(incline,V,rho):
     if CL <= CLmax:
         CD = CD0 + CL**2/piAe
         Thorizontal = (0.5*rho*CD*S*V**2 + np.sin(incline)*W)/numberengines_horizontal
+        Tvertical = 0
     else:
         CL = CLmax
         CD = CD0 + CL**2/piAe
         L = 0.5*rho*CL*S*V**2
         Tvertical = (np.cos(incline)*W - L)/numberengines_vertical
         Thorizontal = (0.5*rho*CD*S*V**2 + np.sin(incline)*W)/numberengines_horizontal
-    Pvertical = (Tvertical**3/(2*rho*A))**0.5*(numberengines_vertical/eta)
-    Phorizontal = (Thorizontal**3/(2*rho*A))**0.5*(numberengines_horizontal/eta)
+    Pvertical = (abs(Tvertical)**3/(2*rho*A))**0.5*(numberengines_vertical/eta)
+    Phorizontal = (abs(Thorizontal)**3/(2*rho*A))**0.5*(numberengines_horizontal/eta)
     P = Pvertical + Phorizontal
     return P
