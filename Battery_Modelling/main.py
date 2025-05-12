@@ -47,10 +47,10 @@ for race_name, race_data in races.items():
         energy = 0
         t = 0
         for index, row in race_data.iterrows():
-            time = row["time"]  # Access directly from DataFrame row
-            velocity_smooth = row["velocity_smooth"]
-            grade_smooth = row["grade_smooth"]
-            altitude = row["altitude"]
+            time = row[" time"]  # Access directly from DataFrame row
+            velocity_smooth = row[" velocity_smooth"]
+            grade_smooth = row[" grade_smooth"]
+            altitude = row[" altitude"]
             rho = sva.air_density_isa(altitude)
             P = calculate_power(grade_smooth,velocity_smooth,rho)
             time_diff = time - t
