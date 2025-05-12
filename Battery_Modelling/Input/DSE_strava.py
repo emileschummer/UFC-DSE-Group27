@@ -27,6 +27,7 @@ for track in gpx.tracks:
                 point.longitude*np.pi/180,       # Longitude
                 point.elevation  ]      # Elevation
             )
+
 def air_density_isa(h):
     T0 = 288.15  # Sea level standard temperature (K)
     p0 = 101325  # Sea level standard pressure (Pa)
@@ -79,4 +80,5 @@ for i in range(len(bike_data)):
         incline_data.append(incline)  
         density_data.append(rho)
         data.append([t2,velocity,incline,rho])
+
 
