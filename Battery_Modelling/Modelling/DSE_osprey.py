@@ -4,7 +4,7 @@ print(1)
 CD0 = 0.05
 piAe = 30
 S = 1 #m^2
-W = 250 #N
+W = 150 #N
 CLmax = 2
 CL0 = 0.1
 CLalpha = 0.1 #degrees
@@ -13,7 +13,7 @@ Tmax = 300 #N
 alphastall = (CLmax - CL0)/CLalpha *np.pi/180 #radians
 A = 0.0008
 eta = 0.8
-
+numberengines = 2
 
 def calculate_power(incline,V,rho):
 
@@ -28,8 +28,8 @@ def calculate_power(incline,V,rho):
         L = 0.5*rho*CL*S*V**2
         Tvertical = np.cos(incline)*W - L
         Thorizontal = 0.5*rho*CD*S*V**2 + np.sin(incline)*W
-        T = (Tvertical**2 + Thorizontal**2)**0.5
-    P = T**(3/2)/(eta*(2*rho*A)**0.5)
+        T = (Tvertical**2 + Thorizontal**2)**0.5/numberengines
+    P = (T**(3/2)/(eta*(2*rho*A)**0.5))*numberengines
     return P
 
 print(calculate_power(0,1,1))
