@@ -1,7 +1,7 @@
 import numpy as np
 
 CD = 0.105 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/0a756857-3708-4250-9524-bdbcc0020d33/content
-S = 1
+S = 0.3
 W = 250 #N
 
 A = 0.8

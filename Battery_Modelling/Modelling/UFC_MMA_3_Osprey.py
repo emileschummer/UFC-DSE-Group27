@@ -5,7 +5,7 @@ piAe = 30
 S = 1 #m^2
 W = 250 #N
 CLmax = 2
-CL0 = 0.1
+
 
 
 A = 0.3
@@ -27,3 +27,10 @@ def calculate_power_UFC_MMA_3(incline,V,rho):
         T = (Tvertical**2 + Thorizontal**2)**0.5/numberengines
     P = (T**3/(2*rho*A))**0.5*(numberengines/eta)
     return P
+import matplotlib.pyplot as plt
+V = np.linspace(0,100,1043)
+t = []
+for i in V:
+    t.append(calculate_power_UFC_MMA_3(0,i,1.225))
+plt.plot(V,t)
+plt.show()
