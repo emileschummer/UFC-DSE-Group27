@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-df= pd.read_csv('Battery_Modelling/Input/Data/WVA_Giro_Stage1.csv')
+df= pd.read_csv('Battery_Modelling/Input/WVA_Giro_Stage1.csv')
 
 time= df[' time'].values
 distance= df[' distance'].values
@@ -37,5 +37,4 @@ inclination = []
 for inc in gradient:
     angle= np.arctan(inc/100)
     inclination.append(angle)
-
 
