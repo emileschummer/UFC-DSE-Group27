@@ -6,8 +6,8 @@ S = 1 #m^2
 W = 250 #N
 CLmax = 2
 CL0 = 0.1
-CLalpha = 0.1 #degrees
-Tmax = 300 #N
+
+
 A = 0.3
 eta = 0.8
 prop_efficiency = 0.8
