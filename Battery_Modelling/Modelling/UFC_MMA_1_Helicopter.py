@@ -15,10 +15,3 @@ def calculate_power_UFC_MMA_1(incline,V,rho):
     T = (Tvertical**2 + Thorizontal**2)**0.5
     P = (T**3/(2*rho*A))**0.5/eta
     return P
-import matplotlib.pyplot as plt
-V = np.linspace(0,40,1043)
-t = []
-for i in V:
-    t.append(calculate_power_UFC_MMA_1(0,i,1.225))
-plt.plot(V,t)
-plt.show()
