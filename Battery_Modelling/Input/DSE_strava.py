@@ -53,6 +53,7 @@ time_data = []
 velocity_data = []
 incline_data = []
 density_data = []
+data = []
 R = 6378000 #radius earth in meter
 for i in range(len(bike_data)):
     if i >0:
@@ -70,13 +71,9 @@ for i in range(len(bike_data)):
         velocity = distance/(t2 - t1)
         incline = np.arctan((altitude2 - altitude1)/distance)
         rho = air_density_isa(altitude2)
-        time_data.append(t2)
+        time_data.append(t1)
         velocity_data.append(velocity)
         incline_data.append(incline)  
         density_data.append(rho)
+        data.append([t1,velocity,incline,rho])
 
-import matplotlib.pyplot as plt
-plt.plot(time_data,velocity_data)
-plt.plot(time_data,incline_data)
-plt.plot(time_data,density_data)
-plt.show()
