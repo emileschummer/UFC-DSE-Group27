@@ -6,6 +6,7 @@ from Modelling.UFC_MMA_4_Yangda import calculate_power_UFC_MMA_4
 from Input import Strava_input_csv as sva
 import sys
 import os
+import numpy as np
 """
 #sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'C:\\Users\\tijnp\\OneDrive\\Documenten\\Phyton\\DSE\\UFC-DSE-Group27\\Battery_Modelling')))
 #from Modelling.DSE_osprey import *
@@ -47,10 +48,10 @@ for race_name, race_data in races.items():
         energy = 0
         t = 0
         for index, row in race_data.iterrows():
-            time = row["time"]  # Access directly from DataFrame row
-            velocity_smooth = row["velocity_smooth"]
-            grade_smooth = row["grade_smooth"]
-            altitude = row["altitude"]
+            time = row[" time"]  # Access directly from DataFrame row
+            velocity_smooth = row[" velocity_smooth"]
+            grade_smooth = row[" grade_smooth"]
+            altitude = row[" altitude"]
             rho = sva.air_density_isa(altitude)
             P = calculate_power(grade_smooth,velocity_smooth,rho)
             time_diff = time - t
@@ -61,3 +62,22 @@ for race_name, race_data in races.items():
         race_results[race_name][i] = energy / 3600  # Store energy in Wh
         print(energy/3600 , 'Wh')
 print(race_results)
+
+
+velocity = np.linspace(0,40,1000)
+T = [[],[],[],[]]
+for v in velocity:
+    T1 = calculate_power_UFC_MMA_1(0,i,1.225)
+    T2 = calculate_power_UFC_MMA_2(0,i,1.225)
+    T3 = calculate_power_UFC_MMA_3(0,i,1.225)
+    T4 = calculate_power_UFC_MMA_4(0,i,1.225)
+    T[0].append(T1)
+    T[0].append(T2)
+    T[0].append(T3)
+    T[0].append(T4)
+import matplotlib.pyplot as plt
+plt.plot(velocity,T1)
+plt.plot(velocity,T2)
+plt.plot(velocity,T3)
+plt.plot(velocity,T4)
+plt.show()

@@ -1,4 +1,4 @@
-time,distance,velocity_smooth,altitude,grade_smooth
+ time, distance, velocity_smooth, altitude, grade_smooth
    28,    223.7,            9.34,     82.6,          5.2
    29,    233.7,            9.56,     83.2,          5.1
    30,    243.5,            9.62,     83.7,          5.4
