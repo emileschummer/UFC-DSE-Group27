@@ -13,9 +13,7 @@ eta = 0.8
 prop_efficiency = 0.8
 numberengines_vertical = 4
 numberengines_horizontal = 1
-Vstall = ((2*W)/(1.225*CLmax*S))**0.5 #m/s
-alphastall = (CLmax - CL0)/CLalpha *np.pi/180 #radians
-print('Vstall:', Vstall, 'alphastall:', alphastall)
+
 
 def calculate_power_UFC_MMA_4(incline,V,rho):
 
@@ -23,13 +21,14 @@ def calculate_power_UFC_MMA_4(incline,V,rho):
     CL = 2*L/(rho*S*V**2)
     if CL <= CLmax:
         CD = CD0 + CL**2/piAe
-        T = (0.5*rho*CD*S*V**2 + np.sin(incline)*W)/numberengines_horizontal
+        Thorizontal = (0.5*rho*CD*S*V**2 + np.sin(incline)*W)/numberengines_horizontal
     else:
         CL = CLmax
         CD = CD0 + CL**2/piAe
         L = 0.5*rho*CL*S*V**2
         Tvertical = (np.cos(incline)*W - L)/numberengines_vertical
         Thorizontal = (0.5*rho*CD*S*V**2 + np.sin(incline)*W)/numberengines_horizontal
-
-    P = (Tvertical**(3/2)/(eta*(2*rho*A)**0.5))*(numberengines_vertical/eta)+ (Thorizontal**(3/2)/(eta*(2*rho*A)**0.5))*(numberengines_horizontal/eta)
+    Pvertical = (Tvertical**3/(2*rho*A))**0.5*(numberengines_vertical/eta)
+    Phorizontal = (Thorizontal**3/(2*rho*A))**0.5*(numberengines_horizontal/eta)
+    P = Pvertical + Phorizontal
     return P

@@ -11,7 +11,6 @@ Tmax = 300 #N
 A = 0.3
 eta = 0.8
 numberengines = 2
-N = 2
 def calculate_power_UFC_MMA_3(incline,V,rho):
 
     L = np.cos(incline)*W
