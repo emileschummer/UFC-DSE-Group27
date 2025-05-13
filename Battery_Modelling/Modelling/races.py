@@ -28,6 +28,7 @@ def get_race_results(output_folder="Output"):
             elif i == 3:
                 calculate_power = calculate_power_UFC_MMA_4
                 label = 'Yangda'
+                high_speed_energy_count = 0
             energy = 0
             t = 0
             time_plot = []
@@ -48,13 +49,28 @@ def get_race_results(output_folder="Output"):
                 power_plot.append(P)
                 speed_plot.append(velocity_smooth)
                 gradient_plot.append(row[" grade_smooth"])
+                if i == 3: #Analysing yangda
+                    if velocity_smooth > 15:
+                        high_speed_energy_count += P * time_diff
             race_plot.append([time_plot, power_plot])
             if race_name not in race_results:
                 race_results[race_name] = [0] * 4
             race_results[race_name][i] = energy / 3600  # Store energy in Wh
             axs[0].plot(time_plot, power_plot, label=label)  # Plot power vs time in the first subplot
-        axs[1].plot(time_plot, speed_plot, label='Speed', color='black', linestyle='--')  # Plot speed vs time
-        axs[2].plot(time_plot, gradient_plot, label='Gradient', color='grey', linestyle='--')  # Plot gradient vs time
+
+        # Highlight regions where speed > 15 m/s
+        speed_count = 0
+        for j in range(len(speed_plot) - 1):
+            if speed_plot[j] > 15:
+                axs[0].axvspan(time_plot[j], time_plot[j + 1], color='red', alpha=0.2)
+                speed_count+=1
+        print(f"---------{race_name} Speed Profile---------")
+        print(f"Maximum speed: {max(speed_plot)} m/s")
+        print(f"Speed < 15 m/s (stall): {1-speed_count/len(speed_plot)} of time")
+        print("---------UFC-MMA-4 Yangda---------")
+        print(f"Relative Power use of Yangda when speed < 15 m/s: {1-high_speed_energy_count/race_results[race_name][3]/3600}")
+        axs[1].plot(time_plot, speed_plot, label='Speed', color='black')  # Plot speed vs time
+        axs[2].plot(time_plot, gradient_plot, label='Gradient', color='grey')  # Plot gradient vs time
 
         # Set titles and labels for subplots
         axs[0].set_title(f"Power vs Time for {race_name}")
@@ -105,6 +121,7 @@ def plot_power_vs_velocity():
     plt.show()
 
 def flat_race():
+    print("---------7h Flat Race at 50km/h---------")
     print("UFC-MMA-1 Helicopter Energy (Wh): ",calculate_power_UFC_MMA_1(0,50/3.6,1.225)*7)
     print("UFC-MMA-2 Quadcopter Energy (Wh): ",calculate_power_UFC_MMA_2(0,50/3.6,1.225)*7)
     print("UFC-MMA-3 Osprey Energy (Wh): ",calculate_power_UFC_MMA_3(0,50/3.6,1.225)*7)
