@@ -13,12 +13,16 @@ def get_race_results():
         for i in range(4):
             if i == 0:
                 calculate_power = calculate_power_UFC_MMA_1
+                print('Helicopter configuration')
             elif i == 1:
                 calculate_power = calculate_power_UFC_MMA_2
+                print('Quadcopter configuration')
             elif i == 2:
                 calculate_power = calculate_power_UFC_MMA_3
+                print('Osprey configuration')
             elif i == 3:
                 calculate_power = calculate_power_UFC_MMA_4
+                print('Yangda configuration')
             energy = 0
             t = 0
             for index, row in race_data.iterrows():
@@ -34,12 +38,14 @@ def get_race_results():
             if race_name not in race_results:
                 race_results[race_name] = [0] * 4
             race_results[race_name][i] = energy / 3600  # Store energy in Wh
-            print(energy/3600 , 'Wh')
+            print(np.round(energy/3600) , 'Wh')
+            print(np.round(energy/(3600*450)), 'kg Li-ion battery') 
     print(race_results)
 
 def plot_power_vs_velocity():
     velocity = np.linspace(0,40,1000)
-    slope = 0
+    slope = 20
+    slope = slope*np.pi/180
     T = [[],[],[],[]]
     for v in velocity:
         T1 = calculate_power_UFC_MMA_1(slope,v,1.225)
@@ -52,9 +58,9 @@ def plot_power_vs_velocity():
         T[3].append(T4)
     import matplotlib.pyplot as plt
 
-    plt.plot(velocity,T[0])
-    plt.plot(velocity,T[1])
-    plt.plot(velocity,T[2])
-    plt.plot(velocity,T[3])
-
+    plt.plot(velocity,T[0],label = 'Helicopter')
+    plt.plot(velocity,T[1], label = 'Quadcopter')
+    plt.plot(velocity,T[2], label = 'Osprey')
+    plt.plot(velocity,T[3], label = 'Yangda')
+    plt.legend()
     plt.show()
