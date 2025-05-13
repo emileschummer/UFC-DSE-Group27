@@ -4,7 +4,7 @@ CD0 = 0.05
 piAe = 30
 S = 1 #m^2
 W = 250 #N
-CLmax = 2
+CLmax = 2 #https://www.sciencedirect.com/science/article/pii/S2090447922004051
 CL0 = 0.1
 
 
