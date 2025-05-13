@@ -6,6 +6,7 @@ piAe = 20.41 #https://www.researchgate.net/publication/351569758_Conceptual_desi
 S = 1.25 #m^2 x2.5 compared to research (cuz reearch is 10kg, we go 25)
 W = 250 #N
 CLmax = 1.3824 *0.9 #https://www.researchgate.net/publication/351569758_Conceptual_design_of_a_fixed_wing_vertical_take-off_and_landing_unmanned_aerial_vehicle
+#clmax is 2 says: https://www.sciencedirect.com/science/article/pii/S2090447922004051
 
 
 
