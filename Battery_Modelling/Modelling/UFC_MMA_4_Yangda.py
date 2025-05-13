@@ -36,3 +36,4 @@ def calculate_power_UFC_MMA_4(incline,V,rho):
     Phorizontal = (abs(Thorizontal)**3/(2*rho*A))**0.5*(numberengines_horizontal/eta)
     P = Pvertical + Phorizontal
     return P
+print(calculate_power_UFC_MMA_4())
