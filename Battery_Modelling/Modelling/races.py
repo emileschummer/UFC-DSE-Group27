@@ -62,7 +62,7 @@ def get_race_results(output_folder="Output"):
         speed_count = 0
         for j in range(len(speed_plot) - 1):
             if speed_plot[j] > 15:
-                axs[0].axvspan(time_plot[j], time_plot[j + 1], color='red', alpha=0.2)
+                axs[0].axvspan(time_plot[j], time_plot[j + 1], color='blue', alpha=0.2)
                 speed_count+=1
         print(f"---------{race_name} Speed Profile---------")
         print(f"Maximum speed: {max(speed_plot)} m/s")
