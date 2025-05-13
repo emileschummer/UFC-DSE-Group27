@@ -51,6 +51,7 @@ def get_race_results(output_folder="Output"):
             plt.plot(time_plot, power_plot, label=label)  # Plot power vs time
         plt.title(f"Power vs Time for {race_name}")
         plt.xlabel("Time (s)")
+        os.makedirs(output_folder, exist_ok=True)  # Ensure the output folder exists
         output_path = os.path.join(output_folder, f"{race_name}_power_vs_time.png")
         plt.savefig(output_path)
         plt.ylabel("Power (W)")
