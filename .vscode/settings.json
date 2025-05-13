@@ -1,0 +1,7 @@
+{
+    "python.testing.pytestArgs": [
+        "Battery_Modelling"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}
