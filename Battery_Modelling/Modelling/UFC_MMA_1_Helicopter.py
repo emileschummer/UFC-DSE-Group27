@@ -1,11 +1,11 @@
 import numpy as np
 
-CD = 1.05 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/0a756857-3708-4250-9524-bdbcc0020d33/content 
+CD = 0.105 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/0a756857-3708-4250-9524-bdbcc0020d33/content 
 S = 0.16 # http://eprints.gla.ac.uk/116394/1/116394.pdf
 W = 250 #N
 
 diameter = 1.041 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/9dc27553-90f0-4209-b744-0adee5c75f27/content 
-A = np.pi*(diameter/2)**2
+A = (diameter/2)**2*np.pi
 eta = 0.8
 
 
