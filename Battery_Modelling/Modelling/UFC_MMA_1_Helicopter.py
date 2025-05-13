@@ -1,6 +1,6 @@
 import numpy as np
 
-CD = 0.105 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/0a756857-3708-4250-9524-bdbcc0020d33/content 
+CD =0.105 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/0a756857-3708-4250-9524-bdbcc0020d33/content 
 S = 0.16 # http://eprints.gla.ac.uk/116394/1/116394.pdf
 W = 250 #N
 
