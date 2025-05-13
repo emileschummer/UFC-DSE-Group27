@@ -12,7 +12,7 @@ CLmax = 1.3824 *0.9 #https://www.researchgate.net/publication/351569758_Conceptu
 
 r=0.21 #https://www.researchgate.net/publication/351569758_Conceptual_design_of_a_fixed_wing_vertical_take-off_and_landing_unmanned_aerial_vehicle
 A = np.pi*(r**2) #m^2
-eta = 0.8
+eta = 0.8 
 numberengines = 2
 def calculate_power_UFC_MMA_3(incline,V,rho):
 
@@ -27,7 +27,7 @@ def calculate_power_UFC_MMA_3(incline,V,rho):
     else:
         CL = CLmax
         CD = CD0 + CL**2/piAe
-        L = 0.5*rho*CL*S*V**2
+        L = 0.5*rho*CL*S*V**2 *0.5
         Tvertical = np.cos(incline)*W - L
         Thorizontal = 0.5*rho*CD*S*V**2 + np.sin(incline)*W
         T = (Tvertical**2 + Thorizontal**2)**0.5/numberengines
