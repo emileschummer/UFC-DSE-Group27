@@ -1,14 +1,14 @@
 import numpy as np
 
-CD0 = 0.05
-piAe = 30
-S = 1 #m^2
+CD0 = 0.0264 #same as osprey
+piAe = 20.41 #same as osprey
+S = 1.25 #m^2 x2.5 compared to research (cuz reearch is 10kg, we go 25)
 W = 250 #N
-CLmax = 2
-CL0 = 0.1
+CLmax = 1.3824 *0.9 #same as osprey
 
 
-A = 0.3
+r=0.21 #same as osprey
+A = np.pi*(r**2) #m^2
 eta = 0.8
 prop_efficiency = 0.8
 numberengines_vertical = 4
@@ -29,8 +29,8 @@ def calculate_power_UFC_MMA_4(incline,V,rho):
     else:
         CL = CLmax
         CD = CD0 + CL**2/piAe
-        L = 0.5*rho*CL*S*V**2
-        Tvertical = (np.cos(incline)*W - L)/numberengines_vertical
+        L = 0.5*rho*CL*S*V**2 * 0.5 #parameter for wake of propellers
+        Tvertical = (np.cos(incline)*W - L)/numberengines_vertical 
         Thorizontal = (0.5*rho*CD*S*V**2 + np.sin(incline)*W)/numberengines_horizontal
     Pvertical = (abs(Tvertical)**3/(2*rho*A))**0.5*(numberengines_vertical/eta)
     Phorizontal = (abs(Thorizontal)**3/(2*rho*A))**0.5*(numberengines_horizontal/eta)
