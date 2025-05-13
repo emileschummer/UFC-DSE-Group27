@@ -1,5 +1,11 @@
+import sys
+import os
+
+# Add the parent directory of 'Battery_Modelling' to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 import pytest as pt
-from Strava_input_csv import air_density_isa
+from Battery_Modelling.Input.Strava_input_csv import air_density_isa
 
 h=1200
 
