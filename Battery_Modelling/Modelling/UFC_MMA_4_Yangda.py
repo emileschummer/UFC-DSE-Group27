@@ -13,7 +13,8 @@ eta = 0.8
 prop_efficiency = 0.8
 numberengines_vertical = 4
 numberengines_horizontal = 1
-
+Avertical = A #individual propellor
+Ahorizontal = A #individual propellor
 
 def calculate_power_UFC_MMA_4(incline,V,rho):
 
@@ -32,7 +33,7 @@ def calculate_power_UFC_MMA_4(incline,V,rho):
         L = 0.5*rho*CL*S*V**2 * 0.5 #parameter for wake of propellers
         Tvertical = (np.cos(incline)*W - L)/numberengines_vertical 
         Thorizontal = (0.5*rho*CD*S*V**2 + np.sin(incline)*W)/numberengines_horizontal
-    Pvertical = (abs(Tvertical)**3/(2*rho*A))**0.5*(numberengines_vertical/eta)
-    Phorizontal = (abs(Thorizontal)**3/(2*rho*A))**0.5*(numberengines_horizontal/eta)
+    Pvertical = (abs(Tvertical)**3/(2*rho*Avertical))**0.5*(numberengines_vertical/eta)
+    Phorizontal = (abs(Thorizontal)**3/(2*rho*Ahorizontal))**0.5*(numberengines_horizontal/eta)
     P = Pvertical + Phorizontal
     return P
