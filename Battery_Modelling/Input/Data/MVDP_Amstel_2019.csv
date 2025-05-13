@@ -1,4 +1,4 @@
-time, distance, velocity_smooth, altitude, grade_smooth
+ time, distance, velocity_smooth, altitude, grade_smooth
    0,      2.3,               0,     38.8,            0
    1,      4.3,               2,     38.8,            0
    2,      6.4,             2.1,     38.8,            0
