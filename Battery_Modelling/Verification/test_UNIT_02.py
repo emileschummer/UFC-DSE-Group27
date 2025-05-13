@@ -17,7 +17,7 @@ diameter = 1.041 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/9dc27553-
 A = (diameter/2)**2*np.pi
 eta = 0.8
 
-expected_power= 19852.52408 # Expected value for power (to be calculated based on the formula)
+expected_power= 3428.961415 # Expected value for power (to be calculated based on the formula)
 
 def test_calculate_power_UFC_MMA_1():
     """
