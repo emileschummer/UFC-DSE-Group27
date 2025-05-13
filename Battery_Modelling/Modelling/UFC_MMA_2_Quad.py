@@ -9,7 +9,9 @@ eta = 0.8
 totalA = (1.041/2)**2*np.pi
 numberengines = 4
 A = totalA/numberengines
-S = 0.16
+Stop = 0.45
+Sfront = 0.35
+S = Stop*np.sin(eta) + Sfront*np.cos(eta)
 def calculate_power_UFC_MMA_2(incline,V,rho):
     D = 0.5*rho*S*CD*V**2
     Tvertical = np.cos(incline)*W
