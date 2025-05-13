@@ -14,7 +14,10 @@ numberengines = 2
 def calculate_power_UFC_MMA_3(incline,V,rho):
 
     L = np.cos(incline)*W
-    CL = 2*L/(rho*S*V**2)
+    if V >0:
+        CL = 2*L/(rho*S*V**2)
+    else:
+        CL = 10000
     if CL <= CLmax:
         CD = CD0 + CL**2/piAe
         T = (0.5*rho*CD*S*V**2 + np.sin(incline)*W)/numberengines

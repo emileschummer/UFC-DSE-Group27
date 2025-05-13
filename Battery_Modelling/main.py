@@ -39,12 +39,16 @@ for race_name, race_data in races.items():
     for i in range(4):
         if i == 0:
             calculate_power = calculate_power_UFC_MMA_1
+            print('Helicopter configuration')
         elif i == 1:
             calculate_power = calculate_power_UFC_MMA_2
+            print('Quadcopter configuration')
         elif i == 2:
             calculate_power = calculate_power_UFC_MMA_3
+            print('Osprey configuration')
         elif i == 3:
             calculate_power = calculate_power_UFC_MMA_4
+            print('Yangde configuration')
         energy = 0
         t = 0
         for index, row in race_data.iterrows():
@@ -60,8 +64,8 @@ for race_name, race_data in races.items():
         if race_name not in race_results:
             race_results[race_name] = [0] * 4
         race_results[race_name][i] = energy / 3600  # Store energy in Wh
-        print(energy/3600 , 'Wh')
-        print(energy/(3600*375), 'kg Li-ion battery')
+        print(np.round(energy/3600) , 'Wh')
+        print(np.round(energy/(3600*375)), 'kg Li-ion battery')
 print(race_results)
 
 
