@@ -23,7 +23,9 @@ r=0.21 #https://www.researchgate.net/publication/351569758_Conceptual_design_of_
 A = np.pi*(r**2) #m^2
 eta = 0.8 
 numberengines = 2
-expected_power = 4592.550332 # Expected value for power (to be calculated based on the formula)
+expected_power1 = 4592.550332 
+expected_power2 = 5996.913091
+expected_power3 = 1572.503012
 
 def test_calculate_power_UFC_MMA_3():
     """
@@ -31,7 +33,11 @@ def test_calculate_power_UFC_MMA_3():
     """
     
     # Call the function with the test input
-    result = calculate_power_UFC_MMA_3(np.pi/9, 10, 1.225)
+    result1 = calculate_power_UFC_MMA_3(np.pi/9, 10, 1.225)
+    result2 = calculate_power_UFC_MMA_3(np.pi/9, 0, 1.225)
+    result3 = calculate_power_UFC_MMA_3(np.pi/9, 20, 1.225)
 
     # Assert that the result is close to the expected value
-    assert pt.approx(result, rel=1e-1) == expected_power
+    assert pt.approx(result1, rel=1e-1) == expected_power1
+    assert pt.approx(result2, rel=1e-1) == expected_power2
+    assert pt.approx(result3, rel=1e-1) == expected_power3
