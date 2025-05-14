@@ -1,6 +1,6 @@
 import numpy as np
 
-CD = 0.35 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/0a756857-3708-4250-9524-bdbcc0020d33/content
+CD = 0.425 #https://www.icas.org/icas_archive/ICAS2020/data/papers/ICAS2020_0781_paper.pdf
 
 W = 250 #N
 
@@ -9,7 +9,7 @@ eta = 0.8
 totalA = (1.041/2)**2*np.pi
 numberengines = 4
 A = totalA/numberengines
-Stop = 0.45
+Stop = 0.45 #https://www.icas.org/icas_archive/ICAS2020/data/papers/ICAS2020_0781_paper.pdf
 Sfront = 0.35
 S = Stop*np.sin(eta) + Sfront*np.cos(eta)
 def calculate_power_UFC_MMA_2(incline,V,rho):
