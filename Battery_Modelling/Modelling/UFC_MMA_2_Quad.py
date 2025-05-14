@@ -10,3 +10,4 @@ def calculate_power_UFC_MMA_2(incline, V, rho, inputs):
     Thorizontal = (D + np.sin(incline)*inputs[0])
     T = (Tvertical**2 + Thorizontal**2)**0.5/numberengine_MMA2
     P = (abs(T)**3/(2*rho*A))**0.5*(numberengine_MMA2/inputs[1])
+    return P
