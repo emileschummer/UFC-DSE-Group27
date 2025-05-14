@@ -12,6 +12,10 @@ def main():
     get_race_results("Battery_Modelling/Output",iterations=5)#50)   
 
 if __name__ == "__main__":
+<<<<<<< HEAD
+    main()
+=======
     # Example usage
     plot_power_vs_velocity_sensitivity(slope=0, iterations=10, variance=0.1)
 
+>>>>>>> 3088b7379d6a57232919417950465ad3038d8133
