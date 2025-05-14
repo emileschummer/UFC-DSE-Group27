@@ -8,8 +8,8 @@ diameter = 1.041 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/9dc27553-
 A = (diameter/2)**2*np.pi
 eta = 0.8
 
-
-def calculate_power_UFC_MMA_1(incline,V,rho):
+input =[CD,S,diameter]
+def calculate_power_UFC_MMA_1(incline,V,rho, inputs):
     D = 0.5*rho*S*CD*V**2
     Tvertical = np.cos(incline)*W
     Thorizontal = D + np.sin(incline)*W
