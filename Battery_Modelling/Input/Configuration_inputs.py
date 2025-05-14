@@ -14,7 +14,7 @@ CD_MMA2 = 0.425 #inputs 5 https://www.icas.org/icas_archive/ICAS2020/data/papers
 Stop_MMA2 = 0.45 #https://www.icas.org/icas_archive/ICAS2020/data/papers/ICAS2020_0781_paper.pdf
 Sfront_MMA2 = 0.35
 totalA_MMA2 = (1.041/2)**2*np.pi
-numberengine_MMA2 = 4
+
 
 #UFC_MMA_3 Osprey
 CD0_MMA3 = 0.0264 #https://www.researchgate.net/publication/351569758_Conceptual_design_of_a_fixed_wing_vertical_take-off_and_landing_unmanned_aerial_vehicle
@@ -23,7 +23,6 @@ S_MMA3 = 1.25 #m^2 x2.5 compared to research (cuz reearch is 10kg, we go 25)
 CLmax_MMA3 = 1.3824 *0.9 #https://www.researchgate.net/publication/351569758_Conceptual_design_of_a_fixed_wing_vertical_take-off_and_landing_unmanned_aerial_vehicle
 #clmax is 2 says: https://www.sciencedirect.com/science/article/pii/S2090447922004051
 r_MMA3 = 0.21 #https://www.researchgate.net/publication/351569758_Conceptual_design_of_a_fixed_wing_vertical_take-off_and_landing_unmanned_aerial_vehicle
-numberengines_MMA3 = 2
 
 #UFC_MMA_4 Yangda
 CD0_MMA4 = 0.0264 #same as osprey
@@ -32,6 +31,4 @@ S_MMA4 = 1.25 #m^2 x2.5 compared to research (cuz reearch is 10kg, we go 25)
 CLmax_MMA4 = 1.3824 *0.9 #same as osprey
 r_MMA4 = r_MMA3 #same as osprey
 prop_efficiency_MMA4 = 0.8
-numberengines_vertical_MMA4 = 4
-numberengines_horizontal_MMA4 = 1
 
