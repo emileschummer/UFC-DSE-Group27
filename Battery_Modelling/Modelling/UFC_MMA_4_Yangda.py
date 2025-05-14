@@ -1,33 +1,15 @@
 import numpy as np
 numberengines_vertical_MMA4 = 4
 numberengines_horizontal_MMA4 = 1
-def calculate_power_UFC_MMA_4(incline, V, rho, inputs):
+
+
+def calculate_power_UFC_MMA_4(incline,V,rho, inputs):
     A = np.pi*(inputs[6]**2) #m^2
-    Avertical = A #individual propellor
-    Ahorizontal = A #individual propellor
+    Avertical = A 
+    Ahorizontal = A
     L = np.cos(incline)*inputs[0]
-
-CD0 = 0.0264 #same as osprey
-piAe = 20.41 #same as osprey
-S = 1.25 #m^2 x2.5 compared to research (cuz reearch is 10kg, we go 25)
-W = 250 #N
-CLmax = 1.3824 *0.9 #same as osprey
-
-
-r=0.21 #same as osprey
-A = np.pi*(r**2) #m^2
-eta = 0.8
-prop_efficiency = 0.8
-numberengines_vertical = 4
-numberengines_horizontal = 1
-Avertical = A #individual propellor
-Ahorizontal = A #individual propellor
-
-def calculate_power_UFC_MMA_4(incline,V,rho):
-
-    L = np.cos(incline)*W
     if V >0:
-        CL = 2*L/(rho*S*V**2)
+        CL = 2*L/(rho*inputs[4]*V**2)
     else:
         CL = 10000
     if CL <= inputs[5]:
