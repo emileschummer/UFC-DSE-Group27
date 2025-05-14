@@ -1,4 +1,5 @@
 import numpy as np
+<<<<<<< HEAD
 
 CD0 = 0.0264 #https://www.researchgate.net/publication/351569758_Conceptual_design_of_a_fixed_wing_vertical_take-off_and_landing_unmanned_aerial_vehicle
 piAe = 20.41 #https://www.researchgate.net/publication/351569758_Conceptual_design_of_a_fixed_wing_vertical_take-off_and_landing_unmanned_aerial_vehicle
@@ -16,6 +17,12 @@ numberengines = 2
 def calculate_power_UFC_MMA_3(incline,V,rho):
 
     L = np.cos(incline)*W
+=======
+numberengines_MMA3=2
+def calculate_power_UFC_MMA_3(incline, V, rho, inputs):
+    A = np.pi*(inputs[6]**2) #m^2
+    L = np.cos(incline)*inputs[0]
+>>>>>>> 7a912145a690572d711c3eaf53bf950b2780cb7b
     if V >0:
         CL = 2*L/(rho*S*V**2)
     else:

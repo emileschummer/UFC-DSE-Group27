@@ -14,5 +14,5 @@ def calculate_power_UFC_MMA_1(incline,V,rho):
     Tvertical = np.cos(incline)*W
     Thorizontal = D + np.sin(incline)*W
     T = (Tvertical**2 + Thorizontal**2)**0.5
-    P = (abs(T)**3/(2*rho*A))**0.5/eta # https://www.spinningwing.com/the-helicopter/momentum-theory/?utm_source=chatgpt.com
+    P = (abs(T)**3/(2*rho*inputs[5]))**0.5/inputs[1]
     return P
