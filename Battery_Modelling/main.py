@@ -12,6 +12,7 @@ def main():
     get_race_results("Battery_Modelling/Output",iterations=5)#50)   
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     main()
 =======
     # Example usage
