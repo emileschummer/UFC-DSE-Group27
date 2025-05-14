@@ -27,6 +27,7 @@ def calculate_power_UFC_MMA_3(incline, V, rho, inputs):
         CL = 2*L/(rho*S*V**2)
     else:
         CL = 10000
+<<<<<<< HEAD
     if CL <= CLmax:
         CD = CD0 + CL**2/piAe
         T = (0.5*rho*CD*S*V**2 + np.sin(incline)*W)/numberengines
@@ -38,5 +39,18 @@ def calculate_power_UFC_MMA_3(incline, V, rho, inputs):
         Thorizontal = 0.5*rho*CD*S*V**2 + np.sin(incline)*W
         T = (Tvertical**2 + Thorizontal**2)**0.5/numberengines
     P = (abs(T)**3/(2*rho*A))**0.5*(numberengines/eta) #https://www.spinningwing.com/the-helicopter/momentum-theory/?utm_source=chatgpt.com
+=======
+    if CL <= inputs[5]:
+        CD = inputs[2] + CL**2/inputs[3]
+        T = (0.5*rho*CD*inputs[4]*V**2 + np.sin(incline)*inputs[0])/numberengines_MMA3
+    else:
+        CL = inputs[5]
+        CD = inputs[2] + CL**2/inputs[3]
+        L = 0.5*rho*CL*inputs[4]*V**2 *0.5
+        Tvertical = np.cos(incline)*inputs[0] - L
+        Thorizontal = 0.5*rho*CD*inputs[4]*V**2 + np.sin(incline)*inputs[0]
+        T = (Tvertical**2 + Thorizontal**2)**0.5/numberengines_MMA3
+    P = (abs(T)**3/(2*rho*A))**0.5*(numberengines_MMA3/inputs[1])
+>>>>>>> 7a912145a690572d711c3eaf53bf950b2780cb7b
     return P
 
