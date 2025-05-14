@@ -1,10 +1,12 @@
 import numpy as np
 numberengines_vertical_MMA4 = 4
 numberengines_horizontal_MMA4 = 1
-def calculate_power_UFC_MMA_4(incline, V, rho, inputs):
+
+
+def calculate_power_UFC_MMA_4(incline,V,rho, inputs):
     A = np.pi*(inputs[6]**2) #m^2
-    Avertical = A #individual propellor
-    Ahorizontal = A #individual propellor
+    Avertical = A 
+    Ahorizontal = A
     L = np.cos(incline)*inputs[0]
     if V >0:
         CL = 2*L/(rho*inputs[4]*V**2)
