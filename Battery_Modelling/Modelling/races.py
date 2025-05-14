@@ -1,6 +1,9 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 import numpy as np
 from matplotlib import pyplot as plt
-
+from Battery_Modelling.Input.Configuration_inputs import *
 from Modelling.UFC_MMA_1_Helicopter import calculate_power_UFC_MMA_1
 from Modelling.UFC_MMA_2_Quad import calculate_power_UFC_MMA_2
 from Modelling.UFC_MMA_3_Osprey import calculate_power_UFC_MMA_3
@@ -8,7 +11,7 @@ from Modelling.UFC_MMA_4_Yangda import calculate_power_UFC_MMA_4
 from Input import Strava_input_csv as sva
 import os
 
-def get_race_results(output_folder="Output"):
+def plot_race_results(output_folder="Output"):
     races = sva.make_race_dictionnary()
     race_results = {}
     for race_name, race_data in races.items():
@@ -22,12 +25,15 @@ def get_race_results(output_folder="Output"):
             elif i == 1:
                 calculate_power = calculate_power_UFC_MMA_2
                 label = 'Quadcopter'
+                inputs = [W, eta, CD_MMA2, Stop_MMA2, Sfront_MMA2, totalA_MMA2]
             elif i == 2:
                 calculate_power = calculate_power_UFC_MMA_3
                 label = 'Osprey'
+                inputs = [W, eta, CD0_MMA3, piAe_MMA3, S_MMA3, CLmax_MMA3, r_MMA3]
             elif i == 3:
                 calculate_power = calculate_power_UFC_MMA_4
                 label = 'Yangda'
+                inputs = [W, eta, CD0_MMA4, piAe_MMA4, S_MMA4, CLmax_MMA4, r_MMA4, prop_efficiency_MMA4]
                 high_speed_energy_count = 0
             energy = 0
             t = 0
@@ -41,7 +47,7 @@ def get_race_results(output_folder="Output"):
                 grade_smooth = np.arctan(row[" grade_smooth"] / 100)
                 altitude = row[" altitude"]
                 rho = sva.air_density_isa(altitude)
-                P = calculate_power(grade_smooth, velocity_smooth, rho)
+                P = calculate_power(grade_smooth, velocity_smooth, rho, inputs)
                 time_diff = time - t
                 energy = energy + time_diff * P
                 t = time
@@ -62,7 +68,7 @@ def get_race_results(output_folder="Output"):
         speed_count = 0
         for j in range(len(speed_plot) - 1):
             if speed_plot[j] > 15:
-                axs[0].axvspan(time_plot[j], time_plot[j + 1], color='blue', alpha=0.2)
+                axs[0].axvspan(time_plot[j], time_plot[j + 1], color='red', alpha=0.2)
                 speed_count+=1
         print(f"---------{race_name} Speed Profile---------")
         print(f"Maximum speed: {max(speed_plot)} m/s")
@@ -97,32 +103,11 @@ def get_race_results(output_folder="Output"):
         plt.show()
     print(race_results)
 
-def plot_power_vs_velocity():
-    velocity = np.linspace(0,40,1000)
-    slope = 20
-    slope = slope*np.pi/180
-    T = [[],[],[],[]]
-    for v in velocity:
-        T1 = calculate_power_UFC_MMA_1(slope,v,1.225)
-        T2 = calculate_power_UFC_MMA_2(slope,v,1.225)
-        T3 = calculate_power_UFC_MMA_3(slope,v,1.225)
-        T4 = calculate_power_UFC_MMA_4(slope,v,1.225)
-        T[0].append(T1)
-        T[1].append(T2)
-        T[2].append(T3)
-        T[3].append(T4)
-    import matplotlib.pyplot as plt
-
-    plt.plot(velocity,T[0],label = 'Helicopter')
-    plt.plot(velocity,T[1], label = 'Quadcopter')
-    plt.plot(velocity,T[2], label = 'Osprey')
-    plt.plot(velocity,T[3], label = 'Yangda')
-    plt.legend()
-    plt.show()
 
 def flat_race():
     print("---------7h Flat Race at 50km/h---------")
-    print("UFC-MMA-1 Helicopter Energy (Wh): ",calculate_power_UFC_MMA_1(0,50/3.6,1.225)*7)
-    print("UFC-MMA-2 Quadcopter Energy (Wh): ",calculate_power_UFC_MMA_2(0,50/3.6,1.225)*7)
-    print("UFC-MMA-3 Osprey Energy (Wh): ",calculate_power_UFC_MMA_3(0,50/3.6,1.225)*7)
-    print("UFC-MMA-4 Yangda Energy (wh): ",calculate_power_UFC_MMA_4(0,50/3.6,1.225)*7)
+    print("Fixed, defined design inputs")
+    print("UFC-MMA-1 Helicopter Energy (Wh): ",calculate_power_UFC_MMA_1(0,50/3.6,1.225,[W,eta,CD_MMA1,S_MMA1,A_MMA1])*7)
+    print("UFC-MMA-2 Quadcopter Energy (Wh): ",calculate_power_UFC_MMA_2(0,50/3.6,1.225,[W, eta, CD_MMA2, Stop_MMA2, Sfront_MMA2, totalA_MMA2])*7)
+    print("UFC-MMA-3 Osprey Energy (Wh): ",calculate_power_UFC_MMA_3(0,50/3.6,1.225,[W, eta, CD0_MMA3, piAe_MMA3, S_MMA3, CLmax_MMA3, r_MMA3])*7)
+    print("UFC-MMA-4 Yangda Energy (wh): ",calculate_power_UFC_MMA_4(0,50/3.6,1.225,[W, eta, CD0_MMA4, piAe_MMA4, S_MMA4, CLmax_MMA4, r_MMA4, prop_efficiency_MMA4])*7)

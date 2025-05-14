@@ -1,4 +1,15 @@
 import numpy as np
+numberengine_MMA2 = 4
+
+
+def calculate_power_UFC_MMA_2(incline, V, rho, inputs):
+    S = inputs[3]*np.sin(inputs[1]) + inputs[4]*np.cos(inputs[1])
+    A = inputs[5]/numberengine_MMA2
+    D = 0.5*rho*S*inputs[2]*V**2
+    Tvertical = np.cos(incline)*inputs[0]
+    Thorizontal = (D + np.sin(incline)*inputs[0])
+    T = (Tvertical**2 + Thorizontal**2)**0.5/numberengine_MMA2
+    P = (abs(T)**3/(2*rho*A))**0.5*(numberengine_MMA2/inputs[1])
 
 CD = 0.35 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/0a756857-3708-4250-9524-bdbcc0020d33/content
 
@@ -9,9 +20,7 @@ eta = 0.8
 totalA = (1.041/2)**2*np.pi
 numberengines = 4
 A = totalA/numberengines
-Stop = 0.45
-Sfront = 0.35
-S = Stop*np.sin(eta) + Sfront*np.cos(eta)
+S = A/2
 def calculate_power_UFC_MMA_2(incline,V,rho):
     D = 0.5*rho*S*CD*V**2
     Tvertical = np.cos(incline)*W

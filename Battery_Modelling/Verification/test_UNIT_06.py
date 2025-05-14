@@ -6,9 +6,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 
 import pytest as pt
 import numpy as np
+from Battery_Modelling.Input.Configuration_inputs import *
 from Battery_Modelling.Modelling.UFC_MMA_4_Yangda import calculate_power_UFC_MMA_4
 
 # Test parameters
+inputs= [W, eta, CD0_MMA4, piAe_MMA4, S_MMA4, CLmax_MMA4, r_MMA4, prop_efficiency_MMA4]
 CD0 = 0.0264 #same as osprey
 piAe = 20.41 #same as osprey
 S = 1.25 #m^2 x2.5 compared to research (cuz reearch is 10kg, we go 25)
@@ -33,9 +35,9 @@ def test_calculate_power_UFC_MMA_4():
    
     
     # Call the function with the test input
-    result1 = calculate_power_UFC_MMA_4(np.pi/9, 10, 1.225)
-    result2 = calculate_power_UFC_MMA_4(np.pi/9, 0, 1.225)
-    result3 = calculate_power_UFC_MMA_4(np.pi/9, 20, 1.225)
+    result1 = calculate_power_UFC_MMA_4(np.pi/9, 10, 1.225, inputs)
+    result2 = calculate_power_UFC_MMA_4(np.pi/9, 0, 1.225, inputs)
+    result3 = calculate_power_UFC_MMA_4(np.pi/9, 20, 1.225, inputs)
 
     # Assert that the result is close to the expected value
     assert pt.approx(result1, rel=1e-1) == expected_power1
