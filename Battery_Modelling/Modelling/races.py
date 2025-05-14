@@ -1,12 +1,17 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
+
 import numpy as np
 from matplotlib import pyplot as plt
 
-from Modelling.UFC_MMA_1_Helicopter import calculate_power_UFC_MMA_1
-from Modelling.UFC_MMA_2_Quad import calculate_power_UFC_MMA_2
-from Modelling.UFC_MMA_3_Osprey import calculate_power_UFC_MMA_3
-from Modelling.UFC_MMA_4_Yangda import calculate_power_UFC_MMA_4
-from Input import Strava_input_csv as sva
-import os
+from Battery_Modelling.Modelling.UFC_MMA_1_Helicopter import calculate_power_UFC_MMA_1
+from Battery_Modelling.Modelling.UFC_MMA_2_Quad import calculate_power_UFC_MMA_2
+from Battery_Modelling.Modelling.UFC_MMA_3_Osprey import calculate_power_UFC_MMA_3
+from Battery_Modelling.Modelling.UFC_MMA_4_Yangda import calculate_power_UFC_MMA_4
+from Battery_Modelling.Input import Strava_input_csv as sva
+
 
 def get_race_results(output_folder="Output"):
     races = sva.make_race_dictionnary()
