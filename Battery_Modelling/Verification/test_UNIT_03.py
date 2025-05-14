@@ -10,7 +10,7 @@ from Battery_Modelling.Input.Configuration_inputs import *
 from Battery_Modelling.Modelling.UFC_MMA_1_Helicopter import calculate_power_UFC_MMA_1
 
 # Test parameters
-inputs= [W, eta, CD_MMA1, S_MMA1, diameter_MMA1, A_MMA1]
+inputs= [W, eta, CD_MMA1, S_MMA1, A_MMA1]
 
 
 
