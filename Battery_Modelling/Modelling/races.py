@@ -11,7 +11,7 @@ from Battery_Modelling.Modelling.UFC_MMA_2_Quad import calculate_power_UFC_MMA_2
 from Battery_Modelling.Modelling.UFC_MMA_3_Osprey import calculate_power_UFC_MMA_3
 from Battery_Modelling.Modelling.UFC_MMA_4_Yangda import calculate_power_UFC_MMA_4
 from Battery_Modelling.Input import Strava_input_csv as sva
-
+from Battery_Modelling.Input.Configuration_inputs import *
 
 def get_race_results(output_folder="Output"):
     races = sva.make_race_dictionnary()
@@ -24,6 +24,7 @@ def get_race_results(output_folder="Output"):
             if i == 0:
                 calculate_power = calculate_power_UFC_MMA_1
                 label = 'Helicopter'
+                inputs = [W,eta,CD_MMA1,S_MMA1,A_MMA1]
             elif i == 1:
                 calculate_power = calculate_power_UFC_MMA_2
                 label = 'Quadcopter'
