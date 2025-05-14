@@ -4,12 +4,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 import numpy as np
 from matplotlib import pyplot as plt
 from Battery_Modelling.Input.Configuration_inputs import *
-from Modelling.UFC_MMA_1_Helicopter import calculate_power_UFC_MMA_1
-from Modelling.UFC_MMA_2_Quad import calculate_power_UFC_MMA_2
-from Modelling.UFC_MMA_3_Osprey import calculate_power_UFC_MMA_3
-from Modelling.UFC_MMA_4_Yangda import calculate_power_UFC_MMA_4
-from Input import Strava_input_csv as sva
-import os
+from Battery_Modelling.Modelling.UFC_MMA_1_Helicopter import calculate_power_UFC_MMA_1
+from Battery_Modelling.Modelling.UFC_MMA_2_Quad import calculate_power_UFC_MMA_2
+from Battery_Modelling.Modelling.UFC_MMA_3_Osprey import calculate_power_UFC_MMA_3
+from Battery_Modelling.Modelling.UFC_MMA_4_Yangda import calculate_power_UFC_MMA_4
+from Battery_Modelling.Input import Strava_input_csv as sva
 
 def plot_race_results(output_folder="Output"):
     races = sva.make_race_dictionnary()
@@ -22,6 +21,7 @@ def plot_race_results(output_folder="Output"):
             if i == 0:
                 calculate_power = calculate_power_UFC_MMA_1
                 label = 'Helicopter'
+                inputs= [W, eta, CD_MMA1, S_MMA1, diameter_MMA1, A_MMA1]
             elif i == 1:
                 calculate_power = calculate_power_UFC_MMA_2
                 label = 'Quadcopter'
@@ -107,7 +107,7 @@ def plot_race_results(output_folder="Output"):
 def flat_race():
     print("---------7h Flat Race at 50km/h---------")
     print("Fixed, defined design inputs")
-    print("UFC-MMA-1 Helicopter Energy (Wh): ",calculate_power_UFC_MMA_1(0,50/3.6,1.225,[W,eta,CD_MMA1,S_MMA1,A_MMA1])*7)
+    print("UFC-MMA-1 Helicopter Energy (Wh): ",calculate_power_UFC_MMA_1(0,50/3.6,1.225,[W, eta, CD_MMA1, S_MMA1, diameter_MMA1, A_MMA1])*7)
     print("UFC-MMA-2 Quadcopter Energy (Wh): ",calculate_power_UFC_MMA_2(0,50/3.6,1.225,[W, eta, CD_MMA2, Stop_MMA2, Sfront_MMA2, totalA_MMA2])*7)
     print("UFC-MMA-3 Osprey Energy (Wh): ",calculate_power_UFC_MMA_3(0,50/3.6,1.225,[W, eta, CD0_MMA3, piAe_MMA3, S_MMA3, CLmax_MMA3, r_MMA3])*7)
     print("UFC-MMA-4 Yangda Energy (wh): ",calculate_power_UFC_MMA_4(0,50/3.6,1.225,[W, eta, CD0_MMA4, piAe_MMA4, S_MMA4, CLmax_MMA4, r_MMA4, prop_efficiency_MMA4])*7)
