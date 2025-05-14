@@ -1,3 +1,10 @@
+import sys
+import os
+
+# Add the parent directory of 'Battery_Modelling' to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
+
 import matplotlib.pyplot as plt
 
 from Battery_Modelling.Modelling.UFC_MMA_1_Helicopter import *
