@@ -4,29 +4,42 @@ import os
 # Add the parent directory of 'Battery_Modelling' to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-import pytest as pt
-import numpy as np
-from Battery_Modelling.Modelling.UFC_MMA_1_Helicopter import calculate_power_UFC_MMA_1
+import pytest
+import pandas as pd
+from unittest.mock import patch, MagicMock
+from Battery_Modelling.Input.Strava_input_csv import make_race_dictionnary
 
-# Test parameters
-CD =0.105 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/0a756857-3708-4250-9524-bdbcc0020d33/content 
-S = 0.16 # http://eprints.gla.ac.uk/116394/1/116394.pdf
-W = 250 #N
+@patch("Battery_Modelling.Input.Strava_input_csv.os.path.exists", return_value=True)
+@patch("Battery_Modelling.Input.Strava_input_csv.os.listdir", return_value=["test.csv"])
+@patch("Battery_Modelling.Input.Strava_input_csv.os.path.join", side_effect=lambda *args: "/".join(args))
+@patch("Battery_Modelling.Input.Strava_input_csv.pd.read_csv")
+def test_make_race_dictionnary(mock_read_csv, mock_join, mock_listdir, mock_exists):
+    mock_df = pd.DataFrame({"a": [1, 2]})
+    mock_read_csv.return_value = mock_df
 
-diameter = 1.041 #https://dspace-erf.nlr.nl/server/api/core/bitstreams/9dc27553-90f0-4209-b744-0adee5c75f27/content 
-A = (diameter/2)**2*np.pi
-eta = 0.8
+    races = make_race_dictionnary()
+    assert "test.csv" in races
+    assert races["test.csv"].equals(mock_df)
 
-expected_power= 3428.961415 # Expected value for power (to be calculated based on the formula)
+@patch("Battery_Modelling.Input.Strava_input_csv.os.path.exists", return_value=False)
+def test_no_data_folder(mock_exists):
+    from Battery_Modelling.Input.Strava_input_csv import make_race_dictionnary
+    result = make_race_dictionnary()
+    assert result == {}
 
-def test_calculate_power_UFC_MMA_1():
-    """
-    Test the calculate_power_UFC_MMA_1 function.
-    """
-    
-    # Call the function with the test input
-    result = calculate_power_UFC_MMA_1(np.pi/9, 10, 1.225)
+@patch("Battery_Modelling.Input.Strava_input_csv.os.path.exists", return_value=True)
+@patch("Battery_Modelling.Input.Strava_input_csv.os.listdir", return_value=["corrupt.csv"])
+@patch("Battery_Modelling.Input.Strava_input_csv.os.path.join", side_effect=lambda *args: "/".join(args))
+@patch("Battery_Modelling.Input.Strava_input_csv.pd.read_csv", side_effect=Exception("Corrupted"))
+def test_read_csv_throws_exception(mock_read_csv, mock_join, mock_listdir, mock_exists):
+    from Battery_Modelling.Input.Strava_input_csv import make_race_dictionnary
+    result = make_race_dictionnary()
+    assert "corrupt.csv" not in result
 
-    # Assert that the result is close to the expected value
-    assert pt.approx(result, rel=1e-1) == expected_power
-
+@patch("Battery_Modelling.Input.Strava_input_csv.os.path.exists", return_value=True)
+@patch("Battery_Modelling.Input.Strava_input_csv.os.listdir", return_value=["note.txt", "readme.md"])
+@patch("Battery_Modelling.Input.Strava_input_csv.os.path.join", side_effect=lambda *args: "/".join(args))
+def test_skips_non_csv_files(mock_join, mock_listdir, mock_exists):
+    from Battery_Modelling.Input.Strava_input_csv import make_race_dictionnary
+    result = make_race_dictionnary()
+    assert result == {}
