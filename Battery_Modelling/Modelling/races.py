@@ -26,12 +26,15 @@ def plot_race_results(output_folder="Output"):
             elif i == 1:
                 calculate_power = calculate_power_UFC_MMA_2
                 label = 'Quadcopter'
+                inputs = [W, eta, CD_MMA2, Stop_MMA2, Sfront_MMA2, totalA_MMA2, numberengine_MMA2]
             elif i == 2:
                 calculate_power = calculate_power_UFC_MMA_3
                 label = 'Osprey'
+                inputs = [W, eta, CD0_MMA3, piAe_MMA3, S_MMA3, CLmax_MMA3, r_MMA3, numberengines_MMA3]
             elif i == 3:
                 calculate_power = calculate_power_UFC_MMA_4
                 label = 'Yangda'
+                inputs = [W, eta, CD0_MMA4, piAe_MMA4, S_MMA4, CLmax_MMA4, r_MMA4, prop_efficiency_MMA4, numberengines_vertical_MMA4, numberengines_horizontal_MMA4]
                 high_speed_energy_count = 0
             energy = 0
             t = 0
