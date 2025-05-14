@@ -17,7 +17,7 @@ from Battery_Modelling.Input import Strava_input_csv as sva
 def plot_power_vs_velocity_sensitivity(slope=0, iterations = 100, variance = 0.1):
     velocity = np.linspace(0,40,1000)
     slope*=np.pi/180
-    inputs_list_original = [[W,eta,CD_MMA1,S_MMA1,A_MMA1],
+    inputs_list_original = [[W,eta,CD_MMA1,S_MMA1,diameter_MMA1, A_MMA1],
                    [W, eta, CD_MMA2, Stop_MMA2, Sfront_MMA2, totalA_MMA2],
                    [W, eta, CD0_MMA3, piAe_MMA3, S_MMA3, CLmax_MMA3, r_MMA3],
                    [W, eta, CD0_MMA4, piAe_MMA4, S_MMA4, CLmax_MMA4, r_MMA4, prop_efficiency_MMA4]]
@@ -53,7 +53,7 @@ def get_race_results(iterations = 100, variance = 0.1):
     race_results = {}
     for race_name, race_data in races.items():
         print(f'---------{race_name}---------')
-        inputs_list_original = [[W,eta,CD_MMA1,S_MMA1,A_MMA1],
+        inputs_list_original = [[W,eta,CD_MMA1,S_MMA1, diameter_MMA1, A_MMA1],
                    [W, eta, CD_MMA2, Stop_MMA2, Sfront_MMA2, totalA_MMA2],
                    [W, eta, CD0_MMA3, piAe_MMA3, S_MMA3, CLmax_MMA3, r_MMA3],
                    [W, eta, CD0_MMA4, piAe_MMA4, S_MMA4, CLmax_MMA4, r_MMA4, prop_efficiency_MMA4]]
