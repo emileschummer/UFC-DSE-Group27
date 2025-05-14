@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 import numpy as np
 from matplotlib import pyplot as plt
-
+from Battery_Modelling.Input.Configuration_inputs import *
 from Modelling.UFC_MMA_1_Helicopter import calculate_power_UFC_MMA_1
 from Modelling.UFC_MMA_2_Quad import calculate_power_UFC_MMA_2
 from Modelling.UFC_MMA_3_Osprey import calculate_power_UFC_MMA_3
