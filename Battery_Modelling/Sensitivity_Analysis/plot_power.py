@@ -1,22 +1,47 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-import numpy as np
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 
-from Battery_Modelling.Modelling.UFC_MMA_1_Helicopter import calculate_power_UFC_MMA_1
-from Battery_Modelling.Modelling.UFC_MMA_2_Quad import calculate_power_UFC_MMA_2
-from Battery_Modelling.Modelling.UFC_MMA_3_Osprey import calculate_power_UFC_MMA_3
-from Battery_Modelling.Modelling.UFC_MMA_4_Yangda import calculate_power_UFC_MMA_4
-from Battery_Modelling.Input import Strava_input_csv as sva
+from Battery_Modelling.Modelling.UFC_MMA_1_Helicopter import *
+from Battery_Modelling.Modelling.UFC_MMA_2_Quad import *
+from Battery_Modelling.Modelling.UFC_MMA_3_Osprey import *
+from Battery_Modelling.Modelling.UFC_MMA_4_Yangda import *
 from Battery_Modelling.Input.Configuration_inputs import *
 
-def plot_race_results(output_folder="Output"):
+def plot_power_vs_velocity_sensitivity(slope=0, iterations = 100):
+
+    velocity = np.linspace(0,40,1000)
+    slope*=np.pi/180
+    """Update this!"""
+    inputs_list_original = [[W,eta,CD_MMA1,S_MMA1,A_MMA1],
+                   [W,eta,CD_MMA2,S_MMA2,A_MMA2],
+                   [W,eta,CD_MMA3,S_MMA3,A_MMA3],
+                   [W,eta,CD_MMA4,S_MMA4,A_MMA4]]
+    for i in range(iterations):
+        inputs_list = []
+        for inputs in inputs_list_original:
+            modified_inputs = [value * (1 + np.random.uniform(-0.1, 0.1)) for value in inputs]
+            inputs_list.append(modified_inputs)
+        T = [[],[],[],[]]
+        for v in velocity:
+            T1 = calculate_power_UFC_MMA_1(slope,v,1.225,inputs_list[0])
+            T2 = calculate_power_UFC_MMA_2(slope,v,1.225,inputs_list[1])
+            T3 = calculate_power_UFC_MMA_3(slope,v,1.225,inputs_list[2])
+            T4 = calculate_power_UFC_MMA_4(slope,v,1.225,inputs_list[3])
+            T[0].append(T1)
+            T[1].append(T2)
+            T[2].append(T3)
+            T[3].append(T4)
+        plt.plot(velocity,T[0],label = 'Helicopter')
+        plt.plot(velocity,T[1], label = 'Quadcopter')
+        plt.plot(velocity,T[2], label = 'Osprey')
+        plt.plot(velocity,T[3], label = 'Yangda')
+
+    plt.legend()
+    plt.show()
+def get_race_results():
     races = sva.make_race_dictionnary()
     race_results = {}
     for race_name, race_data in races.items():
-        fig, axs = plt.subplots(3, 1, figsize=(12, 10), sharex=True)  # Create subplots
-        race_configurations_plot = []
+
         for i in range(4):
             race_plot = []
             if i == 0:
@@ -99,12 +124,4 @@ def plot_race_results(output_folder="Output"):
         plt.tight_layout()
         plt.savefig(output_path)
         plt.show()
-    print(race_results)
-
-
-def flat_race():
-    print("---------7h Flat Race at 50km/h---------")
-    print("UFC-MMA-1 Helicopter Energy (Wh): ",calculate_power_UFC_MMA_1(0,50/3.6,1.225)*7)
-    print("UFC-MMA-2 Quadcopter Energy (Wh): ",calculate_power_UFC_MMA_2(0,50/3.6,1.225)*7)
-    print("UFC-MMA-3 Osprey Energy (Wh): ",calculate_power_UFC_MMA_3(0,50/3.6,1.225)*7)
-    print("UFC-MMA-4 Yangda Energy (wh): ",calculate_power_UFC_MMA_4(0,50/3.6,1.225)*7)
+    print(race_results)    
