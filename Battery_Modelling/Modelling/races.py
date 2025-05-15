@@ -95,8 +95,10 @@ def plot_race_results(output_folder="Output", show = False):
         output_path = os.path.join(output_folder, f"Power_speed_gradient_vs_time_{race_name.replace('.csv', '')}_{timestamp}.png")
         plt.tight_layout()
         plt.savefig(output_path)
-        if show: plt.show()
-        plt.close(fig)
+        if show:  
+            print("Close plot to continue")
+            plt.show()
+        plt.close()
     print("Done")
 
 def flat_race(folder):

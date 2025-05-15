@@ -11,12 +11,13 @@ def main(output_folder="Battery_Modelling/Output"):
         os.makedirs(output_folder)  # Create the output folder if it doesn't exist
     flat_race(output_folder) 
     plot_race_results(output_folder, show = False)
-    plot_power_vs_velocity_sensitivity(output_folder,slope=0, iterations = 2, variance = 0.1, show = True)
-    get_race_results(output_folder,battery_capacity=2250, iterations=2, variance=0.1) 
+    plot_power_vs_velocity_sensitivity(output_folder,slope=0, iterations = 100, variance = 0.1, show = False)
+    get_race_results(output_folder,battery_capacity=2250, iterations=50, variance=0.1) 
+    #Battery Density: 450Wh/kg, ratio MTOW: 0.25
 
 if __name__ == "__main__":
     W = config.inputs_list_original[0][0]
     CLmax = (config.inputs_list_original[2][5] +config.inputs_list_original[3][5])/2
-    #output_folder = f"Battery_Modelling/Output/TradeOff_W={W}_CLmax={CLmax}"
-    output_folder = f"Battery_Modelling/Output/Test={W}_CLmax={CLmax}"
+    output_folder = f"Battery_Modelling/Output/TradeOff_W={W}_CLmax={CLmax}"
+    #output_folder = f"Battery_Modelling/Output/Test_W={W}_CLmax={CLmax}"
     main(output_folder)

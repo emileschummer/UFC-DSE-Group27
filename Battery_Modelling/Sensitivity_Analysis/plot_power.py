@@ -147,6 +147,6 @@ def get_race_results(folder,battery_capacity=2250, iterations=100, variance=0.1)
         file.write("---------Summary--------------------------------------------------------------------\n")
         for l in range(4):
             file.write(f"---------UFC-MMA-{l+1}---------\n")
-            file.write(f"Maximum energy consumption per hour for a 7h race: {max_energies[l]} Wh/7h\n")
+            file.write(f"Maximum energy consumption for a 7h race: {max_energies[l]} Wh/7h\n")
             file.write(f"Relay points required for 7h of filming ({battery_capacity}Wh per drone): {ceil(max_energies[l]/battery_capacity)-1}\n")
     print("\n Done")
