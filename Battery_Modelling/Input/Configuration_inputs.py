@@ -3,6 +3,8 @@ import numpy as np
 #-------------Same across Configurations-------------------
 W = 250 #inputs0 N
 eta = 0.8 #inputs1
+
+
 #-------------Different across Configurations-------------------
 # UFC_MMA_1 Helicopter
 CD_MMA1 =0.105 #inputs 2 https://dspace-erf.nlr.nl/server/api/core/bitstreams/0a756857-3708-4250-9524-bdbcc0020d33/content 

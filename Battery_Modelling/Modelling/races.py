@@ -1,5 +1,6 @@
 import sys
 import os
+from datetime import datetime
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 import numpy as np
 from matplotlib import pyplot as plt
@@ -10,7 +11,7 @@ from Battery_Modelling.Modelling.UFC_MMA_3_Osprey import calculate_power_UFC_MMA
 from Battery_Modelling.Modelling.UFC_MMA_4_Yangda import calculate_power_UFC_MMA_4
 from Battery_Modelling.Input import Strava_input_csv as sva
 
-def plot_race_results(output_folder="Output"):
+def plot_race_results(output_folder="Output", show = False):
     races = sva.make_race_dictionnary()
     race_results = {}
     for race_name, race_data in races.items():
@@ -65,16 +66,9 @@ def plot_race_results(output_folder="Output"):
             axs[0].plot(time_plot, power_plot, label=label)  # Plot power vs time in the first subplot
 
         # Highlight regions where speed > 15 m/s
-        speed_count = 0
         for j in range(len(speed_plot) - 1):
             if speed_plot[j] > 15:
                 axs[0].axvspan(time_plot[j], time_plot[j + 1], color='red', alpha=0.2)
-                speed_count+=1
-        print(f"---------{race_name} Speed Profile---------")
-        print(f"Maximum speed: {max(speed_plot)} m/s")
-        print(f"Speed < 15 m/s (stall): {1-speed_count/len(speed_plot)} of time")
-        print("---------UFC-MMA-4 Yangda---------")
-        print(f"Relative Power use of Yangda when speed < 15 m/s: {1-high_speed_energy_count/race_results[race_name][3]/3600}")
         axs[1].plot(time_plot, speed_plot, label='Speed', color='black')  # Plot speed vs time
         axs[2].plot(time_plot, gradient_plot, label='Gradient', color='grey')  # Plot gradient vs time
 
@@ -96,18 +90,20 @@ def plot_race_results(output_folder="Output"):
         axs[2].grid()
 
         # Save the figure
-        os.makedirs(output_folder, exist_ok=True)  # Ensure the output folder exists
-        output_path = os.path.join(output_folder, f"{race_name}_power_speed_gradient_vs_time.png")
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_path = os.path.join(output_folder, f"Power_speed_gradient_vs_time_{race_name.replace('.csv', '')}_{timestamp}.png")
         plt.tight_layout()
         plt.savefig(output_path)
-        plt.show()
-    print(race_results)
+        if show: plt.show()
 
 
-def flat_race():
-    print("---------7h Flat Race at 50km/h---------")
-    print("Fixed, defined design inputs")
-    print("UFC-MMA-1 Helicopter Energy (Wh): ",calculate_power_UFC_MMA_1(0,50/3.6,1.225,[W, eta, CD_MMA1, S_MMA1, diameter_MMA1, A_MMA1])*7)
-    print("UFC-MMA-2 Quadcopter Energy (Wh): ",calculate_power_UFC_MMA_2(0,50/3.6,1.225,[W, eta, CD_MMA2, Stop_MMA2, Sfront_MMA2, totalA_MMA2])*7)
-    print("UFC-MMA-3 Osprey Energy (Wh): ",calculate_power_UFC_MMA_3(0,50/3.6,1.225,[W, eta, CD0_MMA3, piAe_MMA3, S_MMA3, CLmax_MMA3, r_MMA3])*7)
-    print("UFC-MMA-4 Yangda Energy (wh): ",calculate_power_UFC_MMA_4(0,50/3.6,1.225,[W, eta, CD0_MMA4, piAe_MMA4, S_MMA4, CLmax_MMA4, r_MMA4, prop_efficiency_MMA4])*7)
+def flat_race(folder):
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_file = os.path.join(folder, f"flat_race_{timestamp}.txt")
+    with open(output_file, "w") as file:
+        file.write("---------7h Flat Race at 50km/h---------\n")
+        file.write("Fixed, defined design inputs\n")
+        file.write(f"UFC-MMA-1 Helicopter Energy (Wh): {calculate_power_UFC_MMA_1(0, 50/3.6, 1.225, [W, eta, CD_MMA1, S_MMA1, diameter_MMA1, A_MMA1]) * 7}\n")
+        file.write(f"UFC-MMA-2 Quadcopter Energy (Wh): {calculate_power_UFC_MMA_2(0, 50/3.6, 1.225, [W, eta, CD_MMA2, Stop_MMA2, Sfront_MMA2, totalA_MMA2]) * 7}\n")
+        file.write(f"UFC-MMA-3 Osprey Energy (Wh): {calculate_power_UFC_MMA_3(0, 50/3.6, 1.225, [W, eta, CD0_MMA3, piAe_MMA3, S_MMA3, CLmax_MMA3, r_MMA3]) * 7}\n")
+        file.write(f"UFC-MMA-4 Yangda Energy (Wh): {calculate_power_UFC_MMA_4(0, 50/3.6, 1.225, [W, eta, CD0_MMA4, piAe_MMA4, S_MMA4, CLmax_MMA4, r_MMA4, prop_efficiency_MMA4]) * 7}\n")
