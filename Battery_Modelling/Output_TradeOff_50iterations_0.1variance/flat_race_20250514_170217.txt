@@ -1,6 +1,0 @@
----------7h Flat Race at 50km/h---------
-Fixed, defined design inputs
-UFC-MMA-1 Helicopter Energy (Wh): 21658.590597543625
-UFC-MMA-2 Quadcopter Energy (Wh): 24184.204969335562
-UFC-MMA-3 Osprey Energy (Wh): 21260.499290548272
-UFC-MMA-4 Yangda Energy (Wh): 15812.690517563718

@@ -11,7 +11,7 @@ def calculate_power_UFC_MMA_4(incline,V,rho, inputs):
     if V >0:
         CL = 2*L/(rho*inputs[4]*V**2)
     else:
-        CL = 10000
+        CL = 10000#to jump into else statement
     if CL <= inputs[5]:
         CD = inputs[2] + CL**2/inputs[3]
         Thorizontal = (0.5*rho*CD*inputs[4]*V**2 + np.sin(incline)*inputs[0])/numberengines_horizontal_MMA4
@@ -19,7 +19,7 @@ def calculate_power_UFC_MMA_4(incline,V,rho, inputs):
     else:
         CL = inputs[5]
         CD = inputs[2] + CL**2/inputs[3]
-        L = 0.5*rho*CL*inputs[4]*V**2 * 0.5 #parameter for wake of propellers
+        L = 0.5*rho*CL*inputs[4]*V**2 * inputs[7] #parameter for wake of propellers
         Tvertical = (np.cos(incline)*inputs[0] - L)/numberengines_vertical_MMA4
         Thorizontal = (0.5*rho*CD*inputs[4]*V**2 + np.sin(incline)*inputs[0])/numberengines_horizontal_MMA4
     Pvertical = (abs(Tvertical)**3/(2*rho*Avertical))**0.5*(numberengines_vertical_MMA4/inputs[1])
