@@ -23,7 +23,7 @@ def test_make_race_dictionnary(mock_read_csv, mock_join, mock_listdir, mock_exis
 
 @patch("Battery_Modelling.Input.Strava_input_csv.os.path.exists", return_value=False)
 def test_no_data_folder(mock_exists):
-    from Battery_Modelling.Input.Strava_input_csv import make_race_dictionnary
+
     result = make_race_dictionnary()
     assert result == {}
 
@@ -32,7 +32,6 @@ def test_no_data_folder(mock_exists):
 @patch("Battery_Modelling.Input.Strava_input_csv.os.path.join", side_effect=lambda *args: "/".join(args))
 @patch("Battery_Modelling.Input.Strava_input_csv.pd.read_csv", side_effect=Exception("Corrupted"))
 def test_read_csv_throws_exception(mock_read_csv, mock_join, mock_listdir, mock_exists):
-    from Battery_Modelling.Input.Strava_input_csv import make_race_dictionnary
     result = make_race_dictionnary()
     assert "corrupt.csv" not in result
 
@@ -40,6 +39,5 @@ def test_read_csv_throws_exception(mock_read_csv, mock_join, mock_listdir, mock_
 @patch("Battery_Modelling.Input.Strava_input_csv.os.listdir", return_value=["note.txt", "readme.md"])
 @patch("Battery_Modelling.Input.Strava_input_csv.os.path.join", side_effect=lambda *args: "/".join(args))
 def test_skips_non_csv_files(mock_join, mock_listdir, mock_exists):
-    from Battery_Modelling.Input.Strava_input_csv import make_race_dictionnary
     result = make_race_dictionnary()
     assert result == {}

@@ -8,6 +8,7 @@ from Battery_Modelling.Sensitivity_Analysis.plot_power import *
 import pytest
 from unittest.mock import patch, MagicMock
 import numpy as np
+import pandas as pd
 
 #Test for plot_power_vs_velocity_sensitivity function
 @patch("Battery_Modelling.Sensitivity_Analysis.plot_power.calculate_power_UFC_MMA_1", return_value=10)
@@ -21,15 +22,16 @@ def test_plot_power_vs_velocity_sensitivity(mock_show, mock_plot, mock_p1, mock_
     assert mock_plot.called
     assert mock_show.called
 
-#Test for get_race_results function
+#Test get_race_results function
 @patch("Battery_Modelling.Sensitivity_Analysis.plot_power.calculate_power_UFC_MMA_1", return_value=100)
 @patch("Battery_Modelling.Sensitivity_Analysis.plot_power.calculate_power_UFC_MMA_2", return_value=200)
 @patch("Battery_Modelling.Sensitivity_Analysis.plot_power.calculate_power_UFC_MMA_3", return_value=300)
 @patch("Battery_Modelling.Sensitivity_Analysis.plot_power.calculate_power_UFC_MMA_4", return_value=400)
 @patch("Battery_Modelling.Sensitivity_Analysis.plot_power.sva.air_density_isa", return_value=1.225)
 @patch("Battery_Modelling.Sensitivity_Analysis.plot_power.sva.make_race_dictionnary")
-def test_get_race_results(mock_make_race_dict, mock_air_density, mock_p1, mock_p2, mock_p3, mock_p4, capsys):
-    import pandas as pd
+def test_get_race_results_output(mock_make_race_dict, mock_rho, mock_p1, mock_p2, mock_p3, mock_p4, tmp_path):
+
+    # Minimal mock race data
     mock_df = pd.DataFrame({
         " time": [0, 1, 2],
         " velocity_smooth": [10, 15, 20],
@@ -37,10 +39,18 @@ def test_get_race_results(mock_make_race_dict, mock_air_density, mock_p1, mock_p
         " grade_smooth": [0, 0, 0]
     })
 
-    mock_make_race_dict.return_value = {"mock_race.csv": mock_df}
+    mock_make_race_dict.return_value = {"MockRace.csv": mock_df}
 
-    get_race_results(iterations=2)
+    # Run the function
+    get_race_results(folder=tmp_path, iterations=2, variance=0.0)
 
-    captured = capsys.readouterr()
-    assert "mock_race.csv" in captured.out
-    assert "UFC-MMA-1" in captured.out
+    # Check that a file was created
+    output_files = list(tmp_path.glob("race_results_*.txt"))
+    assert len(output_files) == 1
+
+    # Read and validate output content
+    content = output_files[0].read_text()
+    assert "MockRace.csv" in content
+    assert "UFC-MMA-1" in content
+    assert "Maximum energy consumption" in content
+    assert "Drones required" in content
