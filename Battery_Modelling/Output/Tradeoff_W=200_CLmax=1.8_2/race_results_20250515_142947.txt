@@ -93,13 +93,17 @@ Maximum energy consumption through iterations for a 7h race: 9422.169776673154 W
 ---------Summary--------------------------------------------------------------------
 ---------UFC-MMA-1---------
 Maximum energy consumption for a 7h race: 22064.86750139912 Wh/7h
+Endurance: 0.71h
 Relay points required for 7h of filming (2250Wh per drone): 9
 ---------UFC-MMA-2---------
 Maximum energy consumption for a 7h race: 22846.277300409234 Wh/7h
+Endurance: 0.689h
 Relay points required for 7h of filming (2250Wh per drone): 10
 ---------UFC-MMA-3---------
 Maximum energy consumption for a 7h race: 15510.540583036209 Wh/7h
+Endurance: 1.02h
 Relay points required for 7h of filming (2250Wh per drone): 6
 ---------UFC-MMA-4---------
 Maximum energy consumption for a 7h race: 11517.7658241972 Wh/7h
+Endurance: 1.37h
 Relay points required for 7h of filming (2250Wh per drone): 5
