@@ -3,7 +3,7 @@ numberengines_vertical_MMA4 = 4
 numberengines_horizontal_MMA4 = 1
 
 
-def calculate_power_UFC_MMA_4(incline,V,rho, inputs, max_iter=10000, tol=1e-6):
+def calculate_power_UFC_MMA_4(incline,V,rho, inputs, max_iter=1000, tol=1e-3):
     A = np.pi*(inputs[6]**2) #m^2
     L = np.cos(incline)*inputs[0]
     if V >0:
