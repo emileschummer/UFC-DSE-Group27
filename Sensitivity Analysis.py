@@ -63,7 +63,10 @@ def Compare():
     Cat2 = df.index[Row2]
 
     # Choose a random amount to vary
-    Amount = round(random.uniform(0.01, 0.1), 2)
+    Amount = random.choice([round(i * 0.01, 2) for i in range(1, 11)])
+    #Amount = round(random.uniform(0.01, 0.1), 2) - OLD CODE, BIAS ON EDGES FROM ROUNDING
+
+
     #print(f"\nChanging weights: +{Amount:.2f} to '{Cat1}', -{Amount:.2f} from '{Cat2}'")
 
     # Modify the "Weight (%)" values
@@ -110,7 +113,7 @@ Yangda_Wins = 0
 Amount_Array = []
 Row_Array = []
 
-for i in range(1000):
+for i in range(10000):
     Post, Amount, Row1, Row2 = Compare()
 
     if max(Post) >= 1:
@@ -138,8 +141,7 @@ for i in range(1000):
 print("-----------------------------------------")
 print(Heli_Wins,Quad_Wins,Tilt_Wins,Yangda_Wins)
 print("-----------------------------------------")
-print(min(Row_Array))
-print(max(Row_Array))
+
 
 
 
