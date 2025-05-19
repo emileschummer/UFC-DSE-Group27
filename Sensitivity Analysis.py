@@ -112,6 +112,7 @@ Tilt_Wins = 0
 Yangda_Wins = 0
 Amount_Array = []
 Row_Array = []
+Difference_Winnings = []
 
 for i in range(10000):
     Post, Amount, Row1, Row2 = Compare()
@@ -135,6 +136,14 @@ for i in range(10000):
     Amount_Array.append(Amount)
     Row_Array.append(Row1)
     Row_Array.append(Row2)
+
+
+    # Sort in descending order and take the top two
+    top_two = sorted(Post, reverse=True)[:2]
+    difference = top_two[0] - top_two[1]
+    Difference_Winnings.append(difference)
+
+
 
 
 
@@ -167,5 +176,18 @@ plt.xticks(Rows_Vals)  # Ensure x-axis shows 0 to 6
 plt.xlabel('Integer Values')
 plt.ylabel('Frequency')
 plt.title('Distribution of Random Integers (0 to 6)')
+plt.grid(axis='y')
+plt.show()
+
+
+
+# Sorting the Amounts Data
+Vals_Dif, Counts_Dif = np.unique(Difference_Winnings, return_counts=True)
+
+# Plotting Amounts as a bar chart
+plt.bar(Vals_Dif, Counts_Dif, width=0.005)
+plt.xlabel('Rounded Values')
+plt.ylabel('Frequency')
+plt.title('Distribution of Different Vals')
 plt.grid(axis='y')
 plt.show()
