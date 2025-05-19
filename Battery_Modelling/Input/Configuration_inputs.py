@@ -1,5 +1,5 @@
 import numpy as np
-#Power equation: https://www.spinningwing.com/the-helicopter/momentum-theory/?utm_source=chatgpt.com 
+#Power equation: https://www.spinningwing.com/the-helicopter/momentum-theory/
 #-------------Same across Configurations-------------------
 W = 200 #inputs0 N
 eta = 0.8 #inputs1
