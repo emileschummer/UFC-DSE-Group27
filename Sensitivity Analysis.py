@@ -1,7 +1,8 @@
 import pandas as pd
 import random 
+import numpy as np
+import matplotlib.pyplot as plt
 
-#df.loc[row_label, column_label]
 
 # Create the table with percentages as integers (e.g., 37 means 37%)
 data = {
@@ -91,14 +92,78 @@ def Compare():
     # print("\nWeight COmparison:")
     # print(Pre_weights, Post_weights)
 
-    print(PRE_Totals)
-    return PRE_Totals, POST_Totals
+
+    #Adding the desired things to arrays for comparison
+
+
+
+
+    return POST_Totals, Amount, Row1, Row2
+
 
 
 #MAIN - I guess
-for i in range(1000):
-    Pre,Post = Compare()
-    if max(Pre) >= 1:
-        print("pAST 100% eRROR")
-        print(max(Post))
+Heli_Wins = 0
+Quad_Wins = 0
+Tilt_Wins = 0
+Yangda_Wins = 0
+Amount_Array = []
+Row_Array = []
 
+for i in range(1000):
+    Post, Amount, Row1, Row2 = Compare()
+
+    if max(Post) >= 1:
+        print("PAST 100 ERROR")
+        break
+
+    max_index = int(Post.index(max(Post)))#yes I know this is very bad code, but my brain is fried
+    if max_index == 0:
+        Heli_Wins +=1
+    elif max_index == 1:
+        Quad_Wins +=1
+    elif max_index == 2:
+        Tilt_Wins +=1
+    elif max_index == 3:
+        Yangda_Wins +=1
+    else:
+        print(max_index)
+
+    Amount_Array.append(Amount)
+    Row_Array.append(Row1)
+    Row_Array.append(Row2)
+
+
+
+print("-----------------------------------------")
+print(Heli_Wins,Quad_Wins,Tilt_Wins,Yangda_Wins)
+print("-----------------------------------------")
+print(min(Row_Array))
+print(max(Row_Array))
+
+
+
+# Sorting the Amounts Data
+Vals_Amounts, Counts_Amount = np.unique(Amount_Array, return_counts=True)
+
+# Plotting Amounts as a bar chart
+plt.bar(Vals_Amounts, Counts_Amount, width=0.005)
+plt.xlabel('Rounded Values')
+plt.ylabel('Frequency')
+plt.title('Distribution of Rounded Random Values (0.01 to 0.1)')
+plt.grid(axis='y')
+plt.show()
+
+
+
+# Count the frequency of each integer from 0 to 6
+Rows_Vals, counts_Rows = np.unique(Row_Array, return_counts=True)
+
+# Plot bar chart
+plt.bar(Rows_Vals, counts_Rows)
+plt.xticks(Rows_Vals)  # Ensure x-axis shows 0 to 6
+plt.xlabel('Integer Values')
+plt.ylabel('Frequency')
+plt.title('Distribution of Random Integers (0 to 6)')
+plt.grid(axis='y')
+plt.show()
