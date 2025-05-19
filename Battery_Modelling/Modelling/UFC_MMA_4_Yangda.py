@@ -25,6 +25,8 @@ def calculate_power_UFC_MMA_4(incline,V,rho, inputs, max_iter=1000, tol=1e-3):
         alpha_T= 0
         T_hover= inputs[0]/numberengines_vertical_MMA4
         V_ind_hover= (T_hover/(2*rho*A))**0.5
+        
+        '''
         vi = V_ind_hover  # initial guess
         for _ in range(max_iter):
             vi_new = V_ind_hover**2 / np.sqrt((V * np.sin(alpha_T) + vi)**2 + (V * np.cos(alpha_T))**2)
@@ -32,6 +34,8 @@ def calculate_power_UFC_MMA_4(incline,V,rho, inputs, max_iter=1000, tol=1e-3):
                 vi = vi_new
                 break
             vi = vi_new
+        '''
+        vi= V_ind_hover/(1+V/V_ind_hover)**0.5
         P_vertical = Tvertical * vi * numberengines_vertical_MMA4
         P_horizontal = Thorizontal * V * numberengines_horizontal_MMA4
         P = (P_vertical + P_horizontal) / inputs[1]

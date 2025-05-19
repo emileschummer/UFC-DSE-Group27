@@ -1,6 +1,6 @@
 import numpy as np
 numberengines_MMA3=2
-def calculate_power_UFC_MMA_3(incline, V, rho, inputs, max_iter=10000, tol=1e-6):
+def calculate_power_UFC_MMA_3(incline, V, rho, inputs, max_iter=1000, tol=1e-3):
     A = np.pi*(inputs[6]**2) #m^2
     L = np.cos(incline)*inputs[0]
     if V >0:
@@ -23,6 +23,8 @@ def calculate_power_UFC_MMA_3(incline, V, rho, inputs, max_iter=10000, tol=1e-6)
         alpha_T= np.cos(Tvertical/T)
         T_hover= inputs[0]/numberengines_MMA3
         V_ind_hover= (T_hover/(2*rho*A))**0.5
+        
+        '''
         vi = V_ind_hover  # initial guess
         for _ in range(max_iter):
             vi_new = V_ind_hover**2 / np.sqrt((V * np.sin(alpha_T) + vi)**2 + (V * np.cos(alpha_T))**2)
@@ -30,8 +32,10 @@ def calculate_power_UFC_MMA_3(incline, V, rho, inputs, max_iter=10000, tol=1e-6)
                 vi = vi_new
                 break
             vi = vi_new
-        P_induced = T * vi * numberengines_MMA3
-        P_parasite = D * V
+        '''
+        vi= V_ind_hover/(1+V/V_ind_hover)**0.5
+        P_induced = Tvertical * vi * numberengines_MMA3
+        P_parasite = Thorizontal * V
         P = (P_induced + P_parasite) / inputs[1]
     
     #P = (abs(T)**3/(2*rho*A))**0.5*(numberengines_MMA3/inputs[1])
