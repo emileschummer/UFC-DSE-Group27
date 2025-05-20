@@ -168,12 +168,14 @@ def Compare_Equal():
 
 
 #MAIN - I guess
+Runs = 10000 #Recommend 10k
+Equal = True
+
+
 Amount_Array = []
 Row_Array = []
 Difference_Winnings = []
 Wins = [0,0,0,0]
-Runs = 10000
-Equal = False
 
 for i in range(Runs):
 
