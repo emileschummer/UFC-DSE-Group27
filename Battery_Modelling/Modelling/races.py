@@ -67,9 +67,9 @@ def plot_race_results(output_folder="Output", show = False):
 
         # Highlight regions where speed > V_stall m/s
         V_stall = (inputs_list_original[2][8]+inputs_list_original[3][9])/2 # Average stall speed of both fixed wings
-        #for j in range(len(speed_plot) - 1):
-            #if speed_plot[j] > V_stall:
-                #axs[0].axvspan(time_plot[j], time_plot[j + 1], color='red', alpha=0.2)
+        for j in range(len(speed_plot) - 1):
+            if speed_plot[j] > V_stall:
+                axs[0].axvspan(time_plot[j], time_plot[j + 1], color='red', alpha=0.2)
         axs[1].plot(time_plot, speed_plot, label='Speed', color='black')  # Plot speed vs time
         axs[2].plot(time_plot, gradient_plot, label='Gradient', color='grey')  # Plot gradient vs time
 
