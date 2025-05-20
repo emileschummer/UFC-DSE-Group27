@@ -178,7 +178,7 @@ Row_Array = []
 Difference_Winnings = []
 Wins = [0,0,0,0]
 
-for i in range(1000):
+for i in range(10000):
     Post, Amount, Row1, Row2 = Compare()
 
     if max(Post) >= 1:
@@ -235,7 +235,7 @@ plt.show()
 
 
 Vals_Dif, Counts_Dif = np.unique(Difference_Winnings, return_counts=True)
-
+Counts_Dif = Counts_Dif/10000
 plt.bar(Vals_Dif, Counts_Dif, width=0.005)
 plt.xlabel('Rounded Values')
 plt.ylabel('Frequency')
