@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# Create the table with percentages as integers (e.g., 37 means 37%)
+# Create the DataFrame
 data = {
     "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
     "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
@@ -14,14 +14,14 @@ data = {
     "Yangda": [0.75, 0.75, 0.65, 1, 0.90, 1, 0.58],
 }
 
-# Create the DataFrame
 df = pd.DataFrame(data).set_index("Criteria")
+print("Initial table:")
 print(df)
 
 
 
 def Compare():
-    #resetting the table
+    #resetting the table each time
     data = {
         "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
         "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
@@ -30,7 +30,6 @@ def Compare():
         "Osprey": [0.50, 0.38, 0.52, 0.83, 0.75, 1, 0.38],
         "Yangda": [0.75, 0.75, 0.65, 1, 0.90, 1, 0.58],
     }
-    #global df
     df = pd.DataFrame(data)
     df.set_index("Criteria", inplace=True)
 
@@ -69,18 +68,15 @@ def Compare():
 
     #print(f"\nChanging weights: +{Amount:.2f} to '{Cat1}', -{Amount:.2f} from '{Cat2}'")
 
-    # Modify the "Weight (%)" values
+    # Modify the 2 "Weight (%)" values
     df.loc[Cat1, "Weight (%)"] += Amount
     df.loc[Cat2, "Weight (%)"] -= Amount
-
-    # Optional: ensure weights stay in bounds [0, 1] CHECK IF THIS IS NEEDED
-    #df["Weight (%)"] = df["Weight (%)"].clip(lower=0, upper=1)
 
     # print("\nNew table")
     # print(df)
 
 
-    # Compute weighted total score 
+    # Compute new weighted total score 
     Post_weights = df["Weight (%)"]
     POST_Heli_total = (Heli*Post_weights).sum()
     POST_Quad_total = (Quad *Post_weights ).sum()
@@ -111,7 +107,7 @@ def Compare_Equal():
         "Osprey": [0.50, 0.38, 0.52, 0.83, 0.75, 1, 0.38],
         "Yangda": [0.75, 0.75, 0.65, 1, 0.90, 1, 0.58],
     }
-    #global df
+
     df = pd.DataFrame(data)
     df.set_index("Criteria", inplace=True)
 
@@ -124,7 +120,7 @@ def Compare_Equal():
     Yangda = df["Yangda"].copy()
 
 
-    # Compute weighted total score 
+    # Compute old weighted total score 
     PRE_Heli_total = (Heli*Pre_weights).sum()
     PRE_Quad_total = (Quad * Pre_weights).sum()
     PRE_Tilt_total = (Tiltrotor*Pre_weights).sum()
@@ -136,6 +132,7 @@ def Compare_Equal():
     Amount = random.choice([round(i * 0.01, 2) for i in range(1, 11)])
     Row = random.sample(range(len(df)), 1)[0]
 
+    #increasing the chosen one 
     Cat_Main = df.index[Row]
     df.loc[Cat_Main, "Weight (%)"] += Amount
 
@@ -168,8 +165,8 @@ def Compare_Equal():
 
 
 #MAIN - I guess
-Runs = 10000 #Recommend 10k
-Equal = True
+Runs = 1000 #Recommend 10k
+Equal = True #Change for 2 category or equal Method
 
 
 Amount_Array = []
@@ -195,7 +192,7 @@ for i in range(Runs):
     Wins[max_index] = Wins[max_index] +1 
 
 
-    # Sort in descending order and take the top two
+    # Sort in descending order and take the top two for difference 
     top_two = sorted(Post, reverse=True)[:2]
     difference = top_two[0] - top_two[1]
     Difference_Winnings.append(difference)
@@ -207,7 +204,7 @@ print(Wins)
 print("-----------------------------------------")
 
 
-#Plotting
+#Plotting for bias
 Vals_Amounts, Counts_Amount = np.unique(Amount_Array, return_counts=True)
 
 plt.bar(Vals_Amounts, Counts_Amount, width=0.005)
@@ -222,7 +219,7 @@ plt.show()
 Rows_Vals, counts_Rows = np.unique(Row_Array, return_counts=True)
 
 plt.bar(Rows_Vals, counts_Rows)
-plt.xticks(Rows_Vals)  # Ensure x-axis shows 0 to 6
+plt.xticks(Rows_Vals) 
 plt.xlabel('Integer Values')
 plt.ylabel('Frequency')
 plt.title('Distribution of Random Integers (0 to 6)')
@@ -230,7 +227,7 @@ plt.grid(axis='y')
 plt.show()
 
 
-
+#Plotting the data we want for the report
 Vals_Dif, Counts_Dif = np.unique(Difference_Winnings, return_counts=True)
 #Counts_Dif = Counts_Dif/Runs
 plt.bar(Vals_Dif, Counts_Dif, width=0.005)
