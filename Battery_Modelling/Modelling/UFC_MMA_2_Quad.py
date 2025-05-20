@@ -12,7 +12,7 @@ def calculate_power_UFC_MMA_2(incline, V, rho, inputs):
     T = (Tvertical**2 + Thorizontal**2)**0.5
     A_prop = inputs[6]/numberengine_MMA2
     #Solve for vi
-    alpha_T= np.cos(Tvertical/T)
+    alpha_T= np.arccos(Tvertical/T)
     A=4*(rho*A_prop)**2
     B=8*(rho*A_prop)**2*(V*np.sin(alpha_T))
     C=4*(rho*A_prop*V)**2

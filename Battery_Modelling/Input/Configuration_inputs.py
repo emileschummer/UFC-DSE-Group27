@@ -21,7 +21,7 @@ omega_MMA1 = 100 #inputs 9
 CD0_MMA2 = 0.425 #inputs 2 https://www.icas.org/icas_archive/ICAS2020/data/papers/ICAS2020_0781_paper.pdf
 Stop_MMA2 = 0.45 #inputs 3 https://www.icas.org/icas_archive/ICAS2020/data/papers/ICAS2020_0781_paper.pdf
 Sfront_MMA2 = 0.35#inputs 4
-r_MMA2 = diameter_MMA1/2 #inputs 5
+r_MMA2 = r_MMA1 #inputs 5
 A_prop_MMA2 = (r_MMA2)**2*np.pi #inputs 6
 N_blades_MMA2 = N_blades_MMA1 #inputs 7
 chord_blade_MMA2 = chord_blade_MMA1 #inputs 8
@@ -68,5 +68,5 @@ inputs_list_original = [[W,eta,CD0_MMA1,S_parasite_MMA1,r_MMA1,A_prop_MMA1,N_bla
 def largest_real_positive_root(roots):
     real_roots = [r.real for r in roots if np.isreal(r) and r.real > 0]
     if not real_roots:
-        return None  # or raise an exception or return some sentinel value
+        return 0  # or raise an exception or return some sentinel value
     return max(real_roots)

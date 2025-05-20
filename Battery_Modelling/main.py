@@ -20,5 +20,5 @@ if __name__ == "__main__":
     W = config.inputs_list_original[0][0]
     CLmax = (config.inputs_list_original[2][5] +config.inputs_list_original[3][5])/2
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_folder = f"Battery_Modelling/Output/Test_W={W}_CLmax={CLmax}_{timestamp}_big_T"
+    output_folder = f"Battery_Modelling/Output/Test_W={W}_CLmax={CLmax}_{timestamp}_afterMod"
     main(output_folder)
