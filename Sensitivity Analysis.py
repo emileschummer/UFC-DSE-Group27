@@ -20,7 +20,7 @@ print(df)
 
 
 
-def Compare():
+def Compare(): #2 category method
     #resetting the table each time
     data = {
         "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
@@ -43,7 +43,8 @@ def Compare():
     Tiltrotor = df["Osprey"].copy()
     Yangda = df["Yangda"].copy()
 
-    # Compute weighted total score 
+
+    # Compute old weighted total score for verification/validation
     PRE_Heli_total = (Heli*Pre_weights).sum()
     PRE_Quad_total = (Quad * Pre_weights).sum()
     PRE_Tilt_total = (Tiltrotor*Pre_weights).sum()
@@ -97,7 +98,7 @@ def Compare():
 
 
 
-def Compare_Equal():
+def Compare_Equal():#proportional decrease method
     #resetting the table
     data = {
         "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
@@ -120,7 +121,7 @@ def Compare_Equal():
     Yangda = df["Yangda"].copy()
 
 
-    # Compute old weighted total score 
+    # Compute old weighted total score for verification/validation
     PRE_Heli_total = (Heli*Pre_weights).sum()
     PRE_Quad_total = (Quad * Pre_weights).sum()
     PRE_Tilt_total = (Tiltrotor*Pre_weights).sum()
