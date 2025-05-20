@@ -95,11 +95,7 @@ def Compare():
     # print("\nWeight COmparison:")
     # print(Pre_weights, Post_weights)
 
-
-    #Adding the desired things to arrays for comparison
-
-
-
+    #print("\n The sum of the weights is:",sum(df["Weight (%)"]))
 
     return POST_Totals, Amount, Row1, Row2
 
@@ -136,24 +132,23 @@ def Compare_Equal():
     PRE_Totals = [PRE_Heli_total,PRE_Quad_total,PRE_Tilt_total,PRE_Yangda_total]
 
 
-    # Choose a random amount to vary
+    # Setting Up
     Amount = random.choice([round(i * 0.01, 2) for i in range(1, 11)])
     Row = random.sample(range(len(df)), 1)[0]
 
+    Cat_Main = df.index[Row]
+    df.loc[Cat_Main, "Weight (%)"] += Amount
 
-    #Doing Maths
-    Cat = df.index[Row]
-    df.loc[Cat, "Weight (%)"] += Amount
-
-
-    Count = 0
     Ratios = [0.1, 0.15, 0.15, 0.2, 0.1, 0.1, 0.2]
-    Left_Overs = 1 - Amount
-    for i in range (len(df)):
-        if i == Row:
-            Count +=1
-        else:
-            df.loc[i, "Weight (%)"] -= Amount*Ratios[i]
+    sum_others = 1 - Ratios[Row]
+
+    # Decrease other categories proportionally
+    for i in range(len(df)):
+        if i != Row:
+            Cat_Other = df.index[i]
+            decrease = Amount * (Ratios[i] / sum_others)
+            df.loc[Cat_Other, "Weight (%)"] -= decrease
+
 
 
     # Compute weighted total score 
@@ -166,7 +161,7 @@ def Compare_Equal():
 
 
 
-    return Amount, Row
+    return POST_Totals, Amount, Row
 
 
 
@@ -177,21 +172,25 @@ Amount_Array = []
 Row_Array = []
 Difference_Winnings = []
 Wins = [0,0,0,0]
+Runs = 10000
+Equal = False
 
-for i in range(10000):
-    Post, Amount, Row1, Row2 = Compare()
+for i in range(Runs):
 
-    if max(Post) >= 1:
-        print("PAST 100 ERROR")
-        break
+    if Equal:
+        Post, Amount, Row = Compare_Equal()
+        Amount_Array.append(Amount)
+        Row_Array.append(Row)
+    else:
+        Post, Amount, Row1, Row2 = Compare()
+        Amount_Array.append(Amount)
+        Row_Array.append(Row1)
+        Row_Array.append(Row2)
 
-    max_index = int(Post.index(max(Post)))#yes I know this is very bad code, but my brain is fried
+
+
+    max_index = int(Post.index(max(Post)))
     Wins[max_index] = Wins[max_index] +1 
-
-
-    Amount_Array.append(Amount)
-    Row_Array.append(Row1)
-    Row_Array.append(Row2)
 
 
     # Sort in descending order and take the top two
@@ -201,13 +200,9 @@ for i in range(10000):
 
 
 
-
-
 print("-----------------------------------------")
 print(Wins)
 print("-----------------------------------------")
-
-
 
 
 #Plotting
@@ -235,7 +230,7 @@ plt.show()
 
 
 Vals_Dif, Counts_Dif = np.unique(Difference_Winnings, return_counts=True)
-Counts_Dif = Counts_Dif/10000
+#Counts_Dif = Counts_Dif/Runs
 plt.bar(Vals_Dif, Counts_Dif, width=0.005)
 plt.xlabel('Rounded Values')
 plt.ylabel('Frequency')
