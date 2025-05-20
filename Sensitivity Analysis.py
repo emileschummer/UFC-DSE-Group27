@@ -105,16 +105,80 @@ def Compare():
 
 
 
+def Compare_Equal():
+    #resetting the table
+    data = {
+        "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
+        "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
+        "Helicopter": [0.10, 0.22, 0.65, 0.37, 0.34, 0.10, 0.22],
+        "Quadcopter": [0.10, 1, 1, 0.37, 0.70, 0.75, 0.37],
+        "Osprey": [0.50, 0.38, 0.52, 0.83, 0.75, 1, 0.38],
+        "Yangda": [0.75, 0.75, 0.65, 1, 0.90, 1, 0.58],
+    }
+    #global df
+    df = pd.DataFrame(data)
+    df.set_index("Criteria", inplace=True)
+
+
+    #Seperating
+    Pre_weights = df["Weight (%)"].copy()
+    Heli = df["Helicopter"].copy()
+    Quad = df["Quadcopter"].copy()
+    Tiltrotor = df["Osprey"].copy()
+    Yangda = df["Yangda"].copy()
+
+
+    # Compute weighted total score 
+    PRE_Heli_total = (Heli*Pre_weights).sum()
+    PRE_Quad_total = (Quad * Pre_weights).sum()
+    PRE_Tilt_total = (Tiltrotor*Pre_weights).sum()
+    PRE_Yangda_total = (Yangda*Pre_weights).sum()
+    PRE_Totals = [PRE_Heli_total,PRE_Quad_total,PRE_Tilt_total,PRE_Yangda_total]
+
+
+    # Choose a random amount to vary
+    Amount = random.choice([round(i * 0.01, 2) for i in range(1, 11)])
+    Row = random.sample(range(len(df)), 1)[0]
+
+
+    #Doing Maths
+    Cat = df.index[Row]
+    df.loc[Cat, "Weight (%)"] += Amount
+
+
+    Count = 0
+    Ratios = [0.1, 0.15, 0.15, 0.2, 0.1, 0.1, 0.2]
+    Left_Overs = 1 - Amount
+    for i in range (len(df)):
+        if i == Row:
+            Count +=1
+        else:
+            df.loc[i, "Weight (%)"] -= Amount*Ratios[i]
+
+
+    # Compute weighted total score 
+    Post_weights = df["Weight (%)"]
+    POST_Heli_total = (Heli*Post_weights).sum()
+    POST_Quad_total = (Quad *Post_weights ).sum()
+    POST_Tilt_total = (Tiltrotor*Post_weights).sum()
+    POST_Yangda_total = (Yangda*Post_weights).sum()
+    POST_Totals = [POST_Heli_total,POST_Quad_total,POST_Tilt_total,POST_Yangda_total]
+
+
+
+    return Amount, Row
+
+
+
+
+
 #MAIN - I guess
-Heli_Wins = 0
-Quad_Wins = 0
-Tilt_Wins = 0
-Yangda_Wins = 0
 Amount_Array = []
 Row_Array = []
 Difference_Winnings = []
+Wins = [0,0,0,0]
 
-for i in range(10000):
+for i in range(1000):
     Post, Amount, Row1, Row2 = Compare()
 
     if max(Post) >= 1:
@@ -122,16 +186,8 @@ for i in range(10000):
         break
 
     max_index = int(Post.index(max(Post)))#yes I know this is very bad code, but my brain is fried
-    if max_index == 0:
-        Heli_Wins +=1
-    elif max_index == 1:
-        Quad_Wins +=1
-    elif max_index == 2:
-        Tilt_Wins +=1
-    elif max_index == 3:
-        Yangda_Wins +=1
-    else:
-        print(max_index)
+    Wins[max_index] = Wins[max_index] +1 
+
 
     Amount_Array.append(Amount)
     Row_Array.append(Row1)
@@ -148,16 +204,15 @@ for i in range(10000):
 
 
 print("-----------------------------------------")
-print(Heli_Wins,Quad_Wins,Tilt_Wins,Yangda_Wins)
+print(Wins)
 print("-----------------------------------------")
 
 
 
 
-# Sorting the Amounts Data
+#Plotting
 Vals_Amounts, Counts_Amount = np.unique(Amount_Array, return_counts=True)
 
-# Plotting Amounts as a bar chart
 plt.bar(Vals_Amounts, Counts_Amount, width=0.005)
 plt.xlabel('Rounded Values')
 plt.ylabel('Frequency')
@@ -167,10 +222,8 @@ plt.show()
 
 
 
-# Count the frequency of each integer from 0 to 6
 Rows_Vals, counts_Rows = np.unique(Row_Array, return_counts=True)
 
-# Plot bar chart
 plt.bar(Rows_Vals, counts_Rows)
 plt.xticks(Rows_Vals)  # Ensure x-axis shows 0 to 6
 plt.xlabel('Integer Values')
@@ -181,10 +234,8 @@ plt.show()
 
 
 
-# Sorting the Amounts Data
 Vals_Dif, Counts_Dif = np.unique(Difference_Winnings, return_counts=True)
 
-# Plotting Amounts as a bar chart
 plt.bar(Vals_Dif, Counts_Dif, width=0.005)
 plt.xlabel('Rounded Values')
 plt.ylabel('Frequency')
