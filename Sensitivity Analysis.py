@@ -167,8 +167,12 @@ def Compare_Equal():#proportional decrease method
 
 
 #MAIN - I guess
-Runs = 100000 #Recommend 10k
-Equal = True #Change for 2 category or equal Method
+Runs = 10000 #Recommend 10k
+Equal = True  #Change for 2 category or equal Method
+if Equal:
+    print("\nEqual Variation method used")
+else:
+    print("\n2 Category method used")
 
 
 Amount_Array = []
