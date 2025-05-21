@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 data = {
     "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
     "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
-    "Helicopter": [0.10, 0.22, 0.65, 0.30, 0.34, 0.10, 0.22],
+    "Helicopter": [0.10, 0.22, 0.75, 0.30, 0.34, 0.10, 0.22],
     "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.45],
     "Osprey": [0.50, 0.38, 0.52, 0.68, 0.75, 1, 0.48],
     "Yangda": [0.75, 0.75, 0.65, 0.68, 0.90, 1, 0.68],
@@ -25,11 +25,12 @@ def Compare(): #2 category method
     data = {
         "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
         "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
-        "Helicopter": [0.10, 0.22, 0.65, 0.30, 0.34, 0.10, 0.22],
+        "Helicopter": [0.10, 0.22, 0.75, 0.30, 0.34, 0.10, 0.22],
         "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.45],
         "Osprey": [0.50, 0.38, 0.52, 0.68, 0.75, 1, 0.48],
         "Yangda": [0.75, 0.75, 0.65, 0.68, 0.90, 1, 0.68],
     }
+
     df = pd.DataFrame(data)
     df.set_index("Criteria", inplace=True)
 
@@ -209,9 +210,9 @@ print("-----------------------------------------")
 Vals_Amounts, Counts_Amount = np.unique(Amount_Array, return_counts=True)
 
 plt.bar(Vals_Amounts, Counts_Amount, width=0.005)
-plt.xlabel('Rounded Values')
-plt.ylabel('Frequency')
-plt.title('Distribution of Rounded Random Values (0.01 to 0.1)')
+plt.xlabel('Weighting change ')
+plt.ylabel('Frequency of Occurance')
+plt.title('Distribution of Random Changed Weight Values (0.01 to 0.1)')
 plt.grid(axis='y')
 plt.show()
 
@@ -221,9 +222,9 @@ Rows_Vals, counts_Rows = np.unique(Row_Array, return_counts=True)
 
 plt.bar(Rows_Vals, counts_Rows)
 plt.xticks(Rows_Vals) 
-plt.xlabel('Integer Values')
-plt.ylabel('Frequency')
-plt.title('Distribution of Random Integers (0 to 6)')
+plt.xlabel('Categories Changed')
+plt.ylabel('Frequency of Occurance')
+plt.title('Distribution of Changed Weight Categories')
 plt.grid(axis='y')
 plt.show()
 
@@ -232,8 +233,8 @@ plt.show()
 Vals_Dif, Counts_Dif = np.unique(Difference_Winnings, return_counts=True)
 #Counts_Dif = Counts_Dif/Runs
 plt.bar(Vals_Dif, Counts_Dif, width=0.005)
-plt.xlabel('Rounded Values')
-plt.ylabel('Frequency')
-plt.title('Distribution of Different Vals')
+plt.xlabel('Difference Value')
+plt.ylabel('Frequency of Occurance')
+plt.title('Difference Between First and Second Designs')
 plt.grid(axis='y')
 plt.show()
