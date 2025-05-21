@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 data = {
     "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
     "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
-    "Helicopter": [0.10, 0.22, 0.65, 0.37, 0.34, 0.10, 0.22],
-    "Quadcopter": [0.10, 1, 1, 0.37, 0.70, 0.75, 0.37],
-    "Osprey": [0.50, 0.38, 0.52, 0.83, 0.75, 1, 0.38],
-    "Yangda": [0.75, 0.75, 0.65, 1, 0.90, 1, 0.58],
+    "Helicopter": [0.10, 0.22, 0.65, 0.30, 0.34, 0.10, 0.22],
+    "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.45],
+    "Osprey": [0.50, 0.38, 0.52, 0.68, 0.75, 1, 0.48],
+    "Yangda": [0.75, 0.75, 0.65, 0.68, 0.90, 1, 0.68],
 }
 
 df = pd.DataFrame(data).set_index("Criteria")
@@ -21,14 +21,14 @@ print(df)
 
 
 def Compare(): #2 category method
-    #resetting the table each time
+        #resetting the table each time
     data = {
         "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
         "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
-        "Helicopter": [0.10, 0.22, 0.65, 0.37, 0.34, 0.10, 0.22],
-        "Quadcopter": [0.10, 1, 1, 0.37, 0.70, 0.75, 0.37],
-        "Osprey": [0.50, 0.38, 0.52, 0.83, 0.75, 1, 0.38],
-        "Yangda": [0.75, 0.75, 0.65, 1, 0.90, 1, 0.58],
+        "Helicopter": [0.10, 0.22, 0.65, 0.30, 0.34, 0.10, 0.22],
+        "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.45],
+        "Osprey": [0.50, 0.38, 0.52, 0.68, 0.75, 1, 0.48],
+        "Yangda": [0.75, 0.75, 0.65, 0.68, 0.90, 1, 0.68],
     }
     df = pd.DataFrame(data)
     df.set_index("Criteria", inplace=True)
@@ -103,10 +103,10 @@ def Compare_Equal():#proportional decrease method
     data = {
         "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
         "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
-        "Helicopter": [0.10, 0.22, 0.65, 0.37, 0.34, 0.10, 0.22],
-        "Quadcopter": [0.10, 1, 1, 0.37, 0.70, 0.75, 0.37],
-        "Osprey": [0.50, 0.38, 0.52, 0.83, 0.75, 1, 0.38],
-        "Yangda": [0.75, 0.75, 0.65, 1, 0.90, 1, 0.58],
+        "Helicopter": [0.10, 0.22, 0.65, 0.30, 0.34, 0.10, 0.22],
+        "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.37],
+        "Osprey": [0.50, 0.38, 0.68, 0.83, 0.75, 1, 0.38],
+        "Yangda": [0.75, 0.75, 0.68, 1, 0.90, 1, 0.58],
     }
 
     df = pd.DataFrame(data)
@@ -166,8 +166,8 @@ def Compare_Equal():#proportional decrease method
 
 
 #MAIN - I guess
-Runs = 1000 #Recommend 10k
-Equal = True #Change for 2 category or equal Method
+Runs = 10000 #Recommend 10k
+Equal = False #Change for 2 category or equal Method
 
 
 Amount_Array = []
