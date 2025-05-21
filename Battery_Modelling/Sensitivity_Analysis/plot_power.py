@@ -74,6 +74,7 @@ def get_race_results(folder,battery_capacity=2250, iterations=100, variance=0.1)
         race_results = {}
         race_times = {}
         max_energies = [0, 0, 0, 0]
+        av_energies = [0,0,0,0]
         
         for race_name, race_data in races.items():
             file.write(f"\n\n---------{race_name}------------------------------------------------------\n")
@@ -137,17 +138,25 @@ def get_race_results(folder,battery_capacity=2250, iterations=100, variance=0.1)
                 file.write(f"\n---------UFC-MMA-{k+1}---------\n")
                 max_energy = max(race_results[race_name][k])
                 max_energy_7_hour_race = max_energy/ (race_times[race_name]/3600)*7
+                av_energy = np.mean(race_results[race_name][k])/ (race_times[race_name]/3600)*7
                 if max_energy_7_hour_race > max_energies[k]:
                     max_energies[k] = max_energy_7_hour_race
+                if av_energy > av_energies[k]:
+                    av_energies[k] = av_energy  
                 file.write(f"Average energy consumption through iterations: {np.mean(race_results[race_name][k])} Wh\n")
+                file.write(f"Average energy consumption through iterations for a 7h race: {av_energy} Wh/7h\n")
                 file.write(f"Maximum energy consumption through iterations: {max_energy} Wh\n")
-                file.write(f"Maximum energy consumption through iterations for a 7h race: {max_energy_7_hour_race} Wh/7h")
+                file.write(f"Maximum energy consumption through iterations for a 7h race: {max_energy_7_hour_race} Wh/7h\n")
                 
         file.write("\n\n------------------------------------------------------------------------------------\n")
         file.write("---------Summary--------------------------------------------------------------------\n")
         for l in range(4):
             file.write(f"---------UFC-MMA-{l+1}---------\n")
             file.write(f"Maximum energy consumption for a 7h race: {max_energies[l]} Wh/7h\n")
-            file.write(f"Endurance: {round(battery_capacity/(max_energies[l]/7), 2)}h\n")
-            file.write(f"Relay points required for 7h of filming ({battery_capacity}Wh per drone): {ceil(max_energies[l]/battery_capacity)-1}\n")
+            file.write(f"Endurance based on maximum: {round(battery_capacity/(max_energies[l]/7), 2)}h\n")
+            file.write(f"Relay points required for 7h of filming ({battery_capacity}Wh per drone) based on maximum: {ceil(max_energies[l]/battery_capacity)-1}\n")
+            file.write(f"Average energy consumption through iterations for a 7h race: {av_energies[l]} Wh/7h\n")
+            file.write(f"Endurance based on average: {round(battery_capacity/(av_energies[l]/7), 2)}h\n")
+            file.write(f"Relay points required for 7h of filming ({battery_capacity}Wh per drone) based on average: {ceil(av_energies[l]/battery_capacity)-1}\n")
+            
     print("\n Done")
