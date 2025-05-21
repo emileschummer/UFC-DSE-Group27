@@ -167,8 +167,8 @@ def Compare_Equal():#proportional decrease method
 
 
 #MAIN - I guess
-Runs = 10000 #Recommend 10k
-Equal = False #Change for 2 category or equal Method
+Runs = 100000 #Recommend 10k
+Equal = True #Change for 2 category or equal Method
 
 
 Amount_Array = []
