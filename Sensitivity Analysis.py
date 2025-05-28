@@ -9,9 +9,9 @@ data = {
     "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
     "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
     "Helicopter": [0.10, 0.22, 0.75, 0.30, 0.34, 0.10, 0.22],
-    "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.45],
-    "Osprey": [0.50, 0.38, 0.52, 0.68, 0.75, 1, 0.48],
-    "Yangda": [0.75, 0.75, 0.65, 0.68, 0.90, 1, 0.68],
+    "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.65],
+    "Osprey": [0.50, 0.38, 0.52, 0.68, 0.75, 1, 0.61],
+    "Yangda": [0.75, 0.75, 0.65, 0.68, 0.90, 1, 0.80],
 }
 
 df = pd.DataFrame(data).set_index("Criteria")
@@ -26,9 +26,9 @@ def Compare(): #2 category method
         "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
         "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
         "Helicopter": [0.10, 0.22, 0.75, 0.30, 0.34, 0.10, 0.22],
-        "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.45],
-        "Osprey": [0.50, 0.38, 0.52, 0.68, 0.75, 1, 0.48],
-        "Yangda": [0.75, 0.75, 0.65, 0.68, 0.90, 1, 0.68],
+        "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.65],
+        "Osprey": [0.50, 0.38, 0.52, 0.68, 0.75, 1, 0.61],
+        "Yangda": [0.75, 0.75, 0.65, 0.68, 0.90, 1, 0.80],
     }
 
     df = pd.DataFrame(data)
@@ -94,7 +94,7 @@ def Compare(): #2 category method
     # print(Pre_weights, Post_weights)
 
     #print("\n The sum of the weights is:",sum(df["Weight (%)"]))
-
+    print(df)
     return POST_Totals, Amount, Row1, Row2
 
 
@@ -159,7 +159,7 @@ def Compare_Equal():#proportional decrease method
     POST_Totals = [POST_Heli_total,POST_Quad_total,POST_Tilt_total,POST_Yangda_total]
 
 
-
+    print(df)
     return POST_Totals, Amount, Row
 
 
@@ -167,7 +167,7 @@ def Compare_Equal():#proportional decrease method
 
 
 #MAIN - I guess
-Runs = 10000 #Recommend 10k
+Runs = 2 #Recommend 10k
 Equal = True  #Change for 2 category or equal Method
 if Equal:
     print("\nEqual Variation method used")
