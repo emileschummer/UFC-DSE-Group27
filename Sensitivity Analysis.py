@@ -59,6 +59,7 @@ def Compare(): #2 category method
     # Randomly pick two different row Categories
     Row1, Row2 = random.sample(range(len(df)), 2)
 
+
     # Get the actual row labels 
     Cat1 = df.index[Row1]
     Cat2 = df.index[Row2]
@@ -94,7 +95,7 @@ def Compare(): #2 category method
     # print(Pre_weights, Post_weights)
 
     #print("\n The sum of the weights is:",sum(df["Weight (%)"]))
-    print(df)
+
     return POST_Totals, Amount, Row1, Row2
 
 
@@ -134,7 +135,9 @@ def Compare_Equal():#proportional decrease method
     Amount = random.choice([round(i * 0.01, 2) for i in range(1, 11)])
     Row = random.sample(range(len(df)), 1)[0]
 
+
     #increasing the chosen one 
+
     Cat_Main = df.index[Row]
     df.loc[Cat_Main, "Weight (%)"] += Amount
 
@@ -159,7 +162,7 @@ def Compare_Equal():#proportional decrease method
     POST_Totals = [POST_Heli_total,POST_Quad_total,POST_Tilt_total,POST_Yangda_total]
 
 
-    print(df)
+
     return POST_Totals, Amount, Row
 
 
@@ -167,8 +170,8 @@ def Compare_Equal():#proportional decrease method
 
 
 #MAIN - I guess
-Runs = 2 #Recommend 10k
-Equal = True  #Change for 2 category or equal Method
+Runs = 10000 #Recommend 10k
+Equal = False  #Change for 2 category or equal Method
 if Equal:
     print("\nEqual Variation method used")
 else:
@@ -179,6 +182,8 @@ Amount_Array = []
 Row_Array = []
 Difference_Winnings = []
 Wins = [0,0,0,0]
+WinRow = [0,0,0,0,0,0,0]
+loseRow = [0,0,0,0,0,0,0]
 
 for i in range(Runs):
 
@@ -186,17 +191,19 @@ for i in range(Runs):
         Post, Amount, Row = Compare_Equal()
         Amount_Array.append(Amount)
         Row_Array.append(Row)
+
     else:
         Post, Amount, Row1, Row2 = Compare()
         Amount_Array.append(Amount)
-        Row_Array.append(Row1)
-        Row_Array.append(Row2)
 
 
-
+    #Finding the winning Numbers
     max_index = int(Post.index(max(Post)))
     Wins[max_index] = Wins[max_index] +1 
-
+    if max_index != 3:
+        WinRow[Row1] +=1
+        loseRow[Row2] +=1
+    
 
     # Sort in descending order and take the top two for difference 
     top_two = sorted(Post, reverse=True)[:2]
@@ -206,31 +213,34 @@ for i in range(Runs):
 
 
 print("-----------------------------------------")
-print(Wins)
+print("Wins:", Wins)
+print("-----------------------------------------")
+print("winning Row:", WinRow)
+print("Losing Row:", loseRow)
 print("-----------------------------------------")
 
 
 #Plotting for bias
-Vals_Amounts, Counts_Amount = np.unique(Amount_Array, return_counts=True)
+# Vals_Amounts, Counts_Amount = np.unique(Amount_Array, return_counts=True)
 
-plt.bar(Vals_Amounts, Counts_Amount, width=0.005)
-plt.xlabel('Weighting change ')
-plt.ylabel('Frequency of Occurance')
-plt.title('Distribution of Random Changed Weight Values (0.01 to 0.1)')
-plt.grid(axis='y')
-plt.show()
+# plt.bar(Vals_Amounts, Counts_Amount, width=0.005)
+# plt.xlabel('Weighting change ')
+# plt.ylabel('Frequency of Occurance')
+# plt.title('Distribution of Random Changed Weight Values (0.01 to 0.1)')
+# plt.grid(axis='y')
+# plt.show()
 
 
 
-Rows_Vals, counts_Rows = np.unique(Row_Array, return_counts=True)
+# Rows_Vals, counts_Rows = np.unique(Row_Array, return_counts=True)
 
-plt.bar(Rows_Vals, counts_Rows)
-plt.xticks(Rows_Vals) 
-plt.xlabel('Categories Changed')
-plt.ylabel('Frequency of Occurance')
-plt.title('Distribution of Changed Weight Categories')
-plt.grid(axis='y')
-plt.show()
+# plt.bar(Rows_Vals, counts_Rows)
+# plt.xticks(Rows_Vals) 
+# plt.xlabel('Categories Changed')
+# plt.ylabel('Frequency of Occurance')
+# plt.title('Distribution of Changed Weight Categories')
+# plt.grid(axis='y')
+# plt.show()
 
 
 #Plotting the data we want for the report
