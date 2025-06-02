@@ -170,8 +170,8 @@ def Compare_Equal():#proportional decrease method
 
 
 #MAIN - I guess
-Runs = 10000 #Recommend 10k
-Equal = False  #Change for 2 category or equal Method
+Runs = 100000 #Recommend 10k
+Equal = True  #Change for 2 category or equal Method
 if Equal:
     print("\nEqual Variation method used")
 else:
@@ -243,12 +243,34 @@ print("-----------------------------------------")
 # plt.show()
 
 
-#Plotting the data we want for the report
-Vals_Dif, Counts_Dif = np.unique(Difference_Winnings, return_counts=True)
-#Counts_Dif = Counts_Dif/Runs
-plt.bar(Vals_Dif, Counts_Dif, width=0.005)
+# #Plotting the data we want for the report
+# Vals_Dif, Counts_Dif = np.unique(Difference_Winnings, return_counts=True)
+# #Counts_Dif = Counts_Dif/Runs
+# plt.bar(Vals_Dif, Counts_Dif, width=0.005)
+# plt.xlabel('Difference Value')
+# plt.ylabel('Frequency of Occurance')
+# plt.title('Difference Between First and Second Designs')
+# plt.grid(axis='y')
+# plt.show()
+
+
+# Convert list to NumPy array if needed
+Difference_Winnings = np.array(Difference_Winnings, dtype=np.float64)
+
+# Round to nearest 0.005
+Rounded_diff = np.round(Difference_Winnings / 0.005) * 0.005
+
+# Define bins aligned to the 0.005 grid
+bin_min = np.floor(Rounded_diff.min() / 0.005) * 0.005
+bin_max = np.ceil(Rounded_diff.max() / 0.005) * 0.005
+bins = np.arange(bin_min, bin_max + 0.005, 0.005)
+
+# Plot histogram with custom bins
+plt.figure(figsize=(14, 6))
+plt.hist(Rounded_diff, bins=bins, edgecolor='black', align='mid')
 plt.xlabel('Difference Value')
 plt.ylabel('Frequency of Occurance')
 plt.title('Difference Between First and Second Designs')
-plt.grid(axis='y')
+plt.grid(True)
+plt.tight_layout()
 plt.show()
