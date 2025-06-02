@@ -18,42 +18,50 @@ from Battery_Modelling.Input import Configuration_inputs as config
 from Battery_Modelling.Input import Strava_input_csv as sva
 
 
-def plot_power_vs_velocity_sensitivity(folder,slope=0, iterations = 100, variance = 0.1, show = False):
+def plot_power_vs_velocity_sensitivity(folder, slope=0, iterations=100, variance=0.1, show=False):
     print(f"---------Plot Power vs Velocity---------")
     velocity = np.linspace(0,40,1000)
     slope *= np.pi / 180
     V_stall = (config.inputs_list_original[2][8]+config.inputs_list_original[3][9])/2 # Average stall speed of both fixed wings
     inputs_list_original = config.inputs_list_original
+    
+    # Create arrays to store all iterations
+    all_results = [np.zeros((iterations, len(velocity))) for _ in range(4)]
+    
+    # Calculate power for each iteration
     for i in range(iterations):
         inputs_list = []
         for inputs in inputs_list_original:
             modified_inputs = [value * (1 + np.random.uniform(-variance, variance)) for value in inputs]
             inputs_list.append(modified_inputs)
-        T = [[], [], [], []]
-        for v in velocity:
-            T1 = calculate_power_UFC_MMA_1(slope, v, 1.225, inputs_list[0])
-            T2 = calculate_power_UFC_MMA_2(slope, v, 1.225, inputs_list[1])
-            T3 = calculate_power_UFC_MMA_3(slope, v, 1.225, inputs_list[2])
-            T4 = calculate_power_UFC_MMA_4(slope, v, 1.225, inputs_list[3])
-            T[0].append(T1)
-            T[1].append(T2)
-            T[2].append(T3)
-            T[3].append(T4)
-        if i == 0:
-            plt.axvline(x=V_stall, color='black', linestyle='--', label=f'Stall Speed ({V_stall:.2f} m/s)')
-            plt.plot(velocity, T[0], label='Helicopter', color='blue')
-            plt.plot(velocity, T[1], label='Quadcopter', color='orange')
-            plt.plot(velocity, T[2], label='Osprey', color='green')
-            plt.plot(velocity, T[3], label='Yangda', color='red')
-        plt.plot(velocity, T[0], color='blue')
-        plt.plot(velocity, T[1], color='orange')
-        plt.plot(velocity, T[2], color='green')
-        plt.plot(velocity, T[3], color='red')
+            
+        for j, v in enumerate(velocity):
+            all_results[0][i][j] = calculate_power_UFC_MMA_1(slope, v, 1.225, inputs_list[0])
+            all_results[1][i][j] = calculate_power_UFC_MMA_2(slope, v, 1.225, inputs_list[1])
+            all_results[2][i][j] = calculate_power_UFC_MMA_3(slope, v, 1.225, inputs_list[2])
+            all_results[3][i][j] = calculate_power_UFC_MMA_4(slope, v, 1.225, inputs_list[3])
+    
+    # Plot results
+    colors = ['blue', 'orange', 'green', 'red']
+    labels = ['Helicopter', 'Quadcopter', 'Osprey', 'Yangda']
+    
+    plt.axvline(x=V_stall, color='black', linestyle='--', label=f'Stall Speed ({V_stall:.2f} m/s)')
+    
+    for i in range(4):
+        mean = np.mean(all_results[i], axis=0)
+        std = np.std(all_results[i], axis=0)
+        
+        plt.fill_between(velocity, mean - std, mean + std, color=colors[i], alpha=0.2)
+        plt.plot(velocity, mean, label=labels[i], color=colors[i], linewidth=2)
+    
     plt.legend()
+    plt.xlabel('Velocity [m/s]')
+    plt.ylabel('Power [W]')
+    
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = os.path.join(folder, f"Power_vs_velocity_sensitivity_at_{slope}_slope_{timestamp}.png")
     plt.savefig(output_path)
-    if show:  
+    if show:
         print("Close plot to continue")
         plt.show()
     plt.close()
