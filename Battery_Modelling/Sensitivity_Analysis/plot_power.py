@@ -49,6 +49,8 @@ def plot_power_vs_velocity_sensitivity(folder,slope=0, iterations = 100, varianc
         plt.plot(velocity, T[1], color='orange')
         plt.plot(velocity, T[2], color='green')
         plt.plot(velocity, T[3], color='red')
+        plt.xlabel('Velocity (m/s)')
+        plt.ylabel('Power (W)')
     plt.legend()
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = os.path.join(folder, f"Power_vs_velocity_sensitivity_at_{slope}_slope_{timestamp}.png")

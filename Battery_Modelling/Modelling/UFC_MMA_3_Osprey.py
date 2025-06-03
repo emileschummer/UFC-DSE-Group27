@@ -36,8 +36,7 @@ def calculate_power_UFC_MMA_3(incline, V, rho, inputs):
         #Calculate Total Powers
         P_induced = vi * T * inputs[15]
         P_parasite = D_parasite * V #normal thrust of an aircraft
-        P_profile = (inputs[10]*inputs[11]*rho*inputs[12]*inputs[13]**3*inputs[6]**4*(1+3*(V/(inputs[13]*inputs[6]))**2))/8
+        P_profile = (inputs[10]*inputs[11]*rho*inputs[12]*inputs[13]**3*inputs[6]**4*(1+3*(V/(inputs[13]*inputs[6]))**2))/8 * inputs[15]
         P = (P_induced + P_parasite + P_profile) / inputs[1]
-        P = (P_induced + P_parasite) / inputs[1]
     return P
 
