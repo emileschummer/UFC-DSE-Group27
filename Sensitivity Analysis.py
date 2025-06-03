@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 data = {
     "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
     "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
-    "Helicopter": [0.10, 0.22, 0.65, 0.37, 0.34, 0.10, 0.22],
-    "Quadcopter": [0.10, 1, 1, 0.37, 0.70, 0.75, 0.37],
-    "Osprey": [0.50, 0.38, 0.52, 0.83, 0.75, 1, 0.38],
-    "Yangda": [0.75, 0.75, 0.65, 1, 0.90, 1, 0.58],
+    "Helicopter": [0.10, 0.22, 0.75, 0.30, 0.34, 0.10, 0.22],
+    "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.65],
+    "Osprey": [0.50, 0.38, 0.52, 0.68, 0.75, 1, 0.61],
+    "Yangda": [0.75, 0.75, 0.65, 0.68, 0.90, 1, 0.80],
 }
 
 df = pd.DataFrame(data).set_index("Criteria")
@@ -21,15 +21,16 @@ print(df)
 
 
 def Compare(): #2 category method
-    #resetting the table each time
+        #resetting the table each time
     data = {
         "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
         "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
-        "Helicopter": [0.10, 0.22, 0.65, 0.37, 0.34, 0.10, 0.22],
-        "Quadcopter": [0.10, 1, 1, 0.37, 0.70, 0.75, 0.37],
-        "Osprey": [0.50, 0.38, 0.52, 0.83, 0.75, 1, 0.38],
-        "Yangda": [0.75, 0.75, 0.65, 1, 0.90, 1, 0.58],
+        "Helicopter": [0.10, 0.22, 0.75, 0.30, 0.34, 0.10, 0.22],
+        "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.65],
+        "Osprey": [0.50, 0.38, 0.52, 0.68, 0.75, 1, 0.61],
+        "Yangda": [0.75, 0.75, 0.65, 0.68, 0.90, 1, 0.80],
     }
+
     df = pd.DataFrame(data)
     df.set_index("Criteria", inplace=True)
 
@@ -57,6 +58,7 @@ def Compare(): #2 category method
 
     # Randomly pick two different row Categories
     Row1, Row2 = random.sample(range(len(df)), 2)
+
 
     # Get the actual row labels 
     Cat1 = df.index[Row1]
@@ -103,10 +105,10 @@ def Compare_Equal():#proportional decrease method
     data = {
         "Criteria": ["Endurance", "Complexity", "Quality", "Cost", "Safety", "Noise", "Sustainability"],
         "Weight (%)": [0.10, 0.15, 0.15, 0.20, 0.10, 0.10, 0.20],
-        "Helicopter": [0.10, 0.22, 0.65, 0.37, 0.34, 0.10, 0.22],
-        "Quadcopter": [0.10, 1, 1, 0.37, 0.70, 0.75, 0.37],
-        "Osprey": [0.50, 0.38, 0.52, 0.83, 0.75, 1, 0.38],
-        "Yangda": [0.75, 0.75, 0.65, 1, 0.90, 1, 0.58],
+        "Helicopter": [0.10, 0.22, 0.65, 0.30, 0.34, 0.10, 0.22],
+        "Quadcopter": [0.10, 1, 1, 0.65, 0.70, 0.75, 0.37],
+        "Osprey": [0.50, 0.38, 0.68, 0.83, 0.75, 1, 0.38],
+        "Yangda": [0.75, 0.75, 0.68, 1, 0.90, 1, 0.58],
     }
 
     df = pd.DataFrame(data)
@@ -133,7 +135,9 @@ def Compare_Equal():#proportional decrease method
     Amount = random.choice([round(i * 0.01, 2) for i in range(1, 11)])
     Row = random.sample(range(len(df)), 1)[0]
 
+
     #increasing the chosen one 
+
     Cat_Main = df.index[Row]
     df.loc[Cat_Main, "Weight (%)"] += Amount
 
@@ -166,14 +170,20 @@ def Compare_Equal():#proportional decrease method
 
 
 #MAIN - I guess
-Runs = 1000 #Recommend 10k
-Equal = True #Change for 2 category or equal Method
+Runs = 100000 #Recommend 10k
+Equal = True  #Change for 2 category or equal Method
+if Equal:
+    print("\nEqual Variation method used")
+else:
+    print("\n2 Category method used")
 
 
 Amount_Array = []
 Row_Array = []
 Difference_Winnings = []
 Wins = [0,0,0,0]
+WinRow = [0,0,0,0,0,0,0]
+loseRow = [0,0,0,0,0,0,0]
 
 for i in range(Runs):
 
@@ -181,17 +191,19 @@ for i in range(Runs):
         Post, Amount, Row = Compare_Equal()
         Amount_Array.append(Amount)
         Row_Array.append(Row)
+
     else:
         Post, Amount, Row1, Row2 = Compare()
         Amount_Array.append(Amount)
-        Row_Array.append(Row1)
-        Row_Array.append(Row2)
 
 
-
+    #Finding the winning Numbers
     max_index = int(Post.index(max(Post)))
     Wins[max_index] = Wins[max_index] +1 
-
+    if max_index != 3:
+        WinRow[Row1] +=1
+        loseRow[Row2] +=1
+    
 
     # Sort in descending order and take the top two for difference 
     top_two = sorted(Post, reverse=True)[:2]
@@ -201,39 +213,65 @@ for i in range(Runs):
 
 
 print("-----------------------------------------")
-print(Wins)
+print("Wins:", Wins)
+print("-----------------------------------------")
+print("winning Row:", WinRow)
+print("Losing Row:", loseRow)
 print("-----------------------------------------")
 
 
 #Plotting for bias
-Vals_Amounts, Counts_Amount = np.unique(Amount_Array, return_counts=True)
+# Vals_Amounts, Counts_Amount = np.unique(Amount_Array, return_counts=True)
 
-plt.bar(Vals_Amounts, Counts_Amount, width=0.005)
-plt.xlabel('Rounded Values')
-plt.ylabel('Frequency')
-plt.title('Distribution of Rounded Random Values (0.01 to 0.1)')
-plt.grid(axis='y')
+# plt.bar(Vals_Amounts, Counts_Amount, width=0.005)
+# plt.xlabel('Weighting change ')
+# plt.ylabel('Frequency of Occurance')
+# plt.title('Distribution of Random Changed Weight Values (0.01 to 0.1)')
+# plt.grid(axis='y')
+# plt.show()
+
+
+
+# Rows_Vals, counts_Rows = np.unique(Row_Array, return_counts=True)
+
+# plt.bar(Rows_Vals, counts_Rows)
+# plt.xticks(Rows_Vals) 
+# plt.xlabel('Categories Changed')
+# plt.ylabel('Frequency of Occurance')
+# plt.title('Distribution of Changed Weight Categories')
+# plt.grid(axis='y')
+# plt.show()
+
+
+# #Plotting the data we want for the report
+# Vals_Dif, Counts_Dif = np.unique(Difference_Winnings, return_counts=True)
+# #Counts_Dif = Counts_Dif/Runs
+# plt.bar(Vals_Dif, Counts_Dif, width=0.005)
+# plt.xlabel('Difference Value')
+# plt.ylabel('Frequency of Occurance')
+# plt.title('Difference Between First and Second Designs')
+# plt.grid(axis='y')
+# plt.show()
+
+
+# Convert list to NumPy array if needed
+Difference_Winnings = np.array(Difference_Winnings, dtype=np.float64)
+
+# Round to nearest 0.005
+Rounded_diff = np.round(Difference_Winnings / 0.005) * 0.005
+
+# Define bins aligned to the 0.005 grid
+bin_min = np.floor(Rounded_diff.min() / 0.005) * 0.005
+bin_max = np.ceil(Rounded_diff.max() / 0.005) * 0.005
+bins = np.arange(bin_min, bin_max + 0.005, 0.005)
+
+# Plot histogram with custom bins
+plt.figure(figsize=(14, 6))
+plt.hist(Rounded_diff, bins=bins, edgecolor='black', align='mid')
+plt.xlabel('Difference Value')
+plt.ylabel('Frequency of Occurance')
+plt.title('Difference Between First and Second Designs')
+plt.grid(True)
+plt.tight_layout()
 plt.show()
 
-
-
-Rows_Vals, counts_Rows = np.unique(Row_Array, return_counts=True)
-
-plt.bar(Rows_Vals, counts_Rows)
-plt.xticks(Rows_Vals) 
-plt.xlabel('Integer Values')
-plt.ylabel('Frequency')
-plt.title('Distribution of Random Integers (0 to 6)')
-plt.grid(axis='y')
-plt.show()
-
-
-#Plotting the data we want for the report
-Vals_Dif, Counts_Dif = np.unique(Difference_Winnings, return_counts=True)
-#Counts_Dif = Counts_Dif/Runs
-plt.bar(Vals_Dif, Counts_Dif, width=0.005)
-plt.xlabel('Rounded Values')
-plt.ylabel('Frequency')
-plt.title('Distribution of Different Vals')
-plt.grid(axis='y')
-plt.show()
