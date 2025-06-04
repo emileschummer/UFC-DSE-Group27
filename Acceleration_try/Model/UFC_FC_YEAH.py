@@ -1,6 +1,10 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 import numpy as np
 import matplotlib.pyplot as plt
-from Input.Config import largest_real_positive_root
+from Acceleration_try.Input.Config import largest_real_positive_root
 
 
 def calculate_power_UFC_FC(incline,V,rho, inputs, a, gamma_dot):
@@ -12,8 +16,9 @@ def calculate_power_UFC_FC(incline,V,rho, inputs, a, gamma_dot):
     if CL <= inputs[5]:
         CD = inputs[2] + CL**2/inputs[3]
         D_parasite = 0.5*rho*CD*inputs[4]*V**2 #D_parasite includes both the parasite drag of the fusealge and the drag of the lifting force of the wing
-        T_horizontal = (D_parasite + np.sin(incline)*inputs[0]) + inputs[0]/inputs[-1] * a
-        P = T_horizontal*V/inputs[1]
+        Thorizontal = (D_parasite + np.sin(incline)*inputs[0]) + inputs[0]/inputs[-1] * a
+        Tvertical = 0
+        P = Thorizontal*V/inputs[1]
         P_induced, P_parasite, P_profile = 0, 0, 0
     else:
         #Vertical propellers kick in to aid with lift
@@ -39,5 +44,5 @@ def calculate_power_UFC_FC(incline,V,rho, inputs, a, gamma_dot):
         P_parasite = Thorizontal * V #normal thrust of an aircraft
         P_profile = (inputs[11]*inputs[12]*rho*inputs[13]*inputs[14]**3*inputs[6]**4*(1+3*(V/(inputs[14]*inputs[6]))**2))/8
         P = (P_induced + P_parasite + P_profile) / inputs[1]
-    return P
+    return Tvertical, Thorizontal, #P
     

@@ -100,7 +100,7 @@ def get_race_results(folder, battery_capacity=2250, iterations=100, variance=0.1
                     altitude = row[" altitude"]
                     rho = sva.air_density_isa(altitude)
                     time_diff = time - t
-                    if velocity_smooth > 0:
+                    if t > 0:
                         acceleration = (velocity_smooth - prev_velocity) / time_diff
                         pitch_rate = (grade_smooth - prev_grade_smooth) / time_diff
 
