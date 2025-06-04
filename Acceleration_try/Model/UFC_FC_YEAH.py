@@ -42,7 +42,7 @@ def calculate_power_UFC_FC(incline,V,rho, inputs, a, gamma_dot):
         #Calculate Total Powers
         P_induced = vi * Tvertical * inputs[16]
         P_parasite = Thorizontal * V #normal thrust of an aircraft
-        P_profile = (inputs[11]*inputs[12]*rho*inputs[13]*inputs[14]**3*inputs[6]**4*(1+3*(V/(inputs[14]*inputs[6]))**2))/8
+        P_profile = (inputs[11]*inputs[12]*rho*inputs[13]*inputs[14]**3*inputs[6]**4*(1+3*(V/(inputs[14]*inputs[6]))**2))/8 *inputs[16]
         P = (P_induced + P_parasite + P_profile) / inputs[1]
     return Tvertical, Thorizontal, #P
     
