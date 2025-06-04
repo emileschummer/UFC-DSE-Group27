@@ -39,21 +39,24 @@ def air_density_isa(h):
     return rho
 
 
-def plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms=True,percentile_value_input = 10):
+def plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms=True, percentile_value_input=10, adjust_velocity=True):
     print("---------Plot Race Results---------")
     races = make_race_dictionnary()
 
     all_adjusted_velocities = []
-    percentile_value = 100-percentile_value_input
+    percentile_value = 100 - percentile_value_input
 
     for race_name, race_data in races.items():
         print(f"---------{race_name}---------")
         for index, row in race_data.iterrows():
             velocity_smooth = row[" velocity_smooth"]
-            grade_smooth = np.arctan(row[" grade_smooth"] / 100)
-            altitude = row[" altitude"]
-            rho = air_density_isa(altitude)
-            adjusted_velocity = velocity_smooth * np.sqrt(rho / np.cos(grade_smooth))
+            if adjust_velocity:
+                grade_smooth = np.arctan(row[" grade_smooth"] / 100)
+                altitude = row[" altitude"]
+                rho = air_density_isa(altitude)
+                adjusted_velocity = velocity_smooth * np.sqrt(rho / np.cos(grade_smooth))
+            else:
+                adjusted_velocity = velocity_smooth
             if not unit_ms:
                 adjusted_velocity *= 3.6
             all_adjusted_velocities.append(adjusted_velocity)
@@ -79,16 +82,24 @@ def plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms
     percentages = (counts / total) * 100 if total > 0 else counts
     ax.clear()
     bar_width = bin_width * (1 - bar_gap)
-    ax.bar(bins[:-1] + bar_width/2, percentages, width=bar_width, alpha=0.7, color='green', align='center')
+    bars = ax.bar(bins[:-1] + bar_width/2, percentages, width=bar_width, alpha=0.7, color='green', align='center')
     title_unit = "m/s" if unit_ms else "km/h"
-    ax.set_title(f"Combined Adjusted Velocity Distribution for All Races [{title_unit}]")
-    ax.set_xlabel(f"Adjusted Velocity [{title_unit}]")
+    ax.set_title(f"Combined {'Adjusted ' if adjust_velocity else ''}Velocity Distribution for All Races [{title_unit}]")
+    ax.set_xlabel(f"{'Adjusted ' if adjust_velocity else ''}Velocity [{title_unit}]")
     ax.set_ylabel("Percentage of Time [%]")
     ax.set_xticks(bin_edges)
     ax.grid(True)
 
     # Plot the percentile line and annotate
-    ax.axvline(percentile_velocity, color='red', linestyle='--', linewidth=2, label=f"{percentile_value}th Percentile: {percentile_velocity:.2f} {title_unit}")
+    ax.axvline(percentile_velocity, color='red', linestyle='--', linewidth=2, label=f"{percentile_value_input}th Percentile: {percentile_velocity:.2f} {title_unit}")
+
+    # Find and highlight the bin with the most coverage
+    if len(percentages) > 0:
+        max_bin_idx = np.argmax(percentages)
+        most_present_velocity = (bins[max_bin_idx] + bins[max_bin_idx + 1]) / 2
+        bars[max_bin_idx].set_color('orange')
+        ax.axvline(most_present_velocity, color='orange', linestyle='-', linewidth=2, label=f"Most Present: {most_present_velocity:.2f} {title_unit}")
+
     ax.legend()
 
     plt.tight_layout()
@@ -96,9 +107,10 @@ def plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms
         os.makedirs(output_folder)
     plt.savefig(os.path.join(output_folder, "all_races_velocity_histogram.png"))
 
+
     plt.show()
     plt.close()
     print("Done")
 
 if __name__ == "__main__":
-    plot_race_velocities(show = False)
+    plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms=True,percentile_value_input = 90,adjust_velocity=True)
