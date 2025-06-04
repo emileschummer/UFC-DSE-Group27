@@ -1,0 +1,153 @@
+Stall Speed: 12.757736316383081 m/s or 45.927850738979096 km/h
+
+
+---------MVDP_Amstel_2019.csv------------------------------------------------------
+Race time: 6.46h
+Maximum speed: 34.2 m/s
+Speed < 12.757736316383081 m/s (~stall): 0.6627415458937198 of time
+
+---------UFC-MMA-1---------
+Average energy consumption through iterations: 22108.820776168996 Wh
+Average energy consumption through iterations for a 7h race: 23942.513259968142 Wh/7h
+Maximum energy consumption through iterations: 22108.820776168996 Wh
+Maximum energy consumption through iterations for a 7h race: 23942.513259968142 Wh/7h
+
+---------UFC-MMA-2---------
+Average energy consumption through iterations: 14311.947462052545 Wh
+Average energy consumption through iterations for a 7h race: 15498.971897022955 Wh/7h
+Maximum energy consumption through iterations: 14311.947462052545 Wh
+Maximum energy consumption through iterations for a 7h race: 15498.971897022955 Wh/7h
+
+---------UFC-MMA-3---------
+Average energy consumption through iterations: 5702.146912822422 Wh
+Average energy consumption through iterations for a 7h race: 6175.079596180706 Wh/7h
+Maximum energy consumption through iterations: 5702.146912822422 Wh
+Maximum energy consumption through iterations for a 7h race: 6175.079596180706 Wh/7h
+
+---------UFC-MMA-4---------
+Average energy consumption through iterations: 5324.154001258895 Wh
+Average energy consumption through iterations for a 7h race: 5765.736176696353 Wh/7h
+Maximum energy consumption through iterations: 5324.154001258895 Wh
+Maximum energy consumption through iterations for a 7h race: 5765.736176696353 Wh/7h
+
+
+---------TP_23_04_2025.csv------------------------------------------------------
+Race time: 4.82h
+Maximum speed: 25.0 m/s
+Speed < 12.757736316383081 m/s (~stall): 0.5516463167640762 of time
+
+---------UFC-MMA-1---------
+Average energy consumption through iterations: 16260.931949432628 Wh
+Average energy consumption through iterations for a 7h race: 23603.219003842074 Wh/7h
+Maximum energy consumption through iterations: 16260.931949432628 Wh
+Maximum energy consumption through iterations for a 7h race: 23603.219003842074 Wh/7h
+
+---------UFC-MMA-2---------
+Average energy consumption through iterations: 10617.538609432422 Wh
+Average energy consumption through iterations for a 7h race: 15411.668277040324 Wh/7h
+Maximum energy consumption through iterations: 10617.538609432422 Wh
+Maximum energy consumption through iterations for a 7h race: 15411.668277040324 Wh/7h
+
+---------UFC-MMA-3---------
+Average energy consumption through iterations: 3902.935906564916 Wh
+Average energy consumption through iterations for a 7h race: 5665.225784542128 Wh/7h
+Maximum energy consumption through iterations: 3902.935906564916 Wh
+Maximum energy consumption through iterations for a 7h race: 5665.225784542128 Wh/7h
+
+---------UFC-MMA-4---------
+Average energy consumption through iterations: 3679.1293248997476 Wh
+Average energy consumption through iterations for a 7h race: 5340.363976007929 Wh/7h
+Maximum energy consumption through iterations: 3679.1293248997476 Wh
+Maximum energy consumption through iterations for a 7h race: 5340.363976007929 Wh/7h
+
+
+---------TP_27_04_2025.csv------------------------------------------------------
+Race time: 6.0h
+Maximum speed: 28.8 m/s
+Speed < 12.757736316383081 m/s (~stall): 0.5945253945347051 of time
+
+---------UFC-MMA-1---------
+Average energy consumption through iterations: 20312.276168595883 Wh
+Average energy consumption through iterations for a 7h race: 23703.142368539768 Wh/7h
+Maximum energy consumption through iterations: 20312.276168595883 Wh
+Maximum energy consumption through iterations for a 7h race: 23703.142368539768 Wh/7h
+
+---------UFC-MMA-2---------
+Average energy consumption through iterations: 13490.762508060177 Wh
+Average energy consumption through iterations for a 7h race: 15742.867108271195 Wh/7h
+Maximum energy consumption through iterations: 13490.762508060177 Wh
+Maximum energy consumption through iterations for a 7h race: 15742.867108271195 Wh/7h
+
+---------UFC-MMA-3---------
+Average energy consumption through iterations: 5384.783947877968 Wh
+Average energy consumption through iterations for a 7h race: 6283.702499954841 Wh/7h
+Maximum energy consumption through iterations: 5384.783947877968 Wh
+Maximum energy consumption through iterations for a 7h race: 6283.702499954841 Wh/7h
+
+---------UFC-MMA-4---------
+Average energy consumption through iterations: 5209.715960908944 Wh
+Average energy consumption through iterations for a 7h race: 6079.409225047714 Wh/7h
+Maximum energy consumption through iterations: 5209.715960908944 Wh
+Maximum energy consumption through iterations for a 7h race: 6079.409225047714 Wh/7h
+
+
+---------WVA_Giro_Stage1.csv------------------------------------------------------
+Race time: 4.01h
+Maximum speed: 23.06 m/s
+Speed < 12.757736316383081 m/s (~stall): 0.5252320792908494 of time
+
+---------UFC-MMA-1---------
+Average energy consumption through iterations: 13551.735926391337 Wh
+Average energy consumption through iterations for a 7h race: 23676.07774161548 Wh/7h
+Maximum energy consumption through iterations: 13551.735926391337 Wh
+Maximum energy consumption through iterations for a 7h race: 23676.07774161548 Wh/7h
+
+---------UFC-MMA-2---------
+Average energy consumption through iterations: 8810.85161812442 Wh
+Average energy consumption through iterations for a 7h race: 15393.334773761466 Wh/7h
+Maximum energy consumption through iterations: 8810.85161812442 Wh
+Maximum energy consumption through iterations for a 7h race: 15393.334773761466 Wh/7h
+
+---------UFC-MMA-3---------
+Average energy consumption through iterations: 3278.477328933748 Wh
+Average energy consumption through iterations for a 7h race: 5727.789010616365 Wh/7h
+Maximum energy consumption through iterations: 3278.477328933748 Wh
+Maximum energy consumption through iterations for a 7h race: 5727.789010616365 Wh/7h
+
+---------UFC-MMA-4---------
+Average energy consumption through iterations: 3017.795962845025 Wh
+Average energy consumption through iterations for a 7h race: 5272.355675519594 Wh/7h
+Maximum energy consumption through iterations: 3017.795962845025 Wh
+Maximum energy consumption through iterations for a 7h race: 5272.355675519594 Wh/7h
+
+
+------------------------------------------------------------------------------------
+---------Summary--------------------------------------------------------------------
+---------UFC-MMA-1---------
+Maximum energy consumption for a 7h race: 23942.513259968142 Wh/7h
+Endurance based on maximum: 0.66h
+Relay points required for 7h of filming (2250Wh per drone) based on maximum: 10
+Average energy consumption through iterations for a 7h race: 23942.513259968142 Wh/7h
+Endurance based on average: 0.66h
+Relay points required for 7h of filming (2250Wh per drone) based on average: 10
+---------UFC-MMA-2---------
+Maximum energy consumption for a 7h race: 15742.867108271195 Wh/7h
+Endurance based on maximum: 1.0h
+Relay points required for 7h of filming (2250Wh per drone) based on maximum: 6
+Average energy consumption through iterations for a 7h race: 15742.867108271195 Wh/7h
+Endurance based on average: 1.0h
+Relay points required for 7h of filming (2250Wh per drone) based on average: 6
+---------UFC-MMA-3---------
+Maximum energy consumption for a 7h race: 6283.702499954841 Wh/7h
+Endurance based on maximum: 2.51h
+Relay points required for 7h of filming (2250Wh per drone) based on maximum: 2
+Average energy consumption through iterations for a 7h race: 6283.702499954841 Wh/7h
+Endurance based on average: 2.51h
+Relay points required for 7h of filming (2250Wh per drone) based on average: 2
+---------UFC-MMA-4---------
+Maximum energy consumption for a 7h race: 6079.409225047714 Wh/7h
+Endurance based on maximum: 2.59h
+Relay points required for 7h of filming (2250Wh per drone) based on maximum: 2
+Average energy consumption through iterations for a 7h race: 6079.409225047714 Wh/7h
+Endurance based on average: 2.59h
+Relay points required for 7h of filming (2250Wh per drone) based on average: 2
