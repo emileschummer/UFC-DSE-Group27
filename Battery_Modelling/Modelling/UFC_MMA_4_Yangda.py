@@ -1,6 +1,13 @@
+import sys
+import os
+
+# Add the parent of Battery_Modelling to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
+
 import numpy as np
 import matplotlib.pyplot as plt
-from Battery_Modelling.Input.Configuration_inputs import largest_real_positive_root
+from Battery_Modelling.Input.Configuration_inputs import largest_real_positive_root, inputs_list_original
 
 
 def calculate_power_UFC_MMA_4(incline,V,rho, inputs, max_iter=100, tol=1e-3):
@@ -12,8 +19,9 @@ def calculate_power_UFC_MMA_4(incline,V,rho, inputs, max_iter=100, tol=1e-3):
     if CL <= inputs[5]:
         CD = inputs[2] + CL**2/inputs[3]
         D_parasite = 0.5*rho*CD*inputs[4]*V**2 #D_parasite includes both the parasite drag of the fusealge and the drag of the lifting force of the wing
-        T_horizontal = (D_parasite + np.sin(incline)*inputs[0])
-        P = T_horizontal*V/inputs[1]
+        Thorizontal = (D_parasite + np.sin(incline)*inputs[0])
+        Tvertical = 0
+        P = Thorizontal*V/inputs[1]
         P_induced, P_parasite, P_profile = 0, 0, 0
     else:
         #Vertical propellers kick in to aid with lift
@@ -40,4 +48,3 @@ def calculate_power_UFC_MMA_4(incline,V,rho, inputs, max_iter=100, tol=1e-3):
         P_profile = (inputs[11]*inputs[12]*rho*inputs[13]*inputs[14]**3*inputs[6]**4*(1+3*(V/(inputs[14]*inputs[6]))**2))/8 * inputs[16]
         P = (P_induced + P_parasite + P_profile) / inputs[1]
     return P
-    
