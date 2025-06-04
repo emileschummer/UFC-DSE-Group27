@@ -5,6 +5,7 @@ from InertiaCalcs import *
 from ForceAndStressCals import *
 from Materials import *
 
+
 #------------------------------------------------------
 #TODO: ADD TRUSS STRUCTURE ANALYSIS FOR MAIN FRAME
 #TODO: FIGURE OUT THE HINGE :(
@@ -73,12 +74,19 @@ while Big_Owie_VTOL:
     print("the Yield Shear is:",Yield_shear)
     print("the current Shear is:",Trans_Shear)
     print("IS SHE THICCC THO:",R_out)
+    TheSuperSecretFunction()
 
 
     if B_stress <= Yield_Stress and Trans_Shear <=Yield_shear:
-        Big_Owie = False
+        Big_Owie_VTOL = False
     else:
         R_out +=0.01
+
+
+
+
+
+
 
 
 
