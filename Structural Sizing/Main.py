@@ -9,6 +9,10 @@ from Materials import *
 #TODO: ADD TRUSS STRUCTURE ANALYSIS FOR MAIN FRAME
 #TODO: FIGURE OUT THE HINGE :(
 #------------------------------------------------------
+#Things to run
+Big_Owie_VTOL = True
+Big_Owie_Tail = True
+
 
 #Loads
 F_Vtol = 25*9.81/4 #Newtons
@@ -16,6 +20,8 @@ F_prop = 100 #Newtons
 T_Vtol = 10 #Newtons/Meter
 T_prop = 1 #Newtons /Meter
 Wing_loading = 1 #Newtons per meter
+Tail_loading_horizontal = 0.1 #Newtons per meter
+Tail_loading_Vertical = 0.2 #Newtons per meter
 
 
 #I beam
@@ -53,8 +59,7 @@ Material = DogshitTestMaterial()
 Yield_shear= Material.Yield_Shear
 Yield_Stress = Material.Yield_Stress
 
-Big_Owie = True
-while Big_Owie:
+while Big_Owie_VTOL:
     print(R_out)
     Ix = Circle_Moment_of_Inertia(R_out,R_in)
     Iy=Ix
@@ -70,7 +75,6 @@ while Big_Owie:
     print("IS SHE THICCC THO:",R_out)
 
 
-
     if B_stress <= Yield_Stress and Trans_Shear <=Yield_shear:
         Big_Owie = False
     else:
@@ -78,4 +82,7 @@ while Big_Owie:
 
 
 
+
+#TAIL
+Tail_Length = 0.3 #Meters
 
