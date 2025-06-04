@@ -9,10 +9,11 @@ from Materials import *
 #------------------------------------------------------
 #TODO: ADD TRUSS STRUCTURE ANALYSIS FOR MAIN FRAME
 #TODO: FIGURE OUT THE HINGE :(
+#TODO: ASK DANIEL ABOUT WINGBOX ANALYSIS
 #------------------------------------------------------
 #Things to run
-Big_Owie_VTOL = True
-Big_Owie_Tail = True
+Big_Owie_VTOL = False
+Big_Owie_Tail = False
 Big_owie_WingBox = True
 
 
@@ -119,7 +120,7 @@ while Big_Owie_Tail:
         R_out_Tail +=0.01
 
 
-WingBox_Torque = 10
+WingBox_Torque = 1000
 WingBox_Lift_Distribution = 10 #Should be an elliptical func, we will figure it out later
 WingBox_B = 0.8
 WingBox_H = 0.4
@@ -129,6 +130,17 @@ WingBox_t = 0.01
 
 
 while Big_owie_WingBox:
-    Big_owie_WingBox = False
+
     #Y-X plane
+    WingBox_Torsion_Shear = Shear_Torsion(T=WingBox_Torque , t=WingBox_t , A=(WingBox_B*WingBox_H))
+    
+    print("----------------------------------------------------")
+    print(Yield_shear,"---",WingBox_Torsion_Shear)
+
+
+    if WingBox_Torsion_Shear <= Yield_shear:
+        Big_owie_WingBox = False
+    else:
+        WingBox_t +=0.01
+
 
