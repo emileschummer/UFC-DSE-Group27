@@ -1,8 +1,7 @@
 import numpy as np
 import matplotlib as plt
 import pandas as pd
-import webbrowser
-ImportantStressThing = "https://youtube.com/shorts/41iWg91yFv0?si=3yS7CuMoRXtxr3bn"
+
 
 #I dunno where to put this yet but to record:
 # r = np.sqrt(I/A) called radius of gyration. used in buckling
@@ -19,7 +18,6 @@ def Tube_Area(R_out,R_in):
 
 def Circle_Moment_of_Inertia(R_Out,R_in):
     I = (np.pi)/4 * (R_Out**4 - R_in**4)
-    webbrowser.open(ImportantStressThing)
     return I
 
 
@@ -65,3 +63,10 @@ def Spring_Constant(E,A,L):
     return K
 
 
+
+def TheSuperSecretFunction():
+    import time
+    import webbrowser
+    ImportantStressThing = "https://youtube.com/shorts/41iWg91yFv0?si=3yS7CuMoRXtxr3bn"
+    webbrowser.open(ImportantStressThing)
+    time.sleep(1.5)  # Wait for 2 seconds
