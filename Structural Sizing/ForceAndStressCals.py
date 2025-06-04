@@ -14,7 +14,7 @@ def Shear_Circle_Torsion(T,r,J):
 
 
 def Shear_Torsion(T,t,A):
-    Shear = T/2*t*A
+    Shear = T/(2*t*A)
     return Shear
 
 
