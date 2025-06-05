@@ -69,4 +69,4 @@ def TheSuperSecretFunction():
     import webbrowser
     ImportantStressThing = "https://youtube.com/shorts/41iWg91yFv0?si=3yS7CuMoRXtxr3bn"
     webbrowser.open(ImportantStressThing)
-    time.sleep(1.5)  # Wait for 2 seconds
+    time.sleep(1.5) 
