@@ -3,23 +3,24 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 #initial conditions
 
+
 W = 200
 m = W/9.81
 piAe = 30
 Clalpha = 4.635
-Clhalpha = 4.6
+Clhalpha = 4.158
 Clvbeta = 8
 CLmax = 2.4
 CLmaxh = 1.8
 CLmaxv = 1.8
 Cl0 = 0.934
-Clh0 = 0.15
+Clh0 = 0
 b = 3
 bh = 0.3
 bv = 0.3
 dihederal = 0
 S = 1
-Sh = 0.13
+Sh = 0.2
 Sv = 0.2
 rho = 1.2
 Cd0 = 0.05
@@ -32,16 +33,16 @@ alpha = np.sin(Vz/V)
 beta = np.sin(Vy/V)
 pitch = 0
 yaw = 0
-roll = 0
+roll = 0.1
 pitchrate = 0
 yawrate = 0
 rollrate = 0
 p = 0
 q = 0
 r = 0
-lh = 2
+lh = 1.5
 lv = 2
-l = 0.2
+l = 0
 c = 0.36
 Ix = 1.5
 Iy = 14
@@ -225,7 +226,7 @@ while t < tend:
     Zlst.append(Z)
     distance.append(dist)
 
-plot_mode = 0
+plot_mode = 1
 
 
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
