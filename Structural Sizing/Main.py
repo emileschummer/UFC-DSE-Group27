@@ -9,6 +9,7 @@ from Materials import *
 #------------------------------------------------------
 #TODO: ADD TRUSS STRUCTURE ANALYSIS FOR MAIN FRAME
 #TODO: FIGURE OUT THE HINGE :(
+#TODO: ASK DANIEL ABOUT WINGBOX ANALYSIS
 #------------------------------------------------------
 #Things to run
 Big_Owie_VTOL = True
@@ -97,7 +98,7 @@ M_x_Tail = Tail_Horizontal*Entire_Tail_Length
 M_y_Tail = Tail_Vertical*Entire_Tail_Length
 
 while Big_Owie_Tail:
-    TheSuperSecretFunction()
+
     Ix = Circle_Moment_of_Inertia(R_out_Tail,R_in_Tail)
     Iy = Ix
 
@@ -119,8 +120,14 @@ while Big_Owie_Tail:
         R_out_Tail +=0.01
 
 
-WingBox_Torque = 10
+
+#WINGBOX
+WingBox_Torque = 100
 WingBox_Lift_Distribution = 10 #Should be an elliptical func, we will figure it out later
+WingBox_Max_Lift = 100
+WingBox_Lift_at_VTOL = 75
+Vtol_Location = 0.5
+
 WingBox_B = 0.8
 WingBox_H = 0.4
 WingBox_t = 0.01
@@ -129,6 +136,28 @@ WingBox_t = 0.01
 
 
 while Big_owie_WingBox:
-    Big_owie_WingBox = False
-    #Y-X plane
+    WingBox_Ix = WingBox_Moment_of_inertia(B=WingBox_B,H=WingBox_H,t=WingBox_t)
+    WingBox_Iy = WingBox_Moment_of_inertia(B=WingBox_H,H=WingBox_B,t=WingBox_t)
+    WingBox_Q_x = First_Area_Q_WingBox(H=WingBox_H,B= WingBox_B, t= WingBox_t)
+    WingBox_Q_y = First_Area_Q_WingBox(H=WingBox_B,B= WingBox_H, t= WingBox_t)
+
+    WingBox_Torsion_Shear = Shear_Torsion(T=WingBox_Torque , t=WingBox_t , A=(WingBox_B*WingBox_H))
+
+    WingBox_Transverse_Shear_lift = Shear_Transverse_General(F = WingBox_Max_Lift, Q= WingBox_Q_x, I= WingBox_Ix, t=WingBox_t) #modelling for max shear, where force transfered from VTOl
+    WingBox_Transverse_Shear_VTOL = Shear_Transverse_General(F = F_Vtol, Q= WingBox_Q_y, I= WingBox_Iy, t=WingBox_t)
+
+    WingBox_Stress = Bending(Mx=(F_Vtol*Vtol_Location), Ix=WingBox_Ix, X=WingBox_B*0.5, My= (WingBox_Lift_at_VTOL*Vtol_Location), Iy=WingBox_Iy, Y=WingBox_H*0.5)
+
+    WingBox_Total_Shear = np.sqrt(WingBox_Torsion_Shear**2 + WingBox_Transverse_Shear_lift**2 + WingBox_Transverse_Shear_VTOL**2 )
+
+    print("----------------------------------------------------")
+    print("The Max Shear:",WingBox_Total_Shear, "The Yield Shear:", Yield_shear)
+    print("The Max Stress:",WingBox_Stress,"The yield stress", Yield_Stress)
+
+
+    if WingBox_Total_Shear <= Yield_shear and WingBox_Stress <= Yield_Stress:
+        Big_owie_WingBox = False
+    else:
+        WingBox_t +=0.01
+
 

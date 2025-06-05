@@ -35,7 +35,7 @@ def I_Beam_Moment_of_Inertia(t1,t2,t3,B,H):
 
 
 def WingBox_Moment_of_inertia(B,H,t):
-    I = ( (B*t**3)/12 + B*t*(H/2 - t/2)**2 + t*H**3/12 )*2#symmetry
+    I = ( (B*t**3)/12 + B*t*(H/2 - t/2)**2 + (t*H**3)/12 )*2#symmetry
     return I
 
 
@@ -69,4 +69,4 @@ def TheSuperSecretFunction():
     import webbrowser
     ImportantStressThing = "https://youtube.com/shorts/41iWg91yFv0?si=3yS7CuMoRXtxr3bn"
     webbrowser.open(ImportantStressThing)
-    time.sleep(1.5)  # Wait for 2 seconds
+    time.sleep(1.5) 
