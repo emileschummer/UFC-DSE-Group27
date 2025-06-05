@@ -35,7 +35,7 @@ def I_Beam_Moment_of_Inertia(t1,t2,t3,B,H):
 
 
 def WingBox_Moment_of_inertia(B,H,t):
-    I = ( (B*t**3)/12 + B*t*(H/2 - t/2)**2 + t*H**3/12 )*2#symmetry
+    I = ( (B*t**3)/12 + B*t*(H/2 - t/2)**2 + (t*H**3)/12 )*2#symmetry
     return I
 
 

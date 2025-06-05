@@ -3,6 +3,11 @@ import matplotlib as plt
 import pandas as pd
 
 
+def Bending_Simple(M,Y,I):
+    Stress = (M*Y)/I
+    return Stress
+
+
 def Bending(Mx,Ix,X,My,Iy,Y):
     Stress = ((Mx*Iy*Y)+(My*Ix*X) )/(Ix*Iy)
     return Stress
@@ -41,3 +46,8 @@ def Buckling_Stress(E,L,r,K):  #K=1 for pin ends, 2 for fixed and free combo, 0.
 def Shear_Torsional(T,A_m,t):
     Shear = T/(2*A_m*t)
     return Shear
+
+
+def Tip_Deflection(F,L,E,I):
+    V_tip = (F*L**4)/(8*E*I)
+    return V_tip
