@@ -52,7 +52,7 @@ for race_name, race_data in races.items():
     
     time_points = race_data[' time'].values
     plt.figure(figsize=(10, 6))
-    plt.plot(time_points, Tverttical_list, label='Vertical Thrust')
+    #plt.plot(time_points, Tverttical_list, label='Vertical Thrust')
     plt.plot(time_points, Thorizontal_list, label='Horizontal Thrust')
     plt.xlabel('Time (s)')
     plt.ylabel('Thrust (N)')
