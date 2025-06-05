@@ -1,0 +1,35 @@
+import os
+import pandas as pd
+
+def make_race_dictionnary():
+    races = {}
+    current_dir = os.path.dirname(os.path.abspath(__file__))  # Location of main.py
+    data_folder = os.path.join(current_dir, "RaceData")
+    
+    if not os.path.exists(data_folder):
+        print(f"Data folder {data_folder} does not exist.")
+        return {}
+    
+    for file_name in os.listdir(data_folder):
+        if file_name.endswith(".csv"):
+            file_path = os.path.join(data_folder, file_name)
+            try:
+                data = pd.read_csv(file_path)
+                races[file_name] = data
+            except Exception as e:
+                print(f"Error processing file {file_name}: {e}") 
+    return races
+
+def air_density_isa(h):
+    T0 = 288.15  # Sea level standard temperature (K)
+    p0 = 101325  # Sea level standard pressure (Pa)
+    L = -0.0065  # Temperature lapse rate (K/m)
+    g = 9.80665  # Gravity (m/s^2)
+    R = 287.058  # Specific gas constant for air (J/kg·K)
+
+    T = T0 + L * h
+    p = p0 * (T / T0) ** (-g / (L * R))
+    rho = p / (R * T)
+
+    return rho
+

@@ -5,16 +5,10 @@ import pandas as pd
 #I dunno where to put this yet but to record:
 # r = np.sqrt(I/A) called radius of gyration. used in buckling
 
-def I_beam_Area(H,B,t1,t2,t3):
-    A = H*t2+B*t1+B*t3
-    return A
 
-
-def Tube_Area(R_out,R_in):
-    A = np.pi*(R_out**2 - R_in**2)
-    return A
-
-
+#-----------------------------------------------------------------------
+#AREA MOMENT OF INERTIA 
+#-----------------------------------------------------------------------
 def Circle_Moment_of_Inertia(R_Out,R_in):
     I = (np.pi)/4 * (R_Out**4 - R_in**4)
     return I
@@ -34,7 +28,7 @@ def I_Beam_Moment_of_Inertia(t1,t2,t3,B,H):
 
 
 def WingBox_Moment_of_inertia(B,H,t):
-    I = ( (B*t**3)/12 + B*t*(H/2 - t/2)**2 + t*H**3/12 )*2#symmetry
+    I = ( (B*t**3)/12 + B*t*(H/2 - t/2)**2 + (t*(H-2*t)**3)/12 )*2#symmetry
     return I
 
 
@@ -43,7 +37,10 @@ def Circle_Polar_Moment_of_Inertia(R_out,R_in):
     return J
 
 
-def First_Area_Q_WingBox(H,B,t): #Fuck u, uniform thickness only
+#-----------------------------------------------------------------------
+#FIRST MOMENT AREA (Q)
+#-----------------------------------------------------------------------
+def First_Area_Q_WingBox(H,B,t): #Fuck u, uniform thickness only >:(
     X1 = 0.5*B*t*(H-t)
     X2 = (0.5*H*t-t**2)*(0.25*H - 0.5*t)
     Q = X1+X2
@@ -57,8 +54,39 @@ def First_Area_Q_IBeam(B,H,t1,t2):
     return Shear
 
 
+#-----------------------------------------------------------------------
+#OTHER
+#-----------------------------------------------------------------------
 def Spring_Constant(E,A,L):
     K = (E*A)/L
     return K
 
 
+def TheSuperSecretFunction():
+    import time
+    import webbrowser
+    ImportantStressThing = "https://youtube.com/shorts/41iWg91yFv0?si=3yS7CuMoRXtxr3bn"
+    webbrowser.open(ImportantStressThing)
+    time.sleep(1.5) 
+
+
+#-----------------------------------------------------------------------
+#AREA AND VOLUME
+#-----------------------------------------------------------------------
+def Tube_Area(R_out,R_in):
+    A = np.pi*(R_out**2 - R_in**2)
+    return A
+
+
+def I_beam_Area(H,B,t1,t2,t3):
+    A = H*t2+B*t1+B*t3
+    return A
+
+
+def WingBox_Area(B,H,t):
+    A = H*B-( (B-2*t)*(H-2*t) )
+    return A
+
+
+def Volume(A,L):
+    return A*L
