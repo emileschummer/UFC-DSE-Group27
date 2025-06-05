@@ -4,7 +4,7 @@ import pandas as pd
 def make_race_dictionnary():
     races = {}
     current_dir = os.path.dirname(os.path.abspath(__file__))  # Location of main.py
-    data_folder = os.path.join(current_dir, "Data")
+    data_folder = os.path.join(current_dir, "RaceData")
     
     if not os.path.exists(data_folder):
         print(f"Data folder {data_folder} does not exist.")
