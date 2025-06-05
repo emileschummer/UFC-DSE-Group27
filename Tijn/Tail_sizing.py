@@ -42,8 +42,6 @@ def get_tail(show,Clalpha,Clhalpha,Clmax,Clhmax,Cmac,S,c,lh,ARh):
     for i in range(len(surface)):
         margin = stab[i] - contr[i]
         if margin > 0:
-            print(margin*c)
-            print(surface[i])
             break
     bh = (ARh*surface[i])**0.5
     ch = surface[i]/bh
