@@ -39,6 +39,7 @@ for alpha in AoA:
     Cm = Cn*l/c + Cmac
     M = 0.5*rho*S*c*Cmac*Vmax**2
     Ftail = M/lh
+    
 
 
 

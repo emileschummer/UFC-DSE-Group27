@@ -33,7 +33,7 @@ def WingBox_Moment_of_inertia(B,H,t):
 
 
 def Circle_Polar_Moment_of_Inertia(R_out,R_in):
-    J = (np.pi/2)*(R_out**2 - R_in**4)
+    J = (np.pi/2)*(R_out**4 - R_in**4)
     return J
 
 
@@ -53,6 +53,12 @@ def First_Area_Q_IBeam(B,H,t1,t2):
     Shear = X1+X2
     return Shear
 
+
+def First_Area_Q_Circle(R_out,R_in,t):
+    Y = np.pi*(4/3)*( (R_out**3-R_in**3)/(R_out**2-R_in**2) ) #Source: ChatGPT
+    A = 0.5*np.pi*(R_out**2 - R_in**2)
+    Q = Y*A
+    return Q
 
 #-----------------------------------------------------------------------
 #OTHER

@@ -15,15 +15,15 @@ from AirFoilDataExtraction import *
 #------------------------------------------------------
 
 #Things to run
-Airfoil_Data = load_airfoil_dat("Structural Sizing\AirfoilData\Airfoil.dat")
-Airfoil_Data_Rotated = Rotate_for_Inertia(coordinates=Airfoil_Data, name= "s1223", angle= np.deg2rad(10))
+# Airfoil_Data = load_airfoil_dat("Structural Sizing\AirfoilData\Airfoil.dat")
+# Airfoil_Data_Rotated = Rotate_for_Inertia(coordinates=Airfoil_Data, name= "s1223", angle= np.deg2rad(10))
 
-print(Airfoil_Moment_of_Inertia(Airfoil_Data,))
-print(Airfoil_Moment_of_Inertia(Airfoil_Data_Rotated))
+# print(Airfoil_Moment_of_Inertia(Airfoil_Data,))
+# print(Airfoil_Moment_of_Inertia(Airfoil_Data_Rotated))
 
 Big_Owie_VTOL = False
 Big_Owie_Tail = False
-Big_owie_WingBox = False
+Big_owie_WingBox = True
 MAC = 1
 
 
@@ -89,6 +89,8 @@ WingBox_H = 0.015
 WingBox_t = 0.001
 WingBox_length = 3
 
+
+
 Failure_VTOL = False
 #Sizing Time
 while Failure_VTOL:
@@ -132,20 +134,33 @@ while Big_Owie_Tail:
 
 
 
+
+
+R_in_WingBox = 0.1
+R_out_WingBox = 0.11
+
 while Big_owie_WingBox:
-    WingBox_Ix = WingBox_Moment_of_inertia(B=WingBox_B,H=WingBox_H,t=WingBox_t)
-    WingBox_Iy = WingBox_Moment_of_inertia(B=WingBox_H,H=WingBox_B,t=WingBox_t)
-    WingBox_Q_x = First_Area_Q_WingBox(H=WingBox_H,B= WingBox_B, t= WingBox_t)
-    WingBox_Q_y = First_Area_Q_WingBox(H=WingBox_B,B= WingBox_H, t= WingBox_t)
+    # WingBox_Ix = WingBox_Moment_of_inertia(B=WingBox_B,H=WingBox_H,t=WingBox_t)
+    # WingBox_Iy = WingBox_Moment_of_inertia(B=WingBox_H,H=WingBox_B,t=WingBox_t)
+    # WingBox_Q_x = First_Area_Q_WingBox(H=WingBox_H,B= WingBox_B, t= WingBox_t)
+    # WingBox_Q_y = First_Area_Q_WingBox(H=WingBox_B,B= WingBox_H, t= WingBox_t)
 
-    WingBox_Torsion_Shear = Shear_Torsion(T=WingBox_Torque , t=WingBox_t , A=(WingBox_B*WingBox_H))
+    # WingBox_Torsion_Shear = Shear_Torsion(T=WingBox_Torque , t=WingBox_t , A=(WingBox_B*WingBox_H))
 
-    WingBox_Transverse_Shear_lift = Shear_Transverse_General(F = WingBox_Max_Lift, Q= WingBox_Q_x, I= WingBox_Ix, t=WingBox_t) #modelling for max shear, where force transfered from VTOl
-    WingBox_Transverse_Shear_VTOL = Shear_Transverse_General(F = F_Vtol, Q= WingBox_Q_y, I= WingBox_Iy, t=WingBox_t)
+    
+    # WingBox_Stress = Bending(Mx=(F_Vtol*Vtol_Location), Ix=WingBox_Ix, X=WingBox_B*0.5, My= (WingBox_Lift_at_VTOL*Vtol_Location), Iy=WingBox_Iy, Y=WingBox_H*0.5)
 
-    WingBox_Stress = Bending(Mx=(F_Vtol*Vtol_Location), Ix=WingBox_Ix, X=WingBox_B*0.5, My= (WingBox_Lift_at_VTOL*Vtol_Location), Iy=WingBox_Iy, Y=WingBox_H*0.5)
+    # WingBox_Total_Shear = np.sqrt(WingBox_Torsion_Shear**2 + WingBox_Transverse_Shear_lift**2 + WingBox_Transverse_Shear_VTOL**2 )
+    WingBox_Ix = Circle_Moment_of_Inertia(R_Out=R_out_WingBox,R_in=R_in_WingBox)
+    WingBox_Iy = WingBox_Ix
+    WingBox_Q = First_Area_Q_Circle(R_out=R_out_WingBox,R_in=R_in_WingBox,t=WingBox_t)
+    WingBox_J = Circle_Polar_Moment_of_Inertia
 
-    WingBox_Total_Shear = np.sqrt(WingBox_Torsion_Shear**2 + WingBox_Transverse_Shear_lift**2 + WingBox_Transverse_Shear_VTOL**2 )
+    WingBox_Transverse_Shear_lift = Shear_Transverse_General(F = WingBox_Max_Lift, Q= WingBox_Q, I= WingBox_Ix, t=WingBox_t) #modelling for max shear, where force transfered from VTOl
+    WingBox_Transverse_Shear_VTOL = Shear_Transverse_General(F = F_Vtol, Q= WingBox_Q, I= WingBox_Iy, t=WingBox_t)
+    WingBox_Torsion_Shear = Shear_Circle_Torsion(T=WingBox_Torque, r=R_out_WingBox, J= WingBox_J)
+
+    WingBox_Stress = Bending(Mx=1 ,Ix=WingBox_Ix, X= R_out_WingBox,My=1 ,Iy=WingBox_Iy,Y=R_out_WingBox) #FINISH ON FRIDAY
 
     print("----------------------------------------------------")
     print("The Max Shear WingBox:",WingBox_Total_Shear, "The Yield Shear:", Yield_shear_WingBox)
