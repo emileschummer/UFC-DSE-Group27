@@ -16,9 +16,15 @@ from AirFoilDataExtraction import *
 
 #Things to run
 Airfoil_Data = load_airfoil_dat("Structural Sizing\AirfoilData\Airfoil.dat")
+Airfoil_Data_Rotated = Rotate_for_Inertia(coordinates=Airfoil_Data, name= "s1223", angle= np.deg2rad(10))
+
+print(Airfoil_Moment_of_Inertia(Airfoil_Data,))
+print(Airfoil_Moment_of_Inertia(Airfoil_Data_Rotated))
+
 Big_Owie_VTOL = False
 Big_Owie_Tail = False
 Big_owie_WingBox = False
+MAC = 1
 
 
 #Create the material
@@ -83,7 +89,7 @@ WingBox_H = 0.015
 WingBox_t = 0.001
 WingBox_length = 3
 
-Failure_VTOL = True
+Failure_VTOL = False
 #Sizing Time
 while Failure_VTOL:
     Ix = Circle_Moment_of_Inertia(R_out_VTOL,R_in_VTOL)
@@ -154,7 +160,7 @@ while Big_owie_WingBox:
 
 
 
-Big_Owie_Leg = True
+Big_Owie_Leg = False
 Required_Leg_Length_Front = 0.5
 
 
@@ -171,15 +177,15 @@ Vtol_Pole_Mass = Volume(A=Tube_Area(R_out=R_out_VTOL,R_in=R_in_VTOL), L=Vtol_Pol
 WingBox_Mass = Volume(A=WingBox_Area(B=WingBox_B,H=WingBox_H,t=WingBox_t), L=WingBox_length)*Density_WingBox
 
 TOTAL_MASS = 1*WingBox_Mass + 4*Vtol_Pole_Mass + 2*Tail_pole_mass
-print("Yippee")
-print("Yippee")
-print("Yippee")
-print("Yippee")
-print("Yippee")
-print(Tail_pole_mass)
-print(Vtol_Pole_Mass)
-print(WingBox_Mass)
-print(TOTAL_MASS)
-print("-------------------------------------------")
-print(R_in_VTOL,R_out_VTOL, (R_out_VTOL-R_in_VTOL))
+# print("Yippee")
+# print("Yippee")
+# print("Yippee")
+# print("Yippee")
+# print("Yippee")
+# print(Tail_pole_mass)
+# print(Vtol_Pole_Mass)
+# print(WingBox_Mass)
+# print(TOTAL_MASS)
+# print("-------------------------------------------")
+# print(R_in_VTOL,R_out_VTOL, (R_out_VTOL-R_in_VTOL))
 

@@ -16,11 +16,21 @@ def load_airfoil_dat(path):
     return np.array(coords)
 
 
-my_airfoil = Airfoil(name = name, coordinates = coordinates)
-X = AS.rotate(my_airfoil)
+def Rotate_for_Inertia(coordinates,name,angle):
+    # coordinates = load_airfoil_dat(r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat")
+    # name = "S1223"
+    my_airfoil = AS.Airfoil(name=name, coordinates=coordinates)
+    Rotated_airfoil = my_airfoil.rotate(angle)
+
+    # print(Rotated_airfoil)
+    # print(Rotated_airfoil.coordinates)
+
+    return Rotated_airfoil.coordinates
+ 
 
 
-def Airfoil_Moment_of_Inertia(points):
+
+def Airfoil_Moment_of_Inertia(points,Length):
     # Replace with your array if reading from a file
     #points = load_airfoil_dat("Structural Sizing\AirfoilData\Airfoil.dat")
     # points = np.array([ 1.0000e+00,  0.0000e+00]
@@ -109,8 +119,8 @@ def Airfoil_Moment_of_Inertia(points):
     if not np.allclose(points[0], points[-1]):
         points = np.vstack([points, points[0]])
 
-    x = points[:, 0]
-    y = points[:, 1]
+    x = points[:, 0]*Length
+    y = points[:, 1]*Length
 
     # Shoelace helper
     def poly_area(x, y):
@@ -140,4 +150,4 @@ def Airfoil_Moment_of_Inertia(points):
     print(f"Iyy (centroidal) = {Iyy_c:.6e}")
     print(f"Ixy (centroidal) = {Ixy_c:.6e}")
 
-    return Ixx
+    return Ixx_c,Iyy_c,Ixy_c
