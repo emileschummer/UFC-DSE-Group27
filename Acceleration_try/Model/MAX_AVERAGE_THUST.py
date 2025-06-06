@@ -47,13 +47,13 @@ for race_name, race_data in races.items():
     non_negative_horizontal = [t for t in Thorizontal_list if t >= 0]
     print(f"\nRace: {race_name}")
     print(f"Maximum absolute vertical thrust: {max(abs(np.array(Tvertical_list))):.2f} N")
-    print(f"Average vertical thrust: {sum(non_zero_vertical)/len(non_zero_vertical):.2f} N")
     print(f"Maximum absolute horizontal thrust: {max(abs(np.array(Thorizontal_list))):.2f} N")
-    print(f"Average horizontal thrust: {sum(non_negative_horizontal)/len(non_negative_horizontal):.2f} N")
+    print(f"Average vertical thrust (excluding zeros): {sum(non_zero_vertical)/len(non_zero_vertical):.2f} N")
+    print(f"Average horizontal thrust (excluding negative): {sum(non_negative_horizontal)/len(non_negative_horizontal):.2f} N")
     try:
         # Filter out zero values from Tvertical_list
         print(f"Most common vertical thrust value (excluding zeros): {mode(non_zero_vertical):.2f} N")
-        print(f"Most common horizontal thrust value: {mode(Thorizontal_list):.2f} N")
+        print(f"Most common horizontal thrust value (excluding negative): {mode(Thorizontal_list):.2f} N")
     except StatisticsError:
         print("No unique mode found for thrust values")
     
@@ -64,10 +64,10 @@ for race_name, race_data in races.items():
     time_points = race_data[' time'].values
     plt.figure(figsize=(10, 6))
     plt.plot(time_points, Tvertical_list, label='Vertical Thrust')
-    #plt.plot(time_points, Thorizontal_list, label='Horizontal Thrust')
+    plt.plot(time_points, Thorizontal_list, label='Horizontal Thrust')
     plt.xlabel('Time (s)')
     plt.ylabel('Thrust (N)')
     plt.title(f'Thrust vs Time - {race_name}')
     plt.legend()
     plt.grid(True)
-    plt.show()
+    #plt.show()
