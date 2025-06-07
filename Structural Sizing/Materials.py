@@ -43,7 +43,7 @@ class DogshitTestMaterial(Material):
         super().__init__(
             E=200e6,             # Young's modulus for steel in Pascals
             G=79.3e6,            # Shear modulus for steel in Pascals
-            Density=7850,        # Density of steel in kg/m³
+            Density=1000,        # Density of steel in kg/m³
             Yield_Shear=250e2,   # Shear yield strength (typical value) in Pascals
-            Yield_Stress=250e2   # Tensile yield strength (e.g., mild steel) in Pascals
+            Yield_Stress=300e2   # Tensile yield strength (e.g., mild steel) in Pascals
         )

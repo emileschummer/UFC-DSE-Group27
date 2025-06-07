@@ -1,4 +1,6 @@
 import numpy as np 
+from aerosandbox import OperatingPoint
+
 
 def load_airfoil_dat(path):
     with open(path, "r") as f:

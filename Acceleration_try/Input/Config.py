@@ -54,7 +54,7 @@ chord_blade_MMA3 = r_MMA3/chord_factor #inputs 11
 #UFC_MMA_4 Yangda
 CD0_MMA4 = CD0_MMA3 #inputs 2 same as osprey
 piAe_MMA4 = piAe_MMA3 #inputs 3 same as osprey
-S_MMA4 = 1.25 #inputs 4 m^2 x2.5 compared to research (cuz reearch is 10kg, we go 25)
+S_MMA4 = 3*0.36 #inputs 4 m^2 x2.5 compared to research (cuz reearch is 10kg, we go 25)
 CLmax_MMA4 =  CLmax_MMA3#1.3824 *0.9 #inputs 5 + safety margin same as osprey
 wing_eff_prop_on_MMA4 = wing_eff_prop_on_MMA3 #inputs 7 
 prop_efficiency_MMA4 = 0.8#inputs 8
