@@ -14,6 +14,12 @@ def Circle_Moment_of_Inertia(R_Out,R_in):
     return I
 
 
+def Solid_Circle_moment_of_Inertia(R):
+    d = 2*R
+    I = (np.pi*d**4)/64
+    return I
+
+
 def Rectangle_Moment_of_Inertia(B,H):
     I_x = (B*H**3)/12
     return I_x
@@ -35,6 +41,11 @@ def WingBox_Moment_of_inertia(B,H,t):
 def Circle_Polar_Moment_of_Inertia(R_out,R_in):
     J = (np.pi/2)*(R_out**4 - R_in**4)
     return J
+
+
+def Semi_Circle_Moment_of_Inertia(R_out,t):
+    I = (np.pi/2 - 4/np.pi)*t*R_out**3
+    return I
 
 
 #-----------------------------------------------------------------------
@@ -96,3 +107,5 @@ def WingBox_Area(B,H,t):
 
 def Volume(A,L):
     return A*L
+
+

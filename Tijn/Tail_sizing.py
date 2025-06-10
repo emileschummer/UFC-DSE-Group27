@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 stability_margin = 0.05
 Clalpha = 4.635
 Clhalpha = 4.158
-Clmax = 2.4
+Clmax = 2.2
 Clhmax = 1.5
 Cmac = -0.5
 S = 1

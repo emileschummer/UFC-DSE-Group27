@@ -9,54 +9,221 @@ import os
 from datetime import datetime
 from Acceleration_try.Model.UFC_FC_Battery_Model import *
 from Acceleration_try.Input import Strava_input_csv as sva
+import numpy as np
 
-def Battery_Model(V_stall, W,D_rest,D_wing,L_wing,CLmax,alpha_T, N_blades, Chord_blade,CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal,eta_prop_vertical, propeller_wake_efficiency,number_relay_stations,battery_max_usage,VCr,output_folder, show=False):
+def Battery_Model(output_folder, V_vert_prop=6, W=250, D_rest=50, CLmax=2.2, S_wing=1.5, piAe=20.41, CD0_wing=0.0264, alpha_T=0.2, N_blades=2, Chord_blade=0.02, CD_blade=0.014, omega=300, r_prop_vertical=0.07, numberengines_vertical=4, numberengines_horizontal=1, eta_prop_horizontal=0.8, eta_prop_vertical=0.8, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,  show=False):
     print("---------Plot Race Results---------")
     races = sva.make_race_dictionnary()
-    race_results = {} #actual energy consumption in Wh
-    race_results_7h = {} #energy consumption for a standardised 7h race in Wh
+    race_results = {}
     for race_name, race_data in races.items():
+        necessary_battery_capacity = 0
         print(f"---------{race_name}---------")
-        if show: 
-            fig, axs = plt.subplots(3, 1, figsize=(12, 10), sharex=True)  # Create subplots
-            label = 'Yangda-style'
-        race_plot = []
         calculate_power = calculate_power_UFC_FC
-        energy = 0
-        t = 0
-        prev_velocity = 0 
-        prev_grade_smooth = 0 
-        time_plot = []
-        distance_plot = []
-        power_plot = []
-        speed_plot = []
-        gradient_plot = []
-        acceleration_plot = []
-        pitch_rate_plot = []
-        rho_plot = []
-        energy_plot = []
-        altitude_plot = []
-        for index, row in race_data.iterrows():
+        # 1. Follow a cyclist with 1 battery, no relay station
+        time_plot, distance_plot, power_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot = simulate_1_battery(race_data, calculate_power, V_vert_prop, W, D_rest, CLmax, S_wing, piAe, CD0_wing, alpha_T, N_blades, Chord_blade, CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal, eta_prop_vertical, propeller_wake_efficiency)
+        
+        # 2. Calculate battery capacity and threshold
+        total_battery_energy = battery_energy_plot[-1]
+        battery_usable_capacity = total_battery_energy / (number_relay_stations + 1)
+
+        # 3. Simulate battery switches
+        # We'll build new arrays as we go
+        new_time, new_distance, new_power, new_speed = [], [], [], []
+        new_gradient, new_acceleration, new_pitch_rate = [], [], []
+        new_rho, new_altitude, new_battery_energy = [], [], []
+
+        idx = 0
+        last_battery_energy = 0
+        n_switches = 0
+        while n_switches < number_relay_stations and idx < len(time_plot):
+            start_idx = idx
+            # Find where battery_usable_capacity is reached
+            battery_empty_idx = start_idx
+            while battery_empty_idx < len(battery_energy_plot) and (battery_energy_plot[battery_empty_idx] - last_battery_energy) < battery_usable_capacity:
+                battery_empty_idx += 1
+            if battery_empty_idx >= len(time_plot):
+                battery_empty_idx = len(time_plot) - 1
+            reached_RS_idx = battery_empty_idx
+            RS_location = distance_plot[reached_RS_idx]
+            threshold_time_RS = time_plot[reached_RS_idx] - UAV_off_for_recharge_time_min*60 #time at which the drone needs to be at RS
+            # Find the index in time_plot for which the value is closest to threshold_time_RS
+            go_charge_idx = int(np.argmin(np.abs(np.array(time_plot) - threshold_time_RS)))
+            #Find the cruise speed
+            VCr = (distance_plot[reached_RS_idx] - distance_plot[go_charge_idx]) / ((time_plot[reached_RS_idx] - time_plot[go_charge_idx])-battery_recharge_time_min*60)
+            if VCr < V_vert_prop:
+               VCr = V_vert_prop
+            # Copy up to threshold
+            new_time.extend(time_plot[start_idx:go_charge_idx])
+            new_distance.extend(distance_plot[start_idx:go_charge_idx])
+            new_power.extend(power_plot[start_idx:go_charge_idx])
+            new_speed.extend(speed_plot[start_idx:go_charge_idx])
+            new_gradient.extend(gradient_plot[start_idx:go_charge_idx])
+            new_acceleration.extend(acceleration_plot[start_idx:go_charge_idx])
+            new_pitch_rate.extend(pitch_rate_plot[start_idx:go_charge_idx])
+            new_rho.extend(rho_plot[start_idx:go_charge_idx])
+            new_altitude.extend(altitude_plot[start_idx:go_charge_idx])
+            # Energy offset for this segment
+            for i in range(start_idx, go_charge_idx):
+                new_battery_energy.append(battery_energy_plot[i] - last_battery_energy)
+            
+            # At threshold: fly ahead at VCr until battery_usable_capacity is reached
+            go_charge_time = time_plot[go_charge_idx]
+            go_charge_distance = distance_plot[go_charge_idx]
+            go_charge_altitude = altitude_plot[go_charge_idx]
+            go_charge_gradient = gradient_plot[go_charge_idx]
+            go_charge_rho = rho_plot[go_charge_idx]
+            go_charge_pitch = np.arctan(go_charge_gradient / 100)
+            go_charge_energy = new_battery_energy[-1] if new_battery_energy else 0
+            go_charge_prev_velocity = VCr
+            go_charge_prev_pitch = go_charge_pitch
+            go_charge_prev_time = go_charge_time
+            """
+            # Simulate flying ahead at VCr
+            orig_times = np.array(time_plot[go_charge_idx:reached_RS_idx+1])
+            orig_distances = np.array(distance_plot[go_charge_idx:reached_RS_idx+1])
+            orig_gradients = np.array(gradient_plot[go_charge_idx:reached_RS_idx+1])
+            orig_altitudes = np.array(altitude_plot[go_charge_idx:reached_RS_idx+1])
+            num_points = len(orig_times)
+            if num_points < 2:
+                break
+            new_distances = [fly_distance]
+            for j in range(1, num_points):
+                dt = orig_times[j] - orig_times[j-1]
+                new_distances.append(new_distances[-1] + VCr * dt)
+            new_distances = np.array(new_distances)
+            new_gradients = np.interp(new_distances, orig_distances, orig_gradients)
+            new_altitudes = np.interp(new_distances, orig_distances, orig_altitudes)
+            """
+
+            # Simulate power/energy for this segment
+            distance = go_charge_distance
+            previous_pitch = go_charge_prev_pitch
+            energy = go_charge_energy
+            for j in range(go_charge_idx, reached_RS_idx + 1):
+                if new_distance[j-1] < RS_location:
+                    time_now = time_plot[j]
+                    dt = (time_now - time_plot[j-1])
+                    velocity = VCr
+                    distance += VCr * dt
+                    gradient, altitude = get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot, altitude_plot)
+                    rho = sva.air_density_isa(altitude)
+                    acceleration = 0
+                    pitch_rate = (gradient - previous_pitch) / dt
+                    previous_pitch = pitch_rate
+                    P = calculate_power(gradient, velocity, rho, V_vert_prop, W, acceleration, pitch_rate, D_rest, CLmax, S_wing, piAe, CD0_wing, alpha_T, N_blades, Chord_blade, CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal, eta_prop_vertical, propeller_wake_efficiency)
+                    energy +=  P*dt/3600  # Convert J to Wh
+                else: 
+                    time_now = time_plot[j]
+                    dt = (time_now - time_plot[j-1])
+                    velocity = 0
+                    distance += 0
+                    gradient, altitude = get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot, altitude_plot)
+                    rho = sva.air_density_isa(altitude)
+                    acceleration = 0
+                    pitch_rate = 0
+                    previous_pitch = 0
+                    P = 0
+                    energy +=  0
+                new_time.append(time_now)
+                new_distance.append(distance)
+                new_power.append(P)
+                new_speed.append(velocity)
+                new_gradient.append(gradient)
+                new_acceleration.append(acceleration)
+                new_pitch_rate.append(pitch_rate)
+                new_rho.append(rho)
+                new_altitude.append(altitude)
+                new_battery_energy.append(energy)
+
+            # Wait at recharge point (optional: can add a pause here if needed)
+            # After battery change, reset battery_energy to zero (full battery)
+
+            if new_battery_energy[-1] > necessary_battery_capacity:
+                necessary_battery_capacity = new_battery_energy[-1]
+            last_battery_energy = battery_energy_plot[battery_empty_idx]
+            idx = battery_empty_idx + 1
+            n_switches += 1
+
+        # Copy the rest of the race after last battery switch
+        if idx < len(time_plot):
+            for i in range(idx, len(time_plot)):
+                new_time.append(time_plot[i])
+                new_distance.append(distance_plot[i])
+                new_power.append(power_plot[i])
+                new_speed.append(speed_plot[i])
+                new_gradient.append(gradient_plot[i])
+                new_acceleration.append(acceleration_plot[i])
+                new_pitch_rate.append(pitch_rate_plot[i])
+                new_rho.append(rho_plot[i])
+                new_altitude.append(altitude_plot[i])
+                new_battery_energy.append(battery_energy_plot[i] - last_battery_energy)
+            if new_battery_energy[-1] > necessary_battery_capacity:
+                necessary_battery_capacity = new_battery_energy[-1]
+        
+        print(necessary_battery_capacity, "Wh")
+        race_results[race_name] = necessary_battery_capacity
+
+        if show:
+            # Plot original and new (with relay stations) on the same figure
+            fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
+            # Plot original
+            plot(
+                time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot,
+                race_name + " (original)", V_vert_prop, output_folder, False, battery_usable_capacity, axs=axs
+            )
+            # Plot new (with relay stations)
+            plot(
+                new_time, new_power, new_speed, new_gradient, new_battery_energy,
+                race_name + " (relay stations)", V_vert_prop, output_folder, False, battery_usable_capacity, multiple_RS=True, axs=axs
+            )
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            output_path = os.path.join(output_folder, f"Power_speed_gradient_energy_vs_time_{race_name.replace('.csv', '')}_{timestamp}.png")
+            os.makedirs(output_folder, exist_ok=True)
+            plt.tight_layout()
+            plt.savefig(output_path)
+            if show:
+                print("Close plot to continue")
+                plt.show()
+            plt.close()
+    print("\n\n------------------------------------------------------------------------------------\n")
+    print("---------Summary--------------------------------------------------------------------\n")
+    if race_results:
+        max_race = max(race_results, key=race_results.get)
+        max_battery_energy = race_results[max_race]
+        print(f"Maximum battery capacity necessary: {max_battery_energy:.2f} Wh (Race: {max_race})\n")
+        avg_battery_energy = sum(race_results.values()) / len(race_results)
+        print(f"Average battery capacity necessary across all races: {avg_battery_energy:.2f} Wh\n")
+    else:
+        print("No race results available to determine maximum energy consumption.\n")
+        max_race, max_battery_energy, avg_battery_energy = 0, 0, 0
+
+    print("Done")
+    return max_battery_energy
+
+def simulate_1_battery(race_data, calculate_power, V_vert_prop, W, D_rest, CLmax, S_wing, piAe, CD0_wing, alpha_T, N_blades, Chord_blade, CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal, eta_prop_vertical, propeller_wake_efficiency):
+    # Prepare arrays
+    time_plot, distance_plot, power_plot, speed_plot = [], [], [], []
+    gradient_plot, acceleration_plot, pitch_rate_plot = [], [], []
+    rho_plot, battery_energy_plot, altitude_plot = [], [], []
+    t, prev_velocity, prev_grade_smooth, energy = 0, 0, 0, 0
+    for index, row in race_data.iterrows():
             distance = row[" distance"]
-            time = row[" time"]  
+            time = row[" time"]
             velocity_smooth = row[" velocity_smooth"]
             grade_smooth = np.arctan(row[" grade_smooth"] / 100)
             altitude = row[" altitude"]
             rho = sva.air_density_isa(altitude)
-            
-            # Calculate acceleration using current and previous velocity
             time_diff = time - t
-            if t > 0:  # Skip first point
+            if t > 0:
                 acceleration = (velocity_smooth - prev_velocity) / time_diff
-                pitch_rate = (grade_smooth - prev_grade_smooth) / time_diff  # Calculate pitch rate
+                pitch_rate = (grade_smooth - prev_grade_smooth) / time_diff
             else:
                 acceleration = 0
                 pitch_rate = 0
-            prev_velocity = velocity_smooth  # Store current velocity for next iteration
-            prev_grade_smooth = grade_smooth  # Store current grade for next iteration
-
-            P = calculate_power(grade_smooth, velocity_smooth, V_stall, rho, W, acceleration, pitch_rate, D_rest, D_wing, L_wing, CLmax, alpha_T, N_blades, Chord_blade, CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal, eta_prop_vertical, propeller_wake_efficiency)
-            energy = energy + time_diff * P
+            prev_velocity = velocity_smooth
+            prev_grade_smooth = grade_smooth
+            P = calculate_power(grade_smooth, velocity_smooth, rho, V_vert_prop, W, acceleration, pitch_rate, D_rest, CLmax, S_wing, piAe, CD0_wing, alpha_T, N_blades, Chord_blade, CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal, eta_prop_vertical, propeller_wake_efficiency)
+            energy += time_diff * P/3600  # Convert J to Wh
             t = time
             time_plot.append(time)
             distance_plot.append(distance)
@@ -67,222 +234,70 @@ def Battery_Model(V_stall, W,D_rest,D_wing,L_wing,CLmax,alpha_T, N_blades, Chord
             pitch_rate_plot.append(pitch_rate)
             rho_plot.append(rho)
             altitude_plot.append(altitude)
-            energy_plot.append(energy / 3600)  # Convert energy to Wh
+            battery_energy_plot.append(energy)
+    return time_plot, distance_plot, power_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot
 
-        battery_capacity = energy / number_relay_stations
-        battery_threshold = battery_capacity * battery_max_usage  # 20% of the battery capacity
-        index_recharge_go = None
-        index_battery_empty = None
-        # Find the indices where the UAV should start racing ahead and where it would have run out of battery
-        for i in range(len(energy_plot)):
-            if index_recharge_go is None and energy_plot[i] > battery_threshold:
-                index_recharge_go = i
-            if index_battery_empty is None and energy_plot[i] > battery_capacity:
-                index_battery_empty = i
-            if index_recharge_go is not None and index_battery_empty is not None:
-                print(time_plot[index_battery_empty])
-                break  # Stop if both indices are found
-        
-        if index_recharge_go is not None and index_battery_empty is not None:
-            # --- Race ahead ---
-            # Set cruise speed (e.g., VCr) and recalculate the power for the segment
-            cruise_speed = VCr
-            # Calculate the distance to cover while racing ahead
-            distance_start = distance_plot[index_recharge_go]
-            distance_end = distance_plot[index_battery_empty]
-            # Use the original time steps for the segment
-            orig_times = np.array(time_plot[index_recharge_go:index_battery_empty+1])
-            orig_distances = np.array(distance_plot[index_recharge_go:index_battery_empty+1])
-            orig_gradients = np.array(gradient_plot[index_recharge_go:index_battery_empty+1])
-            orig_altitudes = np.array(altitude_plot[index_recharge_go:index_battery_empty+1])
+def plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot, race_name, V_vert_prop, output_folder, show, battery_usable_capacity, axs=None,multiple_RS=False):
+    import matplotlib.pyplot as plt
 
-            # Interpolate distances, gradients, and altitudes to match original time steps
-            num_points = len(orig_times)
-            # Calculate new distances at cruise speed, starting from distance_start
-            new_distances = [distance_start]
-            for j in range(1, num_points):
-                dt = orig_times[j] - orig_times[j-1]
-                new_distances.append(new_distances[-1] + cruise_speed * dt)
-            new_distances = np.array(new_distances)
-            # Interpolate gradient and altitude for new points
-            new_gradients = np.interp(new_distances, orig_distances, orig_gradients)
-            new_altitudes = np.interp(new_distances, orig_distances, orig_altitudes)
-
-            # Calculate new power and energy for racing ahead, using original time steps
-            new_power_plot = []
-            new_speed_plot = []
-            new_acceleration_plot = []
-            new_pitch_rate_plot = []
-            new_rho_plot = []
-            new_energy_plot = []
-            prev_velocity = cruise_speed
-            prev_grade = np.arctan(new_gradients[0] / 100)
-            prev_time = orig_times[0]
-            energy_ahead = energy_plot[index_recharge_go] * 3600  # convert back to Joules
-
-            for j in range(num_points):
-                velocity = cruise_speed
-                grade = np.arctan(new_gradients[j] / 100)
-                altitude = new_altitudes[j]
-                rho = sva.air_density_isa(altitude)
-                time_now = orig_times[j]
-                if j == 0:
-                    acceleration = 0
-                    pitch_rate = 0
-                else:
-                    dt = time_now - prev_time
-                    acceleration = (velocity - prev_velocity) / dt
-                    pitch_rate = (grade - prev_grade) / dt
-                P = calculate_power(grade, velocity, V_stall, rho, W, acceleration, pitch_rate, D_rest, D_wing, L_wing, CLmax, alpha_T, N_blades, Chord_blade, CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal, eta_prop_vertical, propeller_wake_efficiency)
-                energy_ahead += (time_now - prev_time) * P if j > 0 else 0
-                new_power_plot.append(P)
-                new_speed_plot.append(velocity)
-                new_acceleration_plot.append(acceleration)
-                new_pitch_rate_plot.append(pitch_rate)
-                new_rho_plot.append(rho)
-                new_energy_plot.append(energy_ahead / 3600)
-                prev_velocity = velocity
-                prev_grade = grade
-                prev_time = time_now
-
-            # Overwrite the plot lists for the race ahead segment
-            time_plot[index_recharge_go:index_battery_empty+1] = list(orig_times)
-            distance_plot[index_recharge_go:index_battery_empty+1] = list(new_distances)
-            power_plot[index_recharge_go:index_battery_empty+1] = new_power_plot
-            speed_plot[index_recharge_go:index_battery_empty+1] = new_speed_plot
-            gradient_plot[index_recharge_go:index_battery_empty+1] = list(new_gradients)
-            acceleration_plot[index_recharge_go:index_battery_empty+1] = new_acceleration_plot
-            pitch_rate_plot[index_recharge_go:index_battery_empty+1] = new_pitch_rate_plot
-            rho_plot[index_recharge_go:index_battery_empty+1] = new_rho_plot
-            altitude_plot[index_recharge_go:index_battery_empty+1] = list(new_altitudes)
-            energy_plot[index_recharge_go:index_battery_empty+1] = new_energy_plot
-
-            # --- Wait at recharge point ---
-            # Find the time when the cyclist reaches the distance_end
-            # This is the original time at index_battery_empty
-            wait_end_time = time_plot[index_battery_empty]
-            # Find the next index after index_battery_empty where the cyclist's distance >= distance_end
-            for k in range(index_battery_empty, len(distance_plot)):
-                if distance_plot[k] >= distance_end:
-                    wait_end_time = time_plot[k]
-                    break
-            wait_duration = wait_end_time - orig_times[-1]
-            if wait_duration > 0:
-                # Insert a waiting segment: constant distance, zero power, zero speed, etc.
-                time_plot.insert(index_battery_empty+1, orig_times[-1] + wait_duration)
-                distance_plot.insert(index_battery_empty+1, distance_end)
-                power_plot.insert(index_battery_empty+1, 0)
-                speed_plot.insert(index_battery_empty+1, 0)
-                gradient_plot.insert(index_battery_empty+1, gradient_plot[index_battery_empty])
-                acceleration_plot.insert(index_battery_empty+1, 0)
-                pitch_rate_plot.insert(index_battery_empty+1, 0)
-                rho_plot.insert(index_battery_empty+1, rho_plot[index_battery_empty])
-                altitude_plot.insert(index_battery_empty+1, altitude_plot[index_battery_empty])
-                energy_plot.insert(index_battery_empty+1, energy_plot[index_battery_empty])
-
-            # --- Resume following the cyclist with full battery ---
-            # From wait_end_time onward, reset energy to zero (full battery)
-            for m in range(index_battery_empty+1, len(energy_plot)):
-                energy_plot[m] = energy_plot[m] - energy_plot[index_battery_empty+1]
-
-        # If no recharge event, do nothing (default behavior)
-        race_plot.append([time_plot, power_plot])
-        race_results[race_name] = energy
-        #race_results_7h[race_name] = energy / race_data[" time"].max() * 7 * 3600  # Store energy in Wh and max time
-
-        if show: 
-            axs[0].plot(time_plot, power_plot, label=label)  # Plot power vs time in the first subplot
-            # Highlight regions where speed > V_stall m/s
-            for j in range(len(speed_plot) - 1):
-                if speed_plot[j] < V_stall:
-                    axs[0].axvspan(time_plot[j], time_plot[j + 1], color='red', alpha=0.2)
-            axs[1].plot(time_plot, speed_plot, label='Speed', color='black')  # Plot speed vs time
-            axs[2].plot(time_plot, gradient_plot, label='Gradient', color='grey')  # Plot gradient vs time
-
-            # Set titles and labels for subplots
-            axs[0].set_title(f"Power vs Time for {race_name}")
-            axs[0].set_ylabel("Power (W)")
-            axs[0].legend()
-            axs[0].grid()
-
-            axs[1].set_title("Speed vs Time")
-            axs[1].set_ylabel("Speed (m/s)")
-            axs[1].legend()
-            axs[1].grid()
-
-            axs[2].set_title("Gradient vs Time")
-            axs[2].set_xlabel("Time (s)")
-            axs[2].set_ylabel("Gradient (%)")
-            axs[2].legend()
-            axs[2].grid()
-
-            # Save the figure
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_path = os.path.join(output_folder, f"Power_speed_gradient_vs_time_{race_name.replace('.csv', '')}_{timestamp}.png")
-            os.makedirs(output_folder, exist_ok=True)  # Ensure output folder exists
-            plt.tight_layout()
-            plt.savefig(output_path)
-            if show:  
-                print("Close plot to continue")
-                plt.show()
-            plt.close()
-    print("\n\n------------------------------------------------------------------------------------\n")
-    print("---------Summary--------------------------------------------------------------------\n")
-    if race_results:
-        max_race = max(race_results_7h, key=race_results_7h.get)
-        max_energy = race_results_7h[max_race]
-        print(f"Maximum energy consumption: {max_energy:.2f} Wh (Race: {max_race})\n")
-        avg_energy = sum(race_results_7h.values()) / len(race_results_7h)
-        print(f"Average energy consumption across all races: {avg_energy:.2f} Wh\n")
+    fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True) if axs is None else (plt.gcf(), axs)
+    if multiple_RS:
+        label = 'Multiple Relay Stations'
+        axs[0].plot(time_plot, power_plot, label=label)
+        axs[1].plot(time_plot, speed_plot, label='UAV Speed', color='black')
+        axs[2].plot(time_plot, gradient_plot, label='UAV Gradient', color='black')
+        axs[3].plot(time_plot, (1 - battery_energy_plot/battery_usable_capacity)*100, label='UAV Battery Usage', color='blue')
+        # Draw stall speed line in the velocity plot (axs[1])
+        axs[1].axhline(V_vert_prop, color='red', linestyle='--', label='Stall Speed')
+        axs[1].legend()
     else:
-        print("No race results available to determine maximum energy consumption.\n")
-        max_race, max_energy, avg_energy = 0,0,0
+        label = 'Cyclists'
+        axs[1].plot(time_plot, speed_plot, label='Cyclist Speed', color='grey')
+        axs[2].plot(time_plot, gradient_plot, label='Cyclist Gradient ', color='grey')
 
-    print("Done")
-    return race_results
 
-"""       
-        battery_capacity = race_results[race_name] / number_relay_stations
 
-        battery_threshold = battery_capacity * battery_max_usage  # 20% of the battery capacity
-        teamA = True  # Assuming teamA is a boolean variable indicating if the team is A
-        if teamA:
-            index_recharge_go = None
-            index_battery_empty = None
-            for i in range(len(energy_plot)):
-                if index_recharge_go is None and energy_plot[i] > battery_threshold:
-                    index_recharge_go = i
-                if index_battery_empty is None and energy_plot[i] > battery_capacity:
-                    index_battery_empty = i
-                if index_recharge_go is not None and index_battery_empty is not None:
-                    break  # Stop if both indices are found
-            #Change values to go recharge    
-            for i in range(index_recharge_go, index_battery_empty):
-                #UAV speeds ahead at Recharing_Cyclist_Speed_Multiplier times the cyclist speed to recharge point
-                if distance_plot[i-1] < distance_plot[index_battery_empty]: 
-                    
-                    
-                        # Calculate acceleration using current and previous velocity
-                    time_diff = time_plot - time_plot[i-1]
-                    if time_plot[i] > 0:  # Skip first point
-                        acceleration = (speed_plot[i] - speed_plot[i-1]) / time_diff* Recharing_Cyclist_Speed_Multiplier
-                        pitch_rate = (gradient_plot[i] - gradient_plot[i-1]) / time_diff  # Calculate pitch rate
-                    else:
-                        acceleration = 0
-                        pitch_rate = 0
-                    P = calculate_power(gradient_plot[i],speed_plot[i]*Recharing_Cyclist_Speed_Multiplier,V_stall,rho[i], W, acceleration, pitch_rate,D_rest,D_wing,L_wing,CLmax,alpha_T, N_blades, Chord_blade,CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal,eta_prop_vertical, propeller_wake_efficiency)
-                    energy = energy_plot[i-1] + time_diff * P
+    axs[0].set_title(f"Power vs Time for {race_name}")
+    axs[0].set_ylabel("Power [W]")
+    axs[0].legend()
+    axs[0].grid()
 
-                    distance_plot[i] = distance_plot[i-1] + speed_plot[i] * time_diff * Recharing_Cyclist_Speed_Multiplier
-                    power_plot[i] = P
-                    speed_plot[i] = speed_plot[i] * Recharing_Cyclist_Speed_Multiplier
-                    gradient_plot.append(row[" grade_smooth"])
-                    acceleration_plot[i] = acceleration
-                    pitch_rate_plot[i] = pitch_rate
-                    energy_plot[i]=energy / 3600  # Convert energy to Wh
-                    
-                    
-                #UAV is at recharge point
-                else: 
+    axs[1].set_title("Speed [m/s] vs Time")
+    axs[1].set_ylabel("Speed [m/s]")
+    axs[1].grid()
 
-"""
+    axs[2].set_title("Gradient vs Time")
+    axs[2].set_ylabel("Gradient [%]")
+    axs[2].legend()
+    axs[2].grid()
+
+    axs[3].set_title("Battery Usage vs Time")
+    axs[3].set_xlabel("Time [s]")
+    axs[3].set_ylabel("Battery Energy [%]")
+    axs[3].grid()
+
+
+
+   
+
+
+def get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot, altitude_plot):
+    """
+    Returns the gradient and altitude at a given distance by interpolating between points.
+    Assumes distance_plot is strictly increasing.
+    """
+
+    if distance <= distance_plot[0]:
+        return gradient_plot[0], altitude_plot[0]
+    if distance >= distance_plot[-1]:
+        return gradient_plot[-1], altitude_plot[-1]
+
+    idx = np.searchsorted(distance_plot, distance)
+    d0, d1 = distance_plot[idx - 1], distance_plot[idx]
+    g0, g1 = gradient_plot[idx - 1], gradient_plot[idx]
+    a0, a1 = altitude_plot[idx - 1], altitude_plot[idx]
+    # Linear interpolation
+    frac = (distance - d0) / (d1 - d0)
+    gradient = g0 + frac * (g1 - g0)
+    altitude = a0 + frac * (a1 - a0)
+    return np.arctan(gradient/100), altitude
