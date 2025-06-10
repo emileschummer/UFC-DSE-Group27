@@ -27,7 +27,7 @@ Cd0 = 0.05
 Cmac = -0.3
 Vx = 30
 Vy = 0
-Vz = 2.5
+Vz = 0
 V = (Vx**2 + Vy**2 + Vz**2)**0.5
 alpha = np.sin(Vz/V)
 beta = np.sin(Vy/V)
@@ -57,9 +57,9 @@ diff_thrust_yaw = 0
 elevator_delta = 0
 rudder_delta = 0
 aeleron_delta = 0
-Cldelta = 0
-Clhdelta = 0
-Clvdelta = 0
+Cldelta = 0.5
+Clhdelta = 0.5
+Clvdelta = 0.5
 
 def get_Cx():
     Cl = alpha*Clalpha + Cl0
@@ -79,6 +79,7 @@ def get_Cz():
 
 def get_Cy():
     Clv =  np.arcsin((-Vy + lv*r)/V)*Clvbeta*(Sv/S) - Clvdelta*rudder_delta*(Sv/S)  #rudder due to sidelip and yaw rotation
+
     Cy = np.cos(beta)*Clv + np.sin(roll)*np.cos(pitch)*W/(0.5*rho*S*V**2)
 
     return Cy
@@ -87,6 +88,7 @@ def get_Cmx_beta(): #due to dihederal and aelerons
     aeleron_moment = (b/2)*Cldelta*aeleron_delta
     dalpha = -2*Vy*np.sin(dihederal)
     dCl = dalpha*Clalpha
+    
     Cm = dCl*(b/4) + aeleron_moment
 
     return Cm
@@ -95,6 +97,7 @@ def get_Cmx_yawrate():
     Cl = alpha*Clalpha + Cl0
     Cd = Cd0 + Cl**2/piAe
     Cn = np.cos(alpha)*Cl + np.sin(alpha)*Cd
+
     yaw_velocity = b*r/4 #due to yawrate
     Cm = 0.5*Cn*yaw_velocity/V    #roll moment needs to be figured out better
 
@@ -105,6 +108,7 @@ def get_Cmx_rollrate():
     Cm = (b/4)*np.arcsin(b*p/(4*V))*2*Clalpha/c #due to roll rate wing
     Cmh = (bh/4)*np.arcsin(bh*p/(4*V))*2*Clhalpha*(Sh/S)/c#horizontal stabilizer
     Cmv = (bv/2)*np.arcsin(bv*p/(2*V))*Clvbeta*(Sv/S)/c#vertical stabilizer
+
     return -(Cm + Cmh + Cmv)
 
 
@@ -115,8 +119,6 @@ def get_Cmx_vertical_yawrate_and_sideslip():
     return Cmv_beta
 
 
-
-
 def get_Cmx(): #roll moment add roll due to vertical tail lift and due to yaw rate 
     Cmx = get_Cmx_beta() + get_Cmx_rollrate() + get_Cmx_yawrate() + get_Cmx_vertical_yawrate_and_sideslip() + diff_thrust_roll/(0.5*rho*S*c*V**2)
     return Cmx
@@ -125,7 +127,6 @@ def get_Cmz(): #yaw moment
     Clv = np.arcsin((Vy-lv*r)/V)*Clvbeta*(Sv/S) + Clvdelta*rudder_delta*(Sv/S) #intersting minus situaltion
     Cy = np.cos(beta)*Clv
     Cmv = Cy*lv/c
-
     return Cmv + diff_thrust_yaw/(0.5*rho*S*c*V**2)
 
 def get_Cmy(): #pitch moment
@@ -136,7 +137,6 @@ def get_Cmy(): #pitch moment
     Cnh = np.cos(alpha)*Clh
     Cm = Cn*l/c + Cmac
     Cmh = -Cnh*lh/c
-
     Cmy = diff_thrust_pitch/(0.5*rho*S*c*V**2) + Cm + Cmh
     return Cmy
 
@@ -163,56 +163,13 @@ Zlst = [Z]
 dist = 0
 distance = [dist]
 #crazy controler
-#controler initial states
-error_I = 0
-Cl_target = 2*W/(rho*S*V**2)
-alpha_target = (Cl_target - Cl0)/Clalpha
-target_AoA = [alpha_target]
-error0 = (alpha_target - alpha)
-pitch_error_I = 0
-pitch_tagetangle = [0]
-elevator_moment = [0]
-diff_pitch_moment = [0]
-Vstallst = [0]
-Tzlst = [0]
+yaw_target = np.pi/4
+diff_thrust_roll_lst = [0]
 while t < tend:
-    Vstall = (2*W/(rho*S*Clmax))**0.5
-    alphastall = (Clmax - Cl0)/Clalpha
-    if V > Vstall:
-        Cl_target = 2*W/(rho*S*V**2)
-        alpha_target = (Cl_target - Cl0)/Clalpha
-        Tz = 0
-
-    else:
-        alpha_target = alphastall
-        Cl = alpha*Clalpha + Cl0
-        Tz = (W - 0.5*rho*S*Cl*V**2)/np.cos(pitch)
-
-    target_pitch = alpha_target 
-    pitch_error = target_pitch - pitch
-    pitch_error_I = pitch_error_I + dt*pitch_error
-    error = (alpha_target - alpha)
-    error_I = error*dt + error_I
-    error_D = error - error0
-    error0 = error
-    if V > 1*Vstall:
-        elevator_delta = -error*1.5 + error_I*0.1 + q*1.5 -pitch_error*10 - pitch_error_I*10
-        diff_thrust_pitch = ( -error*1.5 + error_I*0.7 + q*4 -pitch_error*1 - pitch_error_I*1)*-200
-    else:
-        diff_thrust_pitch = ( -error*0.5 + error_I*0.9 -pitch_error*5 + pitch_error_I*0.001 + q*1)*-300
-    if diff_thrust_pitch > 100:
-        diff_thrust_pitch = 100
-    elif diff_thrust_pitch < -100:
-        diff_thrust_pitch = -100
-    if Tz > 250:
-        Tz = 250
-    Tzlst.append(Tz)
-    target_AoA.append(alpha_target*180/np.pi)
-    pitch_tagetangle.append(target_pitch*180/np.pi)
-    elevator_moment.append(elevator_delta)
-    diff_pitch_moment.append(diff_thrust_pitch)
-    Vstallst.append(Vstall)
-#end of cpontroler stuff
+    
+    diff_thrust_roll = -100*(yaw - yaw_target)
+    diff_thrust_roll_lst.append(diff_thrust_roll)
+    diff_thrust_yaw = -0.4*(yaw - yaw_target)*0
     t = t + dt
 
 
@@ -276,17 +233,17 @@ while t < tend:
     Zlst.append(Z)
     distance.append(dist)
 
-plot_mode = 0
+plot_mode = 1
 
 
-fig, (ax1, ax2, ax3,ax4) = plt.subplots(4, 1, figsize=(10, 8), sharex=True)
+fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(10, 8), sharex=True)
 
 
 
 if plot_mode == 0:
 
     ax1.plot(time, velocity, label = 'velocity [m/s]')
-    ax1.plot(time,Vstallst ,label = 'stall speed [m/s]')
+
 
     ax1.set_title("velocity")
 
@@ -294,22 +251,18 @@ if plot_mode == 0:
     ax1.legend() 
     
     ax2.plot(time, AoA, label = 'angle of attack [degrees]')
-    ax2.plot(time, target_AoA, label = 'target anngle of attack [degrees]')
-    ax2.set_ylim(-10, 35)
+
     ax2.set_title("AoA")
 
     ax2.grid(True)
     ax2.legend()
     ax3.plot(time, pitchangle, label = 'pitch angle [degrees]')
-    ax3.plot(time, pitch_tagetangle, label = 'target pitch angle [degrees]')
+
     ax3.set_title("pitch")
     ax3.legend()
-    ax4.plot(time, diff_pitch_moment, label = 'differential thrust in pitch [Nm]')
-    ax4.plot(time, Tzlst, label = 'vertical thrust [N]')
-    ax4.set_title("input")
-    ax4.grid(True)
-    ax4.set_xlabel("Time [s]")
-    ax4.legend()
+
+    ax3.set_xlabel("Time [s]")
+
 
 
 else:
@@ -326,13 +279,10 @@ else:
     ax3.plot(time, rollangle)
     ax3.set_title("roll")
 
-    ax4.plot(time, diff_pitch_moment, label = 'differential thrust in pitch [Nm]')
-    ax4.plot(time, Tzlst, label = 'vertical thrust [N]')
+    ax4.plot(time, diff_thrust_roll_lst)
     ax4.set_title("input")
     ax4.grid(True)
     ax4.set_xlabel("Time [s]")
-    ax4.legend()
-
 ax3.grid(True)
 plt.show()
 
@@ -359,4 +309,4 @@ ax.set_ylabel('Y')
 ax.set_zlabel('Z')
 ax.set_title('3D Plot Test')
 ax.legend()
-#plt.show()
+plt.show()
