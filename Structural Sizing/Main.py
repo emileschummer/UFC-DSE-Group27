@@ -8,8 +8,6 @@ from AirFoilDataExtraction import *
 
 
 #------------------------------------------------------
-#TODO: ADD TRUSS STRUCTURE ANALYSIS FOR MAIN FRAME
-#TODO: FIGURE OUT THE HINGE :(
 #TODO: ASK DANIEL ABOUT WINGBOX ANALYSIS
 #TODO: UUUUUHHHHHH, why do we not use the winglength?
 #------------------------------------------------------
@@ -21,24 +19,26 @@ from AirFoilDataExtraction import *
 # print(Airfoil_Moment_of_Inertia(Airfoil_Data,))
 # print(Airfoil_Moment_of_Inertia(Airfoil_Data_Rotated))
 
-Big_Owie_VTOL = False
-Big_Owie_Tail = False
+Big_Owie_VTOL = True
+Big_Owie_Tail = True
 Big_owie_WingBox = True
+Big_Owie_VTOL_front = True
+Big_Owie_VTOL_back = True
 MAC = 1
 
 
 #Create the material
-Material_Tail = AL()
+Material_Tail = PLA3DPrintMaterial()
 Yield_shear_Tail= Material_Tail.Yield_Shear
 Yield_Stress_Tail = Material_Tail.Yield_Stress
 Density_Tail = Material_Tail.Density
 
-Material_VTOL = AL()
+Material_VTOL = PLA3DPrintMaterial()
 Yield_shear_VTOL= Material_VTOL.Yield_Shear
 Yield_Stress_VTOL = Material_VTOL.Yield_Stress
 Density_VTOL = Material_VTOL.Density
 
-Material_WingBox = AL()
+Material_WingBox = PLA3DPrintMaterial()
 Yield_shear_WingBox= Material_WingBox.Yield_Shear
 Yield_Stress_WingBox = Material_WingBox.Yield_Stress
 Density_WingBox = Material_WingBox.Density
@@ -59,12 +59,38 @@ WingBox_Max_Lift = 100
 WingBox_Lift_at_VTOL = 75
 
 
-#VTOL poles
-R_in_VTOL = 0.03
-R_out_VTOL = 0.035
-Vtol_Pole_Length = 0.4
-M_x = T_Vtol
-M_y = F_Vtol*Vtol_Pole_Length
+#VTOL poles front
+R_in_VTOL_front = 0.17
+R_out_VTOL_front = 0.1705
+d_prop= 0.7366
+R_prop = d_prop/2	
+MAC= 0.35
+Vtol_Pole_Length_front = 1.1*R_prop+ 0.12*MAC
+M_y = F_Vtol*Vtol_Pole_Length_front
+M_z = T_Vtol
+
+
+#VTOL poles back
+R_in_VTOL_back = 0.17
+R_out_VTOL_back = 0.1705
+d_prop= 0.7366
+R_prop = d_prop/2	
+MAC= 0.35
+Vtol_Pole_Length_back = 1.1*R_prop+ 0.24*MAC
+M_y = F_Vtol*Vtol_Pole_Length_front
+M_z = T_Vtol
+
+
+
+
+
+#Loads
+F_Vtol = 61.3125 #25*9.81/4 #Newtons
+F_prop = 100 #Newtons
+T_Vtol = 2 #Newtons/Meter
+T_prop = 1 #Newtons /Meter
+
+
 
 
 #TAIL
@@ -84,31 +110,31 @@ M_y_Tail = Tail_Vertical_Force*Momenent_Acting_Point_Tail
 
 #WINGBOX
 Vtol_Location = 0.5 #along the wingbox
-WingBox_B = 0.03
-WingBox_H = 0.015
-WingBox_t = 0.001
-WingBox_length = 3
+WingBox_length = 1.5
+M_x_WingBox = Vtol_Location*F_Vtol
+M_y_WingBox = Vtol_Location*WingBox_Lift_at_VTOL
+R_in_WingBox = 0.1
+R_out_WingBox = 0.11
 
 
 
-Failure_VTOL = False
 #Sizing Time
-while Failure_VTOL:
-    Ix = Circle_Moment_of_Inertia(R_out_VTOL,R_in_VTOL)
-    Iy=Ix
-    VTOL_stress = Bending(M_x, Ix, R_out_VTOL, M_y, Iy, R_out_VTOL)
-    VTOL_Trans_Shear = Shear_Transverse_Circle(R_in_VTOL,R_out_VTOL,F_Vtol)
+# while Failure_VTOL:
+#     Ix = Circle_Moment_of_Inertia(R_out_VTOL,R_in_VTOL)
+#     Iy=Ix
+#     VTOL_stress = Bending(M_x, Ix, R_out_VTOL, M_y, Iy, R_out_VTOL)
+#     VTOL_Trans_Shear = Shear_Transverse_Circle(R_in_VTOL,R_out_VTOL,F_Vtol)
 
 
-    print("----------------------------------------------------")
-    print("The Max Shear VTOL:",VTOL_stress, "The Yield Shear:", Yield_shear_VTOL)
-    print("The Max Stress VTOL:",VTOL_Trans_Shear,"The yield stress", Yield_Stress_VTOL)
-    print("The VTOL Thickness:",R_out_VTOL-R_in_VTOL)
+#     print("----------------------------------------------------")
+#     print("The Max Shear VTOL:",VTOL_stress, "The Yield Shear:", Yield_shear_VTOL)
+#     print("The Max Stress VTOL:",VTOL_Trans_Shear,"The yield stress", Yield_Stress_VTOL)
+#     print("The VTOL Thickness:",R_out_VTOL-R_in_VTOL)
 
-    if VTOL_stress <= Yield_Stress_VTOL and VTOL_Trans_Shear <=Yield_shear_VTOL:
-        Failure_VTOL = False
-    else:
-        R_out_VTOL +=0.001
+#     if VTOL_stress <= Yield_Stress_VTOL and VTOL_Trans_Shear <=Yield_shear_VTOL:
+#         Failure_VTOL = False
+#     else:
+#         R_out_VTOL +=0.001
 
 
 
@@ -134,41 +160,43 @@ while Big_Owie_Tail:
 
 
 
-
-
-R_in_WingBox = 0.1
-R_out_WingBox = 0.11
-
 while Big_owie_WingBox:
     # WingBox_Ix = WingBox_Moment_of_inertia(B=WingBox_B,H=WingBox_H,t=WingBox_t)
     # WingBox_Iy = WingBox_Moment_of_inertia(B=WingBox_H,H=WingBox_B,t=WingBox_t)
     # WingBox_Q_x = First_Area_Q_WingBox(H=WingBox_H,B= WingBox_B, t= WingBox_t)
     # WingBox_Q_y = First_Area_Q_WingBox(H=WingBox_B,B= WingBox_H, t= WingBox_t)
-
     # WingBox_Torsion_Shear = Shear_Torsion(T=WingBox_Torque , t=WingBox_t , A=(WingBox_B*WingBox_H))
-
-    
     # WingBox_Stress = Bending(Mx=(F_Vtol*Vtol_Location), Ix=WingBox_Ix, X=WingBox_B*0.5, My= (WingBox_Lift_at_VTOL*Vtol_Location), Iy=WingBox_Iy, Y=WingBox_H*0.5)
-
     # WingBox_Total_Shear = np.sqrt(WingBox_Torsion_Shear**2 + WingBox_Transverse_Shear_lift**2 + WingBox_Transverse_Shear_VTOL**2 )
+    WingBox_t = R_out_WingBox - R_in_WingBox
+
     WingBox_Ix = Circle_Moment_of_Inertia(R_Out=R_out_WingBox,R_in=R_in_WingBox)
     WingBox_Iy = WingBox_Ix
     WingBox_Q = First_Area_Q_Circle(R_out=R_out_WingBox,R_in=R_in_WingBox,t=WingBox_t)
-    WingBox_J = Circle_Polar_Moment_of_Inertia
+    WingBox_J = Circle_Polar_Moment_of_Inertia(R_out=R_out_WingBox,R_in=R_in_WingBox)
 
     WingBox_Transverse_Shear_lift = Shear_Transverse_General(F = WingBox_Max_Lift, Q= WingBox_Q, I= WingBox_Ix, t=WingBox_t) #modelling for max shear, where force transfered from VTOl
-    WingBox_Transverse_Shear_VTOL = Shear_Transverse_General(F = F_Vtol, Q= WingBox_Q, I= WingBox_Iy, t=WingBox_t)
+    #WingBox_Transverse_Shear_VTOL = Shear_Transverse_General(F = F_Vtol, Q= WingBox_Q, I= WingBox_Iy, t=WingBox_t) # ASSUMING EQUAL DUE TO DOUBLE POLES
     WingBox_Torsion_Shear = Shear_Circle_Torsion(T=WingBox_Torque, r=R_out_WingBox, J= WingBox_J)
 
-    WingBox_Stress = Bending(Mx=1 ,Ix=WingBox_Ix, X= R_out_WingBox,My=1 ,Iy=WingBox_Iy,Y=R_out_WingBox) #FINISH ON FRIDAY
+    WingBox_Stress = Bending(Mx=M_x_WingBox ,Ix=WingBox_Ix, X= R_out_WingBox,My=M_y_WingBox ,Iy=WingBox_Iy,Y=R_out_WingBox) 
+    WingBox_Total_Shear = WingBox_Torsion_Shear+WingBox_Transverse_Shear_lift
+
+    Tresca_Stress_Wingbox = Tresca(Stress1=WingBox_Stress,Stress2=0,Shear=WingBox_Total_Shear)
+    Von_Mises_Wingbox_Stress, Von_Mises_Wingbox_Shear = Von_Mises(Stress_X=WingBox_Stress,Stress_Y=0,Stress_Z=0,Shear_XY=WingBox_Total_Shear,Shear_YZ=0,Shear_ZX=0)
+    
+    WingBox_Deflection = Tip_Deflection(F=WingBox_Lift_Distribution,L=WingBox_length,E=Material_WingBox.E,I=WingBox_Ix)
+    WingBox_Twist_Angle = Twist(T = WingBox_Torque,  L= WingBox_length, G=Material_WingBox.G, J=WingBox_J)
+
 
     print("----------------------------------------------------")
-    print("The Max Shear WingBox:",WingBox_Total_Shear, "The Yield Shear:", Yield_shear_WingBox)
-    print("The Max Stress Wingbox:",WingBox_Stress,"The yield stress", Yield_Stress_WingBox)
+    print("The Tresca Stress WingBox:",Tresca_Stress_Wingbox, "The Yield Shear:",Yield_Stress_WingBox)
+    print("The Von Mises Stress Wingbox:",Von_Mises_Wingbox_Stress,"The yield stress", Yield_Stress_WingBox)
+    print("The Von Mises Shear Wingbox:",Von_Mises_Wingbox_Shear,"The yield stress", Yield_shear_WingBox )
     print("The Wingbox Thickness:",WingBox_t)
 
 
-    if WingBox_Total_Shear <= Yield_shear_WingBox and WingBox_Stress <= Yield_Stress_WingBox:
+    if Tresca_Stress_Wingbox < Yield_Stress_WingBox and Von_Mises_Wingbox_Stress < Yield_Stress_WingBox and Von_Mises_Wingbox_Shear < Yield_Stress_WingBox and WingBox_Deflection < 0.05*WingBox_length:
         Big_owie_WingBox = False
     else:
         WingBox_t +=0.001
@@ -184,14 +212,71 @@ while Big_Owie_Leg:
 
 
 
+while Big_Owie_VTOL_front:
+    Iy = Circle_Moment_of_Inertia(R_out_VTOL_front,R_in_VTOL_front)
+    Iz=Iy
+    VTOL_stress = Bending(M_y, Iy, R_out_VTOL_front, M_z, Iz, R_out_VTOL_front)
+    VTOL_Trans_Shear = Shear_Transverse_Circle(R_in_VTOL_front,R_out_VTOL_front,F_Vtol)
+
+
+    print("----------------------------------------------------")
+    print("The Max Shear VTOL:",VTOL_stress, "The Yield Shear:", Yield_shear_VTOL)
+    print("The Max Stress VTOL:",VTOL_Trans_Shear,"The yield stress", Yield_Stress_VTOL)
+    print("The VTOL Thickness:",R_out_VTOL_front-R_in_VTOL_front)
+
+    if VTOL_stress <= Yield_Stress_VTOL and VTOL_Trans_Shear <=Yield_shear_VTOL:
+        Big_Owie_VTOL_front = False
+    else:
+        R_out_VTOL_front +=0.001
+
+
+
+while Big_Owie_VTOL_back:
+    Iy = Circle_Moment_of_Inertia(R_out_VTOL_back,R_in_VTOL_back)
+    Iz=Iy
+    VTOL_stress = Bending(M_y, Iy, R_out_VTOL_back, M_z, Iz, R_out_VTOL_back)
+    VTOL_Trans_Shear = Shear_Transverse_Circle(R_in_VTOL_back,R_out_VTOL_back,F_Vtol)
+
+
+    print("----------------------------------------------------")
+    print("The Max Shear VTOL:",VTOL_stress, "The Yield Shear:", Yield_shear_VTOL)
+    print("The Max Stress VTOL:",VTOL_Trans_Shear,"The yield stress", Yield_Stress_VTOL)
+    print("The VTOL Thickness:",R_out_VTOL_back-R_in_VTOL_back)
+
+    if VTOL_stress <= Yield_Stress_VTOL and VTOL_Trans_Shear <=Yield_shear_VTOL:
+        Big_Owie_VTOL_back = False
+    else:
+        R_out_VTOL_back +=0.001
+
+
+Vtol_Pole_Mass_front = Volume(A=Tube_Area(R_out=R_out_VTOL_front,R_in=R_in_VTOL_front), L=Vtol_Pole_Length_front)*Density_VTOL
+Vtol_Pole_Mass_back = Volume(A=Tube_Area(R_out=R_out_VTOL_back,R_in=R_in_VTOL_back), L=Vtol_Pole_Length_back)*Density_VTOL
+
+Vtol_Pole_Mass = Vtol_Pole_Mass_front + Vtol_Pole_Mass_back
+print("VTOL Pole Mass:", Vtol_Pole_Mass)
+
+
+
+Big_Owie_Fuselage = True
+
+
+
+
+
+
+
+
+
+
+
 
 
 #Calculate Mass
-Tail_pole_mass = Volume(A=Tube_Area(R_out=R_out_Tail,R_in=R_in_Tail), L=Entire_Tail_Length)*Density_Tail
-Vtol_Pole_Mass = Volume(A=Tube_Area(R_out=R_out_VTOL,R_in=R_in_VTOL), L=Vtol_Pole_Length)*Density_VTOL
-WingBox_Mass = Volume(A=WingBox_Area(B=WingBox_B,H=WingBox_H,t=WingBox_t), L=WingBox_length)*Density_WingBox
+# Tail_pole_mass = Volume(A=Tube_Area(R_out=R_out_Tail,R_in=R_in_Tail), L=Entire_Tail_Length)*Density_Tail
+# Vtol_Pole_Mass = Volume(A=Tube_Area(R_out=R_out_VTOL,R_in=R_in_VTOL), L=Vtol_Pole_Length)*Density_VTOL
+# WingBox_Mass = Volume(A=WingBox_Area(B=WingBox_B,H=WingBox_H,t=WingBox_t), L=WingBox_length)*Density_WingBox
 
-TOTAL_MASS = 1*WingBox_Mass + 4*Vtol_Pole_Mass + 2*Tail_pole_mass
+# TOTAL_MASS = 1*WingBox_Mass + 4*Vtol_Pole_Mass + 2*Tail_pole_mass
 # print("Yippee")
 # print("Yippee")
 # print("Yippee")
