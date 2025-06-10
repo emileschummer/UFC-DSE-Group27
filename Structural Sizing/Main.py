@@ -28,20 +28,25 @@ MAC = 1
 
 
 #Create the material
-Material_Tail = PLA3DPrintMaterial()
+Material_Tail = DogshitTestMaterial()
 Yield_shear_Tail= Material_Tail.Yield_Shear
 Yield_Stress_Tail = Material_Tail.Yield_Stress
 Density_Tail = Material_Tail.Density
 
-Material_VTOL = PLA3DPrintMaterial()
+Material_VTOL = DogshitTestMaterial()
 Yield_shear_VTOL= Material_VTOL.Yield_Shear
 Yield_Stress_VTOL = Material_VTOL.Yield_Stress
 Density_VTOL = Material_VTOL.Density
 
-Material_WingBox = PLA3DPrintMaterial()
+Material_WingBox = DogshitTestMaterial()
 Yield_shear_WingBox= Material_WingBox.Yield_Shear
 Yield_Stress_WingBox = Material_WingBox.Yield_Stress
 Density_WingBox = Material_WingBox.Density
+
+Material_Leg = DogshitTestMaterial()
+Yield_shear_Leg = Material_Leg.Yield_Shear
+Yield_Stress_Leg = Material_Leg.Yield_Stress
+Density_Leg = Material_Leg.Density
 
 
 #Loads
@@ -57,6 +62,8 @@ WingBox_Torque = 100
 WingBox_Lift_Distribution = 10 #Should be an elliptical func, we will figure it out later
 WingBox_Max_Lift = 100
 WingBox_Lift_at_VTOL = 75
+
+Leg_Force = (25*9.81)/4
 
 
 #VTOL poles front
@@ -199,16 +206,40 @@ while Big_owie_WingBox:
     if Tresca_Stress_Wingbox < Yield_Stress_WingBox and Von_Mises_Wingbox_Stress < Yield_Stress_WingBox and Von_Mises_Wingbox_Shear < Yield_Stress_WingBox and WingBox_Deflection < 0.05*WingBox_length:
         Big_owie_WingBox = False
     else:
-        WingBox_t +=0.001
+        R_out_WingBox +=0.001
 
 
 
 Big_Owie_Leg = False
-Required_Leg_Length_Front = 0.5
+Leg_Length = 0.5
+R_in_Leg= 1/1000
+R_out_Leg = 2/1000
+Leg_Angle = np.deg2rad(30) #deg
+Leg_Force_X = Leg_Force*np.sin(Leg_Angle)
+Leg_Force_Y = Leg_Force*np.cos(Leg_Angle)
+
 
 
 while Big_Owie_Leg:
-    Big_Owie_Leg = False
+    Leg_Ix = Circle_Moment_of_Inertia(R_Out=R_out_Leg,R_in=R_in_Leg)
+
+    Leg_Bending = Bending_Simple(M=(Leg_Length*Leg_Force_X), Y=R_out_Leg, I=Leg_Ix)
+    Leg_Transverse_Shear = Shear_Transverse_Circle(R_in=R_in_Leg,R_out=R_out_Leg,F=Leg_Force_X)
+
+    Leg_Buckle = Buckling_Stress(E=Material_Leg.E, L=Leg_Length,I=Leg_Ix,A=Tube_Area(R_out=R_out_Leg,R_in=R_in_Leg),K=2)
+
+    Leg_Von_Mises_Stress, Leg_Von_Mises_Shear = Von_Mises(Stress_X=Leg_Bending,Stress_Y=Leg_Buckle,Stress_Z=0,Shear_XY=Leg_Transverse_Shear,Shear_YZ=0,Shear_ZX=0)
+
+    
+    print("----------------------------------------------------")
+    print("The Von Mises Stress Leg:",Leg_Von_Mises_Stress,"The yield stress", Yield_Stress_Leg)
+    print("The Von Mises Shear Leg:",Leg_Von_Mises_Shear,"The yield stress", Yield_shear_Leg)
+    print("The Wingbox Leg:",R_out_Leg-R_in_Leg)
+
+    if Leg_Von_Mises_Stress < Yield_Stress_Leg and Leg_Von_Mises_Shear < Yield_shear_Leg:
+        Big_Owie_Leg = False
+    else:
+        R_out_Leg +=(1/1000)
 
 
 
@@ -220,9 +251,9 @@ while Big_Owie_VTOL_front:
 
 
     print("----------------------------------------------------")
-    print("The Max Shear VTOL:",VTOL_stress, "The Yield Shear:", Yield_shear_VTOL)
-    print("The Max Stress VTOL:",VTOL_Trans_Shear,"The yield stress", Yield_Stress_VTOL)
-    print("The VTOL Thickness:",R_out_VTOL_front-R_in_VTOL_front)
+    print("The Max Shear FRONT VTOL:",VTOL_stress, "The Yield Shear:", Yield_shear_VTOL)
+    print("The Max Stress FRONT VTOL:",VTOL_Trans_Shear,"The yield stress", Yield_Stress_VTOL)
+    print("The FRONT VTOL Thickness:",R_out_VTOL_front-R_in_VTOL_front)
 
     if VTOL_stress <= Yield_Stress_VTOL and VTOL_Trans_Shear <=Yield_shear_VTOL:
         Big_Owie_VTOL_front = False
@@ -239,9 +270,9 @@ while Big_Owie_VTOL_back:
 
 
     print("----------------------------------------------------")
-    print("The Max Shear VTOL:",VTOL_stress, "The Yield Shear:", Yield_shear_VTOL)
-    print("The Max Stress VTOL:",VTOL_Trans_Shear,"The yield stress", Yield_Stress_VTOL)
-    print("The VTOL Thickness:",R_out_VTOL_back-R_in_VTOL_back)
+    print("The Max Shear BACK VTOL:",VTOL_stress, "The Yield Shear:", Yield_shear_VTOL)
+    print("The Max Stress BACK VTOL:",VTOL_Trans_Shear,"The yield stress", Yield_Stress_VTOL)
+    print("The BACK VTOL Thickness:",R_out_VTOL_back-R_in_VTOL_back)
 
     if VTOL_stress <= Yield_Stress_VTOL and VTOL_Trans_Shear <=Yield_shear_VTOL:
         Big_Owie_VTOL_back = False

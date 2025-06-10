@@ -14,6 +14,12 @@ def Circle_Moment_of_Inertia(R_Out,R_in):
     return I
 
 
+def Solid_Circle_moment_of_Inertia(R):
+    d = 2*R
+    I = (np.pi*d**4)/64
+    return I
+
+
 def Rectangle_Moment_of_Inertia(B,H):
     I_x = (B*H**3)/12
     return I_x
