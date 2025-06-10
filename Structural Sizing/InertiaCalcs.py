@@ -43,6 +43,11 @@ def Circle_Polar_Moment_of_Inertia(R_out,R_in):
     return J
 
 
+def Semi_Circle_Moment_of_Inertia(R_out,t):
+    I = (np.pi/2 - 4/np.pi)*t*R_out**3
+    return I
+
+
 #-----------------------------------------------------------------------
 #FIRST MOMENT AREA (Q)
 #-----------------------------------------------------------------------

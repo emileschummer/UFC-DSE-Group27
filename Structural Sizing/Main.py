@@ -280,15 +280,13 @@ while Big_Owie_VTOL_back:
         R_out_VTOL_back +=0.001
 
 
-Vtol_Pole_Mass_front = Volume(A=Tube_Area(R_out=R_out_VTOL_front,R_in=R_in_VTOL_front), L=Vtol_Pole_Length_front)*Density_VTOL
-Vtol_Pole_Mass_back = Volume(A=Tube_Area(R_out=R_out_VTOL_back,R_in=R_in_VTOL_back), L=Vtol_Pole_Length_back)*Density_VTOL
 
-Vtol_Pole_Mass = Vtol_Pole_Mass_front + Vtol_Pole_Mass_back
-print("VTOL Pole Mass:", Vtol_Pole_Mass)
 
 
 
 Big_Owie_Fuselage = True
+while Big_Owie_Fuselage:
+    Big_Owie_Fuselage = False
 
 
 
@@ -303,20 +301,25 @@ Big_Owie_Fuselage = True
 
 
 #Calculate Mass
-# Tail_pole_mass = Volume(A=Tube_Area(R_out=R_out_Tail,R_in=R_in_Tail), L=Entire_Tail_Length)*Density_Tail
-# Vtol_Pole_Mass = Volume(A=Tube_Area(R_out=R_out_VTOL,R_in=R_in_VTOL), L=Vtol_Pole_Length)*Density_VTOL
-# WingBox_Mass = Volume(A=WingBox_Area(B=WingBox_B,H=WingBox_H,t=WingBox_t), L=WingBox_length)*Density_WingBox
+Tail_pole_mass = Volume(A=Tube_Area(R_out=R_out_Tail,R_in=R_in_Tail), L=Entire_Tail_Length)*Density_Tail
+WingBox_Mass = Volume(A=Tube_Area(R_out=R_out_WingBox,R_in=R_in_WingBox), L=WingBox_length)*Density_WingBox
 
-# TOTAL_MASS = 1*WingBox_Mass + 4*Vtol_Pole_Mass + 2*Tail_pole_mass
-# print("Yippee")
-# print("Yippee")
-# print("Yippee")
-# print("Yippee")
-# print("Yippee")
-# print(Tail_pole_mass)
-# print(Vtol_Pole_Mass)
-# print(WingBox_Mass)
-# print(TOTAL_MASS)
-# print("-------------------------------------------")
-# print(R_in_VTOL,R_out_VTOL, (R_out_VTOL-R_in_VTOL))
+Vtol_Pole_Mass_front = Volume(A=Tube_Area(R_out=R_out_VTOL_front,R_in=R_in_VTOL_front), L=Vtol_Pole_Length_front)*Density_VTOL
+Vtol_Pole_Mass_back = Volume(A=Tube_Area(R_out=R_out_VTOL_back,R_in=R_in_VTOL_back), L=Vtol_Pole_Length_back)*Density_VTOL
+
+Vtol_Pole_Mass = Vtol_Pole_Mass_front + Vtol_Pole_Mass_back
+print("VTOL Pole Mass:", Vtol_Pole_Mass)
+
+TOTAL_MASS = 2*WingBox_Mass + 4*Vtol_Pole_Mass + 2*Tail_pole_mass
+print("Yippee")
+print("Yippee")
+print("Yippee")
+print("Yippee")
+print("Yippee")
+print(Tail_pole_mass)
+print(Vtol_Pole_Mass)
+print(WingBox_Mass)
+print(TOTAL_MASS)
+print("-------------------------------------------")
+print(R_in_VTOL,R_out_VTOL, (R_out_VTOL-R_in_VTOL))
 

@@ -23,6 +23,11 @@ def Shear_Torsion(T,t,A):
     return Shear
 
 
+def Shear_Open(T,l,t): #Assuming plate theory, see SAD
+    Shear = (3*T)/(l*t**2)
+    return Shear
+
+
 def Shear_Transverse_General(F,Q,I,t):
     Shear = (F*Q)/(I*t)
     return Shear
@@ -36,7 +41,6 @@ def Shear_Transverse_Rectangle(F,B,H):
 def Shear_Transverse_Circle(R_in,R_out,F):
     Shear = (4/3)*F*( (R_out**2 + R_in**2 + R_in*R_out) / (np.pi*(R_out**4-R_in**4)) )
     return Shear
-
 
 
 def Buckling_Stress(E,L,I,A,K):  #K=1 for pin ends, 2 for fixed and free combo, 0.5 for both fixed, 0.7 for pinned and fixed. SEE P693 OF MOM
