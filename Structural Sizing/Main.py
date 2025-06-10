@@ -281,20 +281,17 @@ while Big_Owie_VTOL_back:
 
 
 
-
-
-
-Big_Owie_Fuselage = True
-while Big_Owie_Fuselage:
-    Big_Owie_Fuselage = False
+Big_Owie_Fuselage_Flying = True
 
 R_out_VTOL_fuselage = 0.3
 R_in_VTOL_fusolage = 0.3+1/1000
 
-while Big_Owie_Fuselage:
-    J = Circle_Polar_Moment_of_Inertia(R_out_VTOL_fuselage, R_in_VTOL_fusolage)
-    VTOL_stress = Shear_Circle_Torsion(T_prop,R_out_VTOL_fuselage,J)
+while Big_Owie_Fuselage_Flying:
+    Fuselage_Full_Section_J = Circle_Polar_Moment_of_Inertia(R_out_VTOL_fuselage, R_in_VTOL_fusolage)
+    VTOL_stress = Shear_Circle_Torsion(T_prop,R_out_VTOL_fuselage,Fuselage_Full_Section_J)
+    
 
+    Big_Owie_Fuselage_Flying = False #just here so you dont get an infinite loop error
 
 
 
