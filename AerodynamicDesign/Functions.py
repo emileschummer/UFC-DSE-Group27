@@ -29,6 +29,3 @@ def wing_geometry_calculator(InputWeight, alpha, csv, velocity_op, altitude, tap
     ct = cr*taper_ratio
 
     return S, cr, ct
-
-
-

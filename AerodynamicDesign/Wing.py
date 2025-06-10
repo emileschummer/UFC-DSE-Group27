@@ -12,13 +12,13 @@ wing = Wing(
     xsecs=[
         WingXSec(
             xyz_le=[0, 0, 0],
-            chord=0.45,
+            chord=0.6,
             twist=0,
             airfoil=my_airfoil,  
         ),
         WingXSec(
             xyz_le=[0, 1.5, 0],
-            chord=0.25,
+            chord=0.6,
             twist=0,
             airfoil=my_airfoil,
         ),
@@ -56,7 +56,7 @@ for alpha in alphas:
     vlm = VortexLatticeMethod(
         airplane=airplane,
         op_point=asb.OperatingPoint(
-            velocity=10,
+            velocity=5,
             alpha=alpha,
             beta=0,
             atmosphere=asb.Atmosphere(altitude=0)
