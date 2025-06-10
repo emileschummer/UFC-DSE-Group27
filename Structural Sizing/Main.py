@@ -19,11 +19,11 @@ from AirFoilDataExtraction import *
 # print(Airfoil_Moment_of_Inertia(Airfoil_Data,))
 # print(Airfoil_Moment_of_Inertia(Airfoil_Data_Rotated))
 
-Big_Owie_VTOL = True
-Big_Owie_Tail = True
-Big_owie_WingBox = True
-Big_Owie_VTOL_front = True
-Big_Owie_VTOL_back = True
+Big_Owie_VTOL = False
+Big_Owie_Tail = False
+Big_owie_WingBox = False
+Big_Owie_VTOL_front = False
+Big_Owie_VTOL_back = False
 MAC = 1
 
 
@@ -48,6 +48,12 @@ Yield_shear_Leg = Material_Leg.Yield_Shear
 Yield_Stress_Leg = Material_Leg.Yield_Stress
 Density_Leg = Material_Leg.Density
 
+Material_Fuselage = DogshitTestMaterial()
+Yield_shear_Fuselage = Material_Fuselage.Yield_Shear
+Yield_Stress_Fuselage = Material_Fuselage.Yield_Stress
+Density_Fuselage = Material_Fuselage.Density
+
+
 
 #Loads
 F_Vtol = 70.6 #25*9.81/4 #Newtons
@@ -64,6 +70,9 @@ WingBox_Max_Lift = 100
 WingBox_Lift_at_VTOL = 75
 
 Leg_Force = (25*9.81)/4
+
+Main_Engine_Thrust = 25
+Main_Engine_Torque = 5
 
 
 #VTOL poles front
@@ -283,22 +292,30 @@ while Big_Owie_VTOL_back:
 
 Big_Owie_Fuselage_Flying = True
 
-R_out_VTOL_fuselage = 0.3
-R_in_VTOL_fusolage = 0.3+1/1000
+R_out_fuselage = 0.3
+R_in_fuselage = 0.3+1/1000
+
+Fuselage_length_sec1 = 0.2
+Fuselage_length_sec1 = 0.4
+Fuselage_length_sec1 = 0.3
 
 while Big_Owie_Fuselage_Flying:
-    Fuselage_Full_Section_J = Circle_Polar_Moment_of_Inertia(R_out_VTOL_fuselage, R_in_VTOL_fusolage)
-    VTOL_stress = Shear_Circle_Torsion(T_prop,R_out_VTOL_fuselage,Fuselage_Full_Section_J)
-    
+    #SECTION 1
+    Fuselage_t = R_out_fuselage-R_in_fuselage
+    Fuselage_J_sec1 = Circle_Polar_Moment_of_Inertia(R_out=R_out_fuselage,R_in=R_in_fuselage)
+    Fuselage_I_sec1 = Circle_Moment_of_Inertia(R_Out=R_out_fuselage , R_in=R_in_fuselage)
+
+    Fuselage_Torsion_Sec1 = Shear_Circle_Torsion(J=Fuselage_J_sec1, T= Main_Engine_Torque, r=R_out_fuselage)
+    Fuselage_Buckle_sec1 = Buckling_Stress(E=Material_Fuselage.E, L= Fuselage_length_sec1, I=Fuselage_I_sec1, A=Tube_Area(R_out=R_out_fuselage,R_in=R_in_fuselage), K=2)
+    Fuselage_Transverse_Shear_sec1 = Shear_Transverse_Circle(R_in=R_in_fuselage,R_out=R_out_fuselage,F=2*Leg_Force_Y)#2 legs, their X forces cancel out
+    Fuselage_Bending_Stress_sec1 = Bending_Simple( M=(2*Leg_Force_Y* (0.5*Fuselage_length_sec1) ), Y=R_out_fuselage, I=Fuselage_I_sec1 )
+
+    Fuselage_VonMises_Sec1_Stress, Fuselage_VonMises_Sec1_Shear = Von_Mises(Stress_X=Fuselage_Buckle_sec1,Stress_Y=Fuselage_Bending_Stress_sec1,Stress_Z=0,Shear_XY=(Fuselage_Transverse_Shear_sec1+Fuselage_Torsion_Sec1),Shear_YZ=0, Shear_ZX=0)
+    print(Fuselage_VonMises_Sec1_Shear,Fuselage_VonMises_Sec1_Stress)
+
+
 
     Big_Owie_Fuselage_Flying = False #just here so you dont get an infinite loop error
-
-
-
-
-
-
-
 
 
 
