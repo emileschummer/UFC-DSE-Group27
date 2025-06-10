@@ -288,8 +288,8 @@ Big_Owie_Fuselage = True
 while Big_Owie_Fuselage:
     Big_Owie_Fuselage = False
 
-R_out_VTOL_fuselage = 10.1
-R_in_VTOL_fusolage = 10
+R_out_VTOL_fuselage = 0.3
+R_in_VTOL_fusolage = 0.3+1/1000
 
 while Big_Owie_Fuselage:
     J = Circle_Polar_Moment_of_Inertia(R_out_VTOL_fuselage, R_in_VTOL_fusolage)
