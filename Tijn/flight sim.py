@@ -13,14 +13,14 @@ Clvbeta = 8
 Clmax = 2.4
 Clmaxh = 1.8
 Clmaxv = 1.8
-Cl0 = 0#0.934
-Clh0 = -0.5
+Cl0 = 1.7
+Clh0 = -0.3
 b = 3
 bh = 0.3
 bv = 0.3
 dihederal = 0
 S = 1
-Sh = 0.35
+Sh = 0.08
 Sv = 0.2
 rho = 1.2
 Cd0 = 0.05
@@ -57,9 +57,9 @@ diff_thrust_yaw = 0
 elevator_delta = 0
 rudder_delta = 0
 aeleron_delta = 0
-Cldelta = 0
-Clhdelta = 0
-Clvdelta = 0
+Cldelta = 0.5
+Clhdelta = 0.5
+Clvdelta = 0.5
 
 def get_Cx():
     Cl = alpha*Clalpha + Cl0
@@ -163,54 +163,9 @@ Zlst = [Z]
 dist = 0
 distance = [dist]
 #crazy controler
-error_I = 0
-Cl_target = 2*W/(rho*S*V**2)
-alpha_target = (Cl_target - Cl0)/Clalpha
-target_AoA = [alpha_target]
-error0 = (alpha_target - alpha)
-pitch_error_I = 0
-pitch_tagetangle = [0]
-elevator_moment = [0]
-diff_pitch_moment = [0]
-Vstallst = [0]
-Tzlst = [0]
+
 while t < tend:
-    Vstall = (2*W/(rho*S*Clmax))**0.5
-    alphastall = (Clmax - Cl0)/Clalpha
-    if V > Vstall:
-        Cl_target = 2*W/(rho*S*V**2)
-        alpha_target = (Cl_target - Cl0)/Clalpha
-        Tz = 0
-
-    else:
-        alpha_target = alphastall
-        Cl = alpha*Clalpha + Cl0
-        Tz = (W - 0.5*rho*S*Cl*V**2)/np.cos(pitch)
-
-    target_pitch = alpha_target 
-    pitch_error = target_pitch - pitch
-    pitch_error_I = pitch_error_I + dt*pitch_error
-    error = (alpha_target - alpha)
-    error_I = error*dt + error_I
-    error_D = error - error0
-    error0 = error
-    if V > 1*Vstall:
-        elevator_delta = -error*1.5 + error_I*0.1 + q*1.5 -pitch_error*10 - pitch_error_I*10
-        diff_thrust_pitch = ( -error*1.5 + error_I*0.7 + q*4 -pitch_error*1 - pitch_error_I*1)*-200
-    else:
-        diff_thrust_pitch = ( -error*0.5 + error_I*0.9 -pitch_error*5 + pitch_error_I*0.001 + q*1)*-300
-    if diff_thrust_pitch > 100:
-        diff_thrust_pitch = 100
-    elif diff_thrust_pitch < -100:
-        diff_thrust_pitch = -100
-    if Tz > 250:
-        Tz = 250
-    Tzlst.append(Tz)
-    target_AoA.append(alpha_target*180/np.pi)
-    pitch_tagetangle.append(target_pitch*180/np.pi)
-    elevator_moment.append(elevator_delta)
-    diff_pitch_moment.append(diff_thrust_pitch)
-    Vstallst.append(Vstall)
+    
 
     t = t + dt
 
@@ -278,14 +233,14 @@ while t < tend:
 plot_mode = 0
 
 
-fig, (ax1, ax2, ax3,ax4) = plt.subplots(4, 1, figsize=(10, 8), sharex=True)
+fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
 
 
 
 if plot_mode == 0:
 
     ax1.plot(time, velocity, label = 'velocity [m/s]')
-    ax1.plot(time,Vstallst ,label = 'stall speed [m/s]')
+
 
     ax1.set_title("velocity")
 
@@ -293,22 +248,18 @@ if plot_mode == 0:
     ax1.legend() 
     
     ax2.plot(time, AoA, label = 'angle of attack [degrees]')
-    ax2.plot(time, target_AoA, label = 'target anngle of attack [degrees]')
-    ax2.set_ylim(-10, 35)
+
     ax2.set_title("AoA")
 
     ax2.grid(True)
     ax2.legend()
     ax3.plot(time, pitchangle, label = 'pitch angle [degrees]')
-    ax3.plot(time, pitch_tagetangle, label = 'target pitch angle [degrees]')
+
     ax3.set_title("pitch")
     ax3.legend()
-    ax4.plot(time, diff_pitch_moment, label = 'differential thrust in pitch [Nm]')
-    ax4.plot(time, Tzlst, label = 'vertical thrust [N]')
-    ax4.set_title("input")
-    ax4.grid(True)
-    ax4.set_xlabel("Time [s]")
-    ax4.legend()
+
+    ax3.set_xlabel("Time [s]")
+
 
 
 else:
@@ -351,4 +302,4 @@ ax.set_ylabel('Y')
 ax.set_zlabel('Z')
 ax.set_title('3D Plot Test')
 ax.legend()
-#plt.show()
+plt.show()
