@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import aerosandbox as asb
 import pandas as pd
-
+# --- Helper Functions ---
 
 def setup_wing_and_airplane(base_airfoil, num_spanwise_sections, r_chord, t_chord, r_twist, t_twist, sweep):
     """Define wing geometry and create an airplane object."""
@@ -61,13 +61,13 @@ def generate_2d_stall_database(airfoil_profile, section_data, alphas_polar, xfoi
     discrete_Res_polar = np.array(sorted(list(set(
         np.round(np.geomspace(max(5e4, min_Re_section * 0.8), min(1e7, max_Re_section * 1.2), ReNumbers) / 1e4) * 1e4
     )))) #lower Re numbers more significant changes so log scale used
-    # print(f"Discrete Re for polars: {discrete_Res_polar}")
+    print(f"Discrete Re for polars: {discrete_Res_polar}")
 
     stall_data_lookup = []
     airfoil_for_polars = asb.Airfoil(name=airfoil_profile.name, coordinates=airfoil_profile.coordinates)
 
     for Re_val in discrete_Res_polar:
-        # print(f"Generating 2D polar for Re = {Re_val:.2e}...")
+        print(f"Generating 2D polar for Re = {Re_val:.2e}...")
         airfoil_for_polars.generate_polars(
             alphas=alphas_polar, Res=np.array([Re_val]),
             xfoil_kwargs={"xfoil_command": xfoil_exe_path, "max_iter": 20, "verbose": False, "timeout": 60},
@@ -135,6 +135,7 @@ def run_vlm_sweep_with_stall_correction(alphas_to_sweep, vlm_airplane, velocity_
                                         section_data_list_prepared, num_wing_sections, wing_geom, altitude):
     """Performs VLM alpha sweep and applies stall correction."""
     CLs_vlm, CDs_vlm, CLs_corrected_list = [], [], []
+    result_collection = []
     lift_distribution = {"alpha": [], "CLs": []}
 
     for alpha_val in alphas_to_sweep:
@@ -147,6 +148,7 @@ def run_vlm_sweep_with_stall_correction(alphas_to_sweep, vlm_airplane, velocity_
         )
 
         results = vlm.run()
+        result_collection.append({"alpha": alpha_val, "results": results})
 
         CLs_vlm.append(results.get("CL", np.nan))
         CDs_vlm.append(results.get("CD", np.nan))
@@ -210,30 +212,30 @@ def run_vlm_sweep_with_stall_correction(alphas_to_sweep, vlm_airplane, velocity_
         # print(f"Number of VLM panels: {len(vlm.vortex_strengths)}")
     # print(f"Number of VLM panels: {len(vlm.vortex_strengths)}")
 
-    return CLs_vlm, CDs_vlm, CLs_corrected_list, lift_distribution
+    return CLs_vlm, CDs_vlm, CLs_corrected_list, result_collection, lift_distribution
 
-def plot_aerodynamic_coefficients(alphas, CLs_vlm, CLs_corrected, CDs_vlm, Plot = False):
+def plot_aerodynamic_coefficients(alphas, CLs_vlm, CLs_corrected, CDs_vlm):
     """Plots the CL and CD curves."""
-    # print("\nAlpha Sweep Results (Original VLM vs. Corrected CL):")
-    # print("----------------------------------------------------------")
-    # print("Alpha (deg) | CL (VLM) | CD (VLM) | CL (Corrected)")
-    # print("----------------------------------   ------------------------")
-    # for i in range(len(alphas)):
-    #     print(f"{alphas[i]:11.1f} | {CLs_vlm[i]:8.4f} | {CDs_vlm[i]:8.5f} | {CLs_corrected[i]:12.4f}")
-    # print("----------------------------------------------------------")
-    if Plot == True:
-        plt.figure(figsize=(10, 7))
-        plt.plot(alphas, CLs_vlm, label="CL (VLM Original)", marker='o', linestyle='--')
-        plt.plot(alphas, CLs_corrected, label="CL (Corrected with Re Effects)", marker='x')
-        plt.xlabel("Angle of Attack (deg)")
-        plt.ylabel("Lift Coefficient (CL)")
-        plt.legend(); plt.grid(True); plt.title("CL vs Alpha (VLM with Multi-Re Stall Correction)")
-        plt.show()
+    print("\nAlpha Sweep Results (Original VLM vs. Corrected CL):")
+    print("----------------------------------------------------------")
+    print("Alpha (deg) | CL (VLM) | CD (VLM) | CL (Corrected)")
+    print("----------------------------------   ------------------------")
+    for i in range(len(alphas)):
+        print(f"{alphas[i]:11.1f} | {CLs_vlm[i]:8.4f} | {CDs_vlm[i]:8.5f} | {CLs_corrected[i]:12.4f}")
+    print("----------------------------------------------------------")
 
-        plt.figure(figsize=(10,7))
-        plt.plot(alphas, CDs_vlm, label="CD (VLM Original)", marker='s')
-        plt.xlabel("Angle of Attack (deg)")
-        plt.ylabel("Drag Coefficient (CD)")
-        plt.legend(); plt.grid(True); plt.title("CD vs Alpha (VLM)")
-        plt.show()
+    plt.figure(figsize=(10, 7))
+    plt.plot(alphas, CLs_vlm, label="CL (VLM Original)", marker='o', linestyle='--')
+    plt.plot(alphas, CLs_corrected, label="CL (Corrected with Re Effects)", marker='x')
+    plt.xlabel("Angle of Attack (deg)")
+    plt.ylabel("Lift Coefficient (CL)")
+    plt.legend(); plt.grid(True); plt.title("CL vs Alpha (VLM with Multi-Re Stall Correction)")
+    plt.show()
+
+    plt.figure(figsize=(10,7))
+    plt.plot(alphas, CDs_vlm, label="CD (VLM Original)", marker='s')
+    plt.xlabel("Angle of Attack (deg)")
+    plt.ylabel("Drag Coefficient (CD)")
+    plt.legend(); plt.grid(True); plt.title("CD vs Alpha (VLM)")
+    plt.show()
 

@@ -33,7 +33,7 @@ def calculate_power_UFC_FC(incline,V,V_stall,rho, W, a, gamma_dot,D_rest,D_wing,
         #L_wing *= propeller_wake_efficiency#Lifting force of the wing
         L_prop = L_req - L_wing
         T_horizontal = (D_wing+D_rest+ np.sin(incline)*W) + W/g * a
-        P_wing = T_horizontal*V/eta_prop_horizontal #Power required to overcome the horizontal thrust
+        P_horizontal = T_horizontal*V/eta_prop_horizontal #Power required to overcome the horizontal thrust
         """Check with Jorge this power consumption is fine"""
         T_vertical_prop = L_prop/numberengines_vertical/eta_prop_vertical #Thrust per vertical propeller
         
@@ -50,7 +50,8 @@ def calculate_power_UFC_FC(incline,V,V_stall,rho, W, a, gamma_dot,D_rest,D_wing,
         #Calculate Total Powers
         P_induced = vi * T_vertical_prop * numberengines_vertical
         P_profile = (N_blades*Chord_blade*rho*CD_blade*omega**3*CLmax**4*(1+3*(V/(omega*CLmax))**2))/8
-        P = (P_induced + P_wing + P_profile)
+        P_vtol = P_induced + P_profile	
+        P = P_horizontal + P_vtol
         """Should we calculate Power differently? Add efficiency here?"""
     return P
     
