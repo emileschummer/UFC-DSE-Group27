@@ -39,7 +39,8 @@ def Shear_Transverse_Circle(R_in,R_out,F):
 
 
 
-def Buckling_Stress(E,L,r,K):  #K=1 for pin ends, 2 for fixed and free combo, 0.5 for both fixed, 0.7 for pinned and fixed. SEE P693 OF MOM
+def Buckling_Stress(E,L,I,A,K):  #K=1 for pin ends, 2 for fixed and free combo, 0.5 for both fixed, 0.7 for pinned and fixed. SEE P693 OF MOM
+    r = np.sqrt(I/A) #called radius of gyration. used in buckling
     Stress = (E*np.pi**2)/((K*L/r)**2)
     return Stress
 
