@@ -8,35 +8,33 @@ def largest_real_positive_root(roots):
     return max(real_roots)
 
 g=9.81 #m/s^2, gravitational acceleration
-def calculate_power_UFC_FC(incline,V,V_stall,rho, W, a, gamma_dot,D_rest,D_wing,L_wing,CLmax,alpha_T, N_blades, Chord_blade,CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal,eta_prop_vertical, propeller_wake_efficiency):	
+def calculate_power_UFC_FC(incline,V,rho,V_vert_prop, W, a, gamma_dot,D_rest,CLmax,S_wing,piAe,CD0_wing,alpha_T, N_blades, Chord_blade,CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal,eta_prop_vertical, propeller_wake_efficiency):	
     L_req = np.cos(incline)*W + W/g * V * gamma_dot #vertical force required for flight (stationary or not)
-    if V > V_stall:
-        """As soon as MArco, fix this!"""
-        CL = 2*L_req/(rho*1.25*V**2)
-        CD = 0.0264 + CL**2/20.41
-        D_wing = 0.5*rho*CD*1.25*V**2
+    if V > V_vert_prop:
+        CL = 2*L_req/(rho*S_wing*V**2)
+        """As soon as Marco, fix this!"""
+        CD = CD0_wing + CL**2/piAe
+        D_wing = 0.5*rho*CD*S_wing*V**2
+        """until here"""
         T_horizontal = (D_wing+D_rest + np.sin(incline)*W) + W/g * a
-        """until here"""
-        #T_horizontal = (D_wing+D_rest + np.sin(incline)*W) + W/g * a
         """Check with Jorge this power consumption is fine"""
-        P_wing = T_horizontal*V/eta_prop_horizontal
-        P = P_wing
-        P_induced, P_parasite, P_profile = 0, 0, 0
+        P_horizontal = T_horizontal*V/eta_prop_horizontal
+        P = P_horizontal
+        P_induced, P_profile, P_vtol = 0, 0, 0
     else:
-        """As soon as MArco, fix this!"""
         CL = CLmax
-        CD = 0.0264 + CL**2/20.41
-        D_wing = 0.5*rho*CD*1.25*V**2
-        T_horizontal = ((D_wing+D_rest)*V**2 + np.sin(incline)*W) + W/g * a
-        L_wing = 0.5*rho*CL*1.25*V**2 * propeller_wake_efficiency  #parameter for wake of propellers
+        """As soon as MArco, fix this!"""
+        CD = CD0_wing + CL**2/piAe
+        D_wing = 0.5*rho*CD*S_wing*V**2
         """until here"""
-        #L_wing *= propeller_wake_efficiency#Lifting force of the wing
+        T_horizontal = (D_wing+D_rest + np.sin(incline)*W) + W/g * a
+        """Check with Jorge this power consumption is fine"""
+        P_horizontal = T_horizontal*V/eta_prop_horizontal
+        P = P_horizontal
+        L_wing = 0.5*rho*CL*S_wing*V**2 * propeller_wake_efficiency  #Lifting force of the wing, parameter for wake of propellers
         L_prop = L_req - L_wing
-        T_horizontal = (D_wing+D_rest+ np.sin(incline)*W) + W/g * a
-        P_horizontal = T_horizontal*V/eta_prop_horizontal #Power required to overcome the horizontal thrust
         """Check with Jorge this power consumption is fine"""
         T_vertical_prop = L_prop/numberengines_vertical/eta_prop_vertical #Thrust per vertical propeller
-        
         A_prop = r_prop_vertical**2 * np.pi #Area of the propeller	
         #Solve for vi
         alpha_T= 0 
