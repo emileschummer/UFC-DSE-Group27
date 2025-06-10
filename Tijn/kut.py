@@ -4,19 +4,6 @@ from mpl_toolkits.mplot3d import Axes3D
 #initial conditions
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 def get_Cx(alpha, pitch, V, W,Clalpha,Cl0,Cd0,piAe,rho,S):
     Cl = alpha * Clalpha + Cl0
     Cd = Cd0 + Cl**2 / piAe
@@ -125,7 +112,7 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Clmax,Cl0,S,Cd0,Cmac,lh,l,Iy,c):
     pitch_result = results[3][min_index]
     return min_val, corresponding_val,alpha_result*180/np.pi,pitch_result*180/np.pi
 
-print(get_tail_size(200,30,4.635,6,2.4,0,1,0.05,-0.5,2,0.3,14,0.36))
+print(get_tail_size(200,30,4.635,4,2.4,1,1,0.05,-0.5,2,0,14,0.36))
 plt.show()
 
 
