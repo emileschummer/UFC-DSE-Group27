@@ -66,7 +66,6 @@ def get_Cx():
     Cd = Cd0 + Cl**2/piAe
     Ct = np.cos(alpha)*Cd - np.sin(alpha)*Cl
     Cx = Tx/(0.5*rho*S*V**2) -np.sin(pitch)*W/(0.5*rho*S*V**2) - Ct
-    TheSuperSecretFunction()
     return Cx
 
 def get_Cz():
@@ -76,12 +75,10 @@ def get_Cz():
     Cn = np.cos(alpha)*Cl + np.sin(alpha)*Cd
     Cnh = np.cos(alpha)*Clh
     Cz = np.cos(pitch)*np.cos(roll)*W/(0.5*rho*S*V**2) - Tz/(0.5*rho*S*V**2) - Cn - Cnh
-    TheSuperSecretFunction()
     return Cz
 
 def get_Cy():
     Clv =  np.arcsin((-Vy + lv*r)/V)*Clvbeta*(Sv/S) - Clvdelta*rudder_delta*(Sv/S)  #rudder due to sidelip and yaw rotation
-    TheSuperSecretFunction()
     Cy = np.cos(beta)*Clv + np.sin(roll)*np.cos(pitch)*W/(0.5*rho*S*V**2)
 
     return Cy
@@ -90,7 +87,6 @@ def get_Cmx_beta(): #due to dihederal and aelerons
     aeleron_moment = (b/2)*Cldelta*aeleron_delta
     dalpha = -2*Vy*np.sin(dihederal)
     dCl = dalpha*Clalpha
-    TheSuperSecretFunction()
     Cm = dCl*(b/4) + aeleron_moment
 
     return Cm
@@ -99,7 +95,6 @@ def get_Cmx_yawrate():
     Cl = alpha*Clalpha + Cl0
     Cd = Cd0 + Cl**2/piAe
     Cn = np.cos(alpha)*Cl + np.sin(alpha)*Cd
-    TheSuperSecretFunction()
     yaw_velocity = b*r/4 #due to yawrate
     Cm = 0.5*Cn*yaw_velocity/V    #roll moment needs to be figured out better
 
@@ -110,7 +105,6 @@ def get_Cmx_rollrate():
     Cm = (b/4)*np.arcsin(b*p/(4*V))*2*Clalpha/c #due to roll rate wing
     Cmh = (bh/4)*np.arcsin(bh*p/(4*V))*2*Clhalpha*(Sh/S)/c#horizontal stabilizer
     Cmv = (bv/2)*np.arcsin(bv*p/(2*V))*Clvbeta*(Sv/S)/c#vertical stabilizer
-    TheSuperSecretFunction()
     return -(Cm + Cmh + Cmv)
 
 
@@ -118,16 +112,9 @@ def get_Cmx_vertical_yawrate_and_sideslip():
     Clv = np.arcsin((-Vy + r*lv)/V)*Clvbeta*(Sv/S) - Clvdelta*rudder_delta*(Sv/S)  #due to sideslip on the vertical stabilizer
     Cy = np.cos(beta)*Clv
     Cmv_beta = Cy*(0.5*bv)/c
-    TheSuperSecretFunction()
     return Cmv_beta
 
 
-def TheSuperSecretFunction():
-    import time
-    import webbrowser
-    ImportantStressThing = "https://youtube.com/shorts/41iWg91yFv0?si=3yS7CuMoRXtxr3bn"
-    webbrowser.open(ImportantStressThing)
-    time.sleep(1.5) 
 
 
 def get_Cmx(): #roll moment add roll due to vertical tail lift and due to yaw rate 
@@ -138,7 +125,7 @@ def get_Cmz(): #yaw moment
     Clv = np.arcsin((Vy-lv*r)/V)*Clvbeta*(Sv/S) + Clvdelta*rudder_delta*(Sv/S) #intersting minus situaltion
     Cy = np.cos(beta)*Clv
     Cmv = Cy*lv/c
-    TheSuperSecretFunction()
+
     return Cmv + diff_thrust_yaw/(0.5*rho*S*c*V**2)
 
 def get_Cmy(): #pitch moment
@@ -149,7 +136,7 @@ def get_Cmy(): #pitch moment
     Cnh = np.cos(alpha)*Clh
     Cm = Cn*l/c + Cmac
     Cmh = -Cnh*lh/c
-    TheSuperSecretFunction()
+
     Cmy = diff_thrust_pitch/(0.5*rho*S*c*V**2) + Cm + Cmh
     return Cmy
 
@@ -176,6 +163,7 @@ Zlst = [Z]
 dist = 0
 distance = [dist]
 #crazy controler
+#controler initial states
 error_I = 0
 Cl_target = 2*W/(rho*S*V**2)
 alpha_target = (Cl_target - Cl0)/Clalpha
@@ -224,7 +212,7 @@ while t < tend:
     elevator_moment.append(elevator_delta)
     diff_pitch_moment.append(diff_thrust_pitch)
     Vstallst.append(Vstall)
-
+#end of cpontroler stuff
     t = t + dt
 
 
@@ -337,7 +325,14 @@ else:
 
     ax3.plot(time, rollangle)
     ax3.set_title("roll")
-    ax3.set_xlabel("Time [s]")
+
+    ax4.plot(time, diff_pitch_moment, label = 'differential thrust in pitch [Nm]')
+    ax4.plot(time, Tzlst, label = 'vertical thrust [N]')
+    ax4.set_title("input")
+    ax4.grid(True)
+    ax4.set_xlabel("Time [s]")
+    ax4.legend()
+
 ax3.grid(True)
 plt.show()
 

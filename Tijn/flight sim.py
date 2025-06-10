@@ -13,21 +13,21 @@ Clvbeta = 8
 Clmax = 2.4
 Clmaxh = 1.8
 Clmaxv = 1.8
-Cl0 = 1.7
-Clh0 = -0.3
+Cl0 = 0#0.934
+Clh0 = -0.5
 b = 3
 bh = 0.3
 bv = 0.3
 dihederal = 0
 S = 1
-Sh = 0.08
+Sh = 0.35
 Sv = 0.2
 rho = 1.2
 Cd0 = 0.05
 Cmac = -0.3
 Vx = 30
 Vy = 0
-Vz = 2.5
+Vz = 0
 V = (Vx**2 + Vy**2 + Vz**2)**0.5
 alpha = np.sin(Vz/V)
 beta = np.sin(Vy/V)
@@ -163,10 +163,13 @@ Zlst = [Z]
 dist = 0
 distance = [dist]
 #crazy controler
-
+yaw_target = np.pi/4
+diff_thrust_roll_lst = [0]
 while t < tend:
     
-
+    diff_thrust_roll = -100*(yaw - yaw_target)
+    diff_thrust_roll_lst.append(diff_thrust_roll)
+    diff_thrust_yaw = -0.4*(yaw - yaw_target)*0
     t = t + dt
 
 
@@ -230,10 +233,10 @@ while t < tend:
     Zlst.append(Z)
     distance.append(dist)
 
-plot_mode = 0
+plot_mode = 1
 
 
-fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
+fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(10, 8), sharex=True)
 
 
 
@@ -275,7 +278,11 @@ else:
 
     ax3.plot(time, rollangle)
     ax3.set_title("roll")
-    ax3.set_xlabel("Time [s]")
+
+    ax4.plot(time, diff_thrust_roll_lst)
+    ax4.set_title("input")
+    ax4.grid(True)
+    ax4.set_xlabel("Time [s]")
 ax3.grid(True)
 plt.show()
 
