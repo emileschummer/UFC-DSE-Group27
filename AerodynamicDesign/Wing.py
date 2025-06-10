@@ -81,4 +81,5 @@ plt.title("CL and CD vs Alpha (VLM with XFOIL polars)")
 # plt.show()
 
 # Render the wing in 3D
-wing.draw(show=False)
+wing.draw(show=True)
+plt.show()
