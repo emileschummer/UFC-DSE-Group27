@@ -12,7 +12,7 @@ Clhalpha = 4
 Clmax = 2.4
 Clmaxh = 1.8
 
-Cl0 = 0.9
+Cl0 = 0
 Clh0 = 0.1
 stall_alpha = (Clmax- Cl0)/Clalpha
 b = 3
