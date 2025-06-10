@@ -288,7 +288,12 @@ Big_Owie_Fuselage = True
 while Big_Owie_Fuselage:
     Big_Owie_Fuselage = False
 
+R_out_VTOL_fuselage = 10.1
+R_in_VTOL_fusolage = 10
 
+while Big_Owie_Fuselage:
+    J = Circle_Polar_Moment_of_Inertia(R_out_VTOL_fuselage, R_in_VTOL_fusolage)
+    VTOL_stress = Shear_Circle_Torsion(T_prop,R_out_VTOL_fuselage,J)
 
 
 
