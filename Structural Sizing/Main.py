@@ -299,6 +299,7 @@ Fuselage_length_sec1 = 0.2
 Fuselage_length_sec1 = 0.4
 Fuselage_length_sec1 = 0.3
 
+
 while Big_Owie_Fuselage_Flying:
     #SECTION 1
     Fuselage_t = R_out_fuselage-R_in_fuselage
@@ -340,5 +341,5 @@ print(Vtol_Pole_Mass)
 print(WingBox_Mass)
 print(TOTAL_MASS)
 print("-------------------------------------------")
-print(R_in_VTOL,R_out_VTOL, (R_out_VTOL-R_in_VTOL))
+
 
