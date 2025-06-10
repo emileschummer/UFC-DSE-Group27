@@ -237,7 +237,7 @@ while Big_Owie_Leg:
 
     Leg_Buckle = Buckling_Stress(E=Material_Leg.E, L=Leg_Length,I=Leg_Ix,A=Tube_Area(R_out=R_out_Leg,R_in=R_in_Leg),K=2)
 
-    Leg_Von_Mises_Stress, Leg_Von_Mises_Shear = Von_Mises(Stress_X=Leg_Bending,Stress_Y=Leg_Buckle,Stress_Z=0,Shear_XY=Leg_Transverse_Shear,Shear_YZ=0,Shear_ZX=0)
+    Leg_Von_Mises_Stress, Leg_Von_Mises_Shear = Von_Mises(Stress_X=Leg_Bending,Stress_Y=(Leg_Force_Y/Tube_Area(R_in=R_in_Leg,R_out=R_out_Leg)),Stress_Z=0,Shear_XY=Leg_Transverse_Shear,Shear_YZ=0,Shear_ZX=0)
 
     
     print("----------------------------------------------------")
@@ -245,7 +245,7 @@ while Big_Owie_Leg:
     print("The Von Mises Shear Leg:",Leg_Von_Mises_Shear,"The yield stress", Yield_shear_Leg)
     print("The Wingbox Leg:",R_out_Leg-R_in_Leg)
 
-    if Leg_Von_Mises_Stress < Yield_Stress_Leg and Leg_Von_Mises_Shear < Yield_shear_Leg:
+    if Leg_Von_Mises_Stress < Yield_Stress_Leg and Leg_Von_Mises_Shear < Yield_shear_Leg and Leg_Buckle < Yield_Stress_Leg:
         Big_Owie_Leg = False
     else:
         R_out_Leg +=(1/1000)
@@ -311,7 +311,7 @@ while Big_Owie_Fuselage_Flying:
     Fuselage_Transverse_Shear_sec1 = Shear_Transverse_Circle(R_in=R_in_fuselage,R_out=R_out_fuselage,F=2*Leg_Force_Y)#2 legs, their X forces cancel out
     Fuselage_Bending_Stress_sec1 = Bending_Simple( M=(2*Leg_Force_Y* (0.5*Fuselage_length_sec1) ), Y=R_out_fuselage, I=Fuselage_I_sec1 )
 
-    Fuselage_VonMises_Sec1_Stress, Fuselage_VonMises_Sec1_Shear = Von_Mises(Stress_X=Fuselage_Buckle_sec1,Stress_Y=Fuselage_Bending_Stress_sec1,Stress_Z=0,Shear_XY=(Fuselage_Transverse_Shear_sec1+Fuselage_Torsion_Sec1),Shear_YZ=0, Shear_ZX=0)
+    Fuselage_VonMises_Sec1_Stress, Fuselage_VonMises_Sec1_Shear = Von_Mises(Stress_X=(Main_Engine_Thrust/Tube_Area(R_in=R_in_fuselage,R_out=R_out_fuselage)),Stress_Y=Fuselage_Bending_Stress_sec1,Stress_Z=0,Shear_XY=(Fuselage_Transverse_Shear_sec1+Fuselage_Torsion_Sec1),Shear_YZ=0, Shear_ZX=0)
     print(Fuselage_VonMises_Sec1_Shear,Fuselage_VonMises_Sec1_Stress)
 
 
