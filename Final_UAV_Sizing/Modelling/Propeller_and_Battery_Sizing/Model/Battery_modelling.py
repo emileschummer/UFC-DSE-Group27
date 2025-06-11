@@ -12,7 +12,7 @@ from Acceleration_try.Input import Strava_input_csv as sva
 import numpy as np
 import pandas as pd
 
-def Battery_Model(output_folder,aero_df, V_vert_prop=5, W=250, D_rest=50, CLmax=2.2, S_wing=1.5, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 189,  show=False):
+def Battery_Model(output_folder,aero_df, V_vert_prop=5, W=250, CLmax=2.2, S_wing=1.5, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 189,  show=False):
     print("---------Plot Race Results---------")
     races = sva.make_race_dictionnary()
     race_results = {}
@@ -316,5 +316,5 @@ def get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot
 
 def Battery_Size(max_battery_energy, battery_safety_margin = 1.2, battery_energy_density = 450, battery_volumetric_density= 200):
     battery_mass = max_battery_energy * battery_safety_margin / battery_energy_density  # in kg
-    battery_volume = max_battery_energy * battery_safety_margin / battery_volumetric_density  # in m^3
+    battery_volume = battery_mass / battery_volumetric_density  # in m^3
     return battery_mass,battery_volume
