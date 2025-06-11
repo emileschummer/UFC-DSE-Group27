@@ -71,6 +71,12 @@ def First_Area_Q_Circle(R_out,R_in,t):
     Q = Y*A
     return Q
 
+
+def First_Area_Q_SemiCircle(t,R_in,R_out):
+    Q = 2*t*(0.5*(R_in+R_out))**2
+    return Q
+
+
 #-----------------------------------------------------------------------
 #OTHER
 #-----------------------------------------------------------------------

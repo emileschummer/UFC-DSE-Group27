@@ -8,8 +8,12 @@ from AirFoilDataExtraction import *
 
 
 #------------------------------------------------------
-#TODO: ASK DANIEL ABOUT WINGBOX ANALYSIS
-#TODO: UUUUUHHHHHH, why do we not use the winglength?
+#TODO ADD A SAFETY FACTOR 1.5
+#TODO VIBRATIONS --> FLUTTER !!!!
+#TODO ASK ALEX FOR FEEDBACK
+#TODO DRAG AND TORQUE FORCES FROM PAYLOAD
+#TODO gps location
+#TODO INCLUDE TAIL IN ENGINE FORCE
 #------------------------------------------------------
 
 #Things to run
@@ -65,7 +69,7 @@ Tail_loading_horizontal_Distributed = 20 #Newtons per meter
 Tail_loading_Vertical_Distributed = 30 #Newtons per meter
 
 WingBox_Torque = 100
-WingBox_Lift_Distribution = 10 #Should be an elliptical func, we will figure it out later
+WingBox_Lift_Distribution = 10 #Should be an elliptical func, we will figure it out later REMEMBER -WL^2/2
 WingBox_Max_Lift = 100
 WingBox_Lift_at_VTOL = 75
 
@@ -134,23 +138,6 @@ R_out_WingBox = 0.11
 
 
 
-#Sizing Time
-# while Failure_VTOL:
-#     Ix = Circle_Moment_of_Inertia(R_out_VTOL,R_in_VTOL)
-#     Iy=Ix
-#     VTOL_stress = Bending(M_x, Ix, R_out_VTOL, M_y, Iy, R_out_VTOL)
-#     VTOL_Trans_Shear = Shear_Transverse_Circle(R_in_VTOL,R_out_VTOL,F_Vtol)
-
-
-#     print("----------------------------------------------------")
-#     print("The Max Shear VTOL:",VTOL_stress, "The Yield Shear:", Yield_shear_VTOL)
-#     print("The Max Stress VTOL:",VTOL_Trans_Shear,"The yield stress", Yield_Stress_VTOL)
-#     print("The VTOL Thickness:",R_out_VTOL-R_in_VTOL)
-
-#     if VTOL_stress <= Yield_Stress_VTOL and VTOL_Trans_Shear <=Yield_shear_VTOL:
-#         Failure_VTOL = False
-#     else:
-#         R_out_VTOL +=0.001
 
 
 
@@ -177,13 +164,6 @@ while Big_Owie_Tail:
 
 
 while Big_owie_WingBox:
-    # WingBox_Ix = WingBox_Moment_of_inertia(B=WingBox_B,H=WingBox_H,t=WingBox_t)
-    # WingBox_Iy = WingBox_Moment_of_inertia(B=WingBox_H,H=WingBox_B,t=WingBox_t)
-    # WingBox_Q_x = First_Area_Q_WingBox(H=WingBox_H,B= WingBox_B, t= WingBox_t)
-    # WingBox_Q_y = First_Area_Q_WingBox(H=WingBox_B,B= WingBox_H, t= WingBox_t)
-    # WingBox_Torsion_Shear = Shear_Torsion(T=WingBox_Torque , t=WingBox_t , A=(WingBox_B*WingBox_H))
-    # WingBox_Stress = Bending(Mx=(F_Vtol*Vtol_Location), Ix=WingBox_Ix, X=WingBox_B*0.5, My= (WingBox_Lift_at_VTOL*Vtol_Location), Iy=WingBox_Iy, Y=WingBox_H*0.5)
-    # WingBox_Total_Shear = np.sqrt(WingBox_Torsion_Shear**2 + WingBox_Transverse_Shear_lift**2 + WingBox_Transverse_Shear_VTOL**2 )
     WingBox_t = R_out_WingBox - R_in_WingBox
 
     WingBox_Ix = Circle_Moment_of_Inertia(R_Out=R_out_WingBox,R_in=R_in_WingBox)
@@ -192,7 +172,6 @@ while Big_owie_WingBox:
     WingBox_J = Circle_Polar_Moment_of_Inertia(R_out=R_out_WingBox,R_in=R_in_WingBox)
 
     WingBox_Transverse_Shear_lift = Shear_Transverse_General(F = WingBox_Max_Lift, Q= WingBox_Q, I= WingBox_Ix, t=WingBox_t) #modelling for max shear, where force transfered from VTOl
-    #WingBox_Transverse_Shear_VTOL = Shear_Transverse_General(F = F_Vtol, Q= WingBox_Q, I= WingBox_Iy, t=WingBox_t) # ASSUMING EQUAL DUE TO DOUBLE POLES
     WingBox_Torsion_Shear = Shear_Circle_Torsion(T=WingBox_Torque, r=R_out_WingBox, J= WingBox_J)
 
     WingBox_Stress = Bending(Mx=M_x_WingBox ,Ix=WingBox_Ix, X= R_out_WingBox,My=M_y_WingBox ,Iy=WingBox_Iy,Y=R_out_WingBox) 
@@ -292,31 +271,60 @@ while Big_Owie_VTOL_back:
 
 Big_Owie_Fuselage_Flying = True
 
-R_out_fuselage = 0.3
-R_in_fuselage = 0.3+1/1000
+R_out_fuselage = 0.3+1/1000 
+R_in_fuselage = 0.3
 
 Fuselage_length_sec1 = 0.2
-Fuselage_length_sec1 = 0.4
-Fuselage_length_sec1 = 0.3
+Fuselage_length_sec2 = 0.4
+Fuselage_length_sec3 = 0.3
+
+#fUSELAGE lOADS
+Fuselage_Sec1_Load = 10 #N*m distributed load
+Fuselage_sec2_load = 15 #Battery
 
 
 while Big_Owie_Fuselage_Flying:
-    #SECTION 1
+    #SECTION 1:
     Fuselage_t = R_out_fuselage-R_in_fuselage
+
     Fuselage_J_sec1 = Circle_Polar_Moment_of_Inertia(R_out=R_out_fuselage,R_in=R_in_fuselage)
     Fuselage_I_sec1 = Circle_Moment_of_Inertia(R_Out=R_out_fuselage , R_in=R_in_fuselage)
 
     Fuselage_Torsion_Sec1 = Shear_Circle_Torsion(J=Fuselage_J_sec1, T= Main_Engine_Torque, r=R_out_fuselage)
     Fuselage_Buckle_sec1 = Buckling_Stress(E=Material_Fuselage.E, L= Fuselage_length_sec1, I=Fuselage_I_sec1, A=Tube_Area(R_out=R_out_fuselage,R_in=R_in_fuselage), K=2)
-    Fuselage_Transverse_Shear_sec1 = Shear_Transverse_Circle(R_in=R_in_fuselage,R_out=R_out_fuselage,F=2*Leg_Force_Y)#2 legs, their X forces cancel out
-    Fuselage_Bending_Stress_sec1 = Bending_Simple( M=(2*Leg_Force_Y* (0.5*Fuselage_length_sec1) ), Y=R_out_fuselage, I=Fuselage_I_sec1 )
+    Fuselage_Transverse_Shear_sec1 = Shear_Transverse_Circle(R_in=R_in_fuselage,R_out=R_out_fuselage,F=(Fuselage_Sec1_Load*Fuselage_length_sec1) ) #shear and therefore thickness would vary over the length of the beam, but modelling for worst case at joint where shear is max
+    Fuselage_Bending_Stress_sec1 = Bending_Simple( M=(-0.5*Fuselage_Sec1_Load*(Fuselage_length_sec1**2)), Y=R_out_fuselage, I=Fuselage_I_sec1 )
 
-    Fuselage_VonMises_Sec1_Stress, Fuselage_VonMises_Sec1_Shear = Von_Mises(Stress_X=(Main_Engine_Thrust/Tube_Area(R_in=R_in_fuselage,R_out=R_out_fuselage)),Stress_Y=Fuselage_Bending_Stress_sec1,Stress_Z=0,Shear_XY=(Fuselage_Transverse_Shear_sec1+Fuselage_Torsion_Sec1),Shear_YZ=0, Shear_ZX=0)
-    print(Fuselage_VonMises_Sec1_Shear,Fuselage_VonMises_Sec1_Stress)
+    Fuselage_VonMises_Sec1_Stress, Fuselage_VonMises_Sec1_Shear = Von_Mises(Stress_X=(Main_Engine_Thrust/Tube_Area(R_in=R_in_fuselage,R_out=R_out_fuselage)),Stress_Y=0,Stress_Z=Fuselage_Bending_Stress_sec1,Shear_XY=(Fuselage_Transverse_Shear_sec1+Fuselage_Torsion_Sec1),Shear_YZ=0, Shear_ZX=0)
+
+    if Fuselage_VonMises_Sec1_Stress < Yield_Stress_Fuselage and Fuselage_VonMises_Sec1_Stress < Fuselage_Buckle_sec1 and Fuselage_VonMises_Sec1_Shear < Yield_shear_Fuselage:
+        Big_Owie_Fuselage_Flying = False 
+    else:
+        R_out_fuselage +=1/1000
 
 
+    #SECTION 2:
+    Fuselage_t = R_out_fuselage-R_in_fuselage
+    Fuselage_Sec1_Load_Total = Fuselage_Sec1_Load*Fuselage_length_sec1
+    Fuselage_I_sec2 = Semi_Circle_Moment_of_Inertia(R_out=(R_out_fuselage-0.5*Fuselage_t), t=Fuselage_t)
 
-    Big_Owie_Fuselage_Flying = False #just here so you dont get an infinite loop error
+    Fuselage_Torsion_Sec2 = Torsion_Open(T=Main_Engine_Torque, l= Fuselage_length_sec2, t=Fuselage_t)
+    Fuselage_Buckle_sec2 = Buckling_Stress(E=Material_Fuselage.E, L=Fuselage_length_sec2, I=Fuselage_I_sec2, A=0.5*Tube_Area(R_out=R_out_fuselage,R_in=R_in_fuselage), K=0.5)
+    Fuselage_Transverse_Shear_sec2 = Shear_Transverse_General(F=(Fuselage_Sec1_Load_Total+Fuselage_length_sec2*Fuselage_Sec1_Load),Q=First_Area_Q_SemiCircle(R_in=R_in_fuselage,R_out=R_out_fuselage,t=Fuselage_t), I=Fuselage_I_sec2,t=Fuselage_t)  
+    Fuselage_Bending_Stress_sec2 = Bending_Simple(M=-(Fuselage_Sec1_Load_Total+0.5*Fuselage_sec2_load*(Fuselage_length_sec2**2)), Y=R_out_fuselage,I=Fuselage_I_sec2)
+
+    Fuselage_VonMises_Sec2_Stress, Fuselage_VonMises_Sec2_Shear = Von_Mises(Stress_X=(Main_Engine_Thrust/0.5*Tube_Area(R_in=R_in_fuselage,R_out=R_out_fuselage)),Stress_Y=0,Stress_Z=Fuselage_Bending_Stress_sec2,Shear_XY=(Fuselage_Transverse_Shear_sec2+Fuselage_Torsion_Sec2),Shear_YZ=0, Shear_ZX=0)
+
+    if Fuselage_VonMises_Sec2_Stress < Yield_Stress_Fuselage and Fuselage_VonMises_Sec2_Stress < Fuselage_Buckle_sec2 and Fuselage_VonMises_Sec2_Shear < Yield_shear_Fuselage:
+        Big_Owie_Fuselage_Flying = False 
+    else:
+        R_out_fuselage +=1/1000
+
+
+    #SECTION 3:
+    Fuselage_t = R_out_fuselage-R_in_fuselage
+
+
 
 
 
