@@ -1,21 +1,37 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-import numpy as np
 import pandas as pd
 import Acceleration_try.Input.Config as config
-from Acceleration_try.Model.UFC_FC_YEAH import calculate_thrust_UFC_FC
-from statistics import mode, StatisticsError
+from Acceleration_try.Model.UFC_FC_YEAH import *
 import Acceleration_try.Input.Strava_input_csv as sva
+from statistics import mode, StatisticsError
+W= 250
+S_wing = 2
+CLmax = 2
+V_vert_prop = 11
+numberengines_vertical = 4
+numberengines_horizontal = 1
+propeller_wake_efficiency = 0.7
+L_blade = 0.7366
+L_stab= 0.6
 
+L_n = 0.2
+L_c = 0.6
+L_fus = L_n + L_c
+d = 0.25
+
+aero_df = pd.read_csv(os.path.join(os.path.dirname(__file__), 'aero.csv'))
 
 races = sva.make_race_dictionnary()
 inputs = config.input_list_final
+
+
 for race_name, race_data in races.items():
     
     Tvertical_list= []
     Thorizontal_list = []
-    calculate_thrust = calculate_thrust_UFC_FC
+    acceleration_list = []
     t = 0
     prev_velocity = 0 
     prev_grade_smooth= 0 
@@ -25,24 +41,31 @@ for race_name, race_data in races.items():
         grade_smooth = np.arctan(row[" grade_smooth"] / 100)
         altitude = row[" altitude"]
         rho = sva.air_density_isa(altitude)
+        Cf_blade= flat_plate_drag_coefficient(velocity_smooth, rho, altitude, L_blade)
+        Cf_stab = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, L_stab)
+        Cf_fus = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, L_fus)
+        CD_cube = cube_drag_coefficient(velocity_smooth, rho, altitude, S_wing)
+        CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing)
+
         
         # Calculate acceleration using current and previous velocity
         time_diff = time - t
         if t > 0:  # Skip first point
             acceleration = (velocity_smooth - prev_velocity) / time_diff
-            pitch_rate = (grade_smooth - prev_grade_smooth) / time_diff  # Calculate pitch rate
+            pitch_rate = (grade_smooth - prev_grade_smooth) / time_diff
         else:
             acceleration = 0
             pitch_rate = 0
-        prev_velocity = velocity_smooth # Store current velocity for next iteration
-        prev_grade_smooth = grade_smooth  # Store current grade for next iteration
+        acceleration_list.append(acceleration)
+        prev_velocity = velocity_smooth
+        prev_grade_smooth = grade_smooth
         t = time
 
-        Tvertical, Thorizontal = calculate_thrust(grade_smooth, velocity_smooth, rho, inputs, acceleration, pitch_rate)
+        Tvertical, Thorizontal = calculate_thrust_UFC_FC(grade_smooth, velocity_smooth, rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical, numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_cube, Cf_blade, Cf_stab)
         Tvertical_list.append(Tvertical)
         Thorizontal_list.append(Thorizontal)
-    # Print maximum and average thrusts for this race
-   
+    
+    # Statistics calculations
     non_zero_vertical = [t for t in Tvertical_list if t != 0]
     non_negative_horizontal = [t for t in Thorizontal_list if t >= 0]
     print(f"\nRace: {race_name}")
@@ -51,23 +74,42 @@ for race_name, race_data in races.items():
     print(f"Average vertical thrust (excluding zeros): {sum(non_zero_vertical)/len(non_zero_vertical):.2f} N")
     print(f"Average horizontal thrust (excluding negative): {sum(non_negative_horizontal)/len(non_negative_horizontal):.2f} N")
     try:
-        # Filter out zero values from Tvertical_list
         print(f"Most common vertical thrust value (excluding zeros): {mode(non_zero_vertical):.2f} N")
         print(f"Most common horizontal thrust value (excluding negative): {mode(Thorizontal_list):.2f} N")
     except StatisticsError:
         print("No unique mode found for thrust values")
     
-    
-    # Plot thrusts against time
-    import matplotlib.pyplot as plt
+    # Create subplots
+    fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(12, 16), sharex=True)
     
     time_points = race_data[' time'].values
-    plt.figure(figsize=(10, 6))
-    plt.plot(time_points, Tvertical_list, label='Vertical Thrust')
-    plt.plot(time_points, Thorizontal_list, label='Horizontal Thrust')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Thrust (N)')
-    plt.title(f'Thrust vs Time - {race_name}')
-    plt.legend()
-    plt.grid(True)
-    #plt.show()
+    
+    # Plot horizontal thrust
+    ax1.plot(time_points, Thorizontal_list, 'b-', label='Horizontal Thrust')
+    ax1.set_ylabel('Thrust (N)')
+    ax1.set_title(f'{race_name} - Time History')
+    ax1.grid(True)
+    ax1.legend()
+    
+    # Plot altitude
+    ax2.plot(time_points, race_data[' grade_smooth'].values, 'g-', label='Gradient')
+    ax2.set_ylabel('Gradient (%)')
+    ax2.grid(True)
+    ax2.legend()
+    
+    # Plot velocity
+    ax3.plot(time_points, race_data[' velocity_smooth'].values, 'r-', label='Velocity')
+    ax3.set_ylabel('Velocity (m/s)')
+    ax3.grid(True)
+    ax3.legend()
+    
+    # Plot acceleration
+    ax4.plot(time_points, acceleration_list, 'm-', label='Acceleration')
+    ax4.set_xlabel('Time (s)')
+    ax4.set_ylabel('Acceleration (m/s²)')
+    ax4.grid(True)
+    ax4.legend()
+    
+    plt.tight_layout()
+    plt.show()
+

@@ -2,6 +2,7 @@ import numpy as np
 #Fixed input values for UAV sizing
 ##A. Folder paths
 output_folder = "Final_UAV_Sizing/Output" # [str] folder to save output data
+OG_aero_csv = "Final_UAV_Sizing/Input/WingData/OG_aero.csv" # [str] name of the original CSV file to save aerodynamic data
 aero_csv = "Final_UAV_Sizing/Input/WingData/aero.csv" # [str] name of the CSV file to save aerodynamic data
 ##B. Constants
 g = 9.81 # [m/s2] gravity acceleration
@@ -17,8 +18,10 @@ max_RS = 6 # [-] maximum number of relay stations
 
 ##1. Wing Sizing Parameters
 xfoil = "Xfoil" # [str] path to xfoil executable
-altitude =  # [m] operational altitude for wing sizing
-taper_ratio =  # [-] taper ratio for wing sizing
+"""Find adequate values for below"""
+altitude =  0 # [m] operational altitude for wing sizing
+taper_ratio = 0.4 # [-] taper ratio for wing sizing
+"""Stop here"""
 b = 3 # [m] wing span
 num_spanwise_sections = 200 # [-] number of spanwise sections for VLM analysis
 vlm_chordwise_resolution = 6 # [-] chordwise resolution for VLM analysis
@@ -33,18 +36,33 @@ Re_numbers = 8 # [-] number of Reynolds numbers for stall database
 ##2. Propeller Sizing
 numberengines_vertical = 4
 numberengines_horizontal = 1
-propeller_wake_efficiency = 0.8
+propeller_wake_efficiency = 0.7
 
 ##3. Battery Sizing
 output_folder = "Final_UAV_Sizing/Output/Battery" # [str] folder to save battery data
-D_rest =  # [N] Drag of the rest
 UAV_off_for_recharge_time_min = 15 # [min] time UAV is not filming to recharge
 battery_recharge_time_min = 5 # [min] time to change/recharge battery
-PL_power = 189 # [W] power consumption of payload
-battery_safety_margin = #1.2 # [-] safety margin for battery capacity
+PL_power = 155 # [W] power consumption of payload
+"""Find propper value for safety_margin (including reserve)"""
+battery_safety_margin = 1.2 # [-] safety margin for battery capacity
 battery_energy_density = 450 # [Wh/kg] energy density of battery
-battery_volumetric_density =  # [Wh/m^3] volumetric density of battery
+battery_volumetric_density =  1851.9 # [kg/m^3] volumetric density of battery
+"""Explain where these values come from and if linked to iteration (Roan knows)"""
+L_n = 0.2
+L_c = 0.6
+L_fus = L_n+L_c
+d=0.25
+L_blade = 0.7366
+L_stab = 0.6
+"""until here"""
 ##4. Tail Sizing
+e = 0.8 # [-] Oswald Efficiency
+Clhalpha = 4.3 # [-] Clalpha of the tail
+Cd0 = 0.00744 +0.1#rest
+lh = 1 # [m] tail length from CG
+l = 0 # [m] distance between CG and AC
+Iy = 14 # [kgm^2] Mass Moment of Inertia
+Clhmax = 1.5 # [-] Clmax of tail
 ##5. Structure Sizing
 ##6. Final Mass Calculation
-M_PL =  # [kg] mass of payload
+M_PL = 2.063 # [kg] mass of payload
