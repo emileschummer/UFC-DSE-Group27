@@ -17,9 +17,10 @@ def load_airfoil_dat(path):
     return np.array(coords)
 
 #taper between 0.4-0.6
-def wing_geometry_calculator(InputWeight, alpha, csv, velocity_op, altitude, taper_ratio, b):
+def wing_geometry_calculator(InputWeight, aero_df, velocity_op, altitude, taper_ratio, b):
     #from csv should take the CL assosciated to the alpha that want to analyse. it should take the old CL.
-    
+    CL = aero_df["CL_corrected"][-2]
+
     op_point_for_atmo = asb.OperatingPoint(velocity=velocity_op, atmosphere=asb.Atmosphere(altitude=altitude))
     rho = op_point_for_atmo.atmosphere.density()
 
