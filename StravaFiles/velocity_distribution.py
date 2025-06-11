@@ -10,7 +10,7 @@ def make_race_dictionnary(data_folder = 0):
     races = {}
     current_dir = os.path.dirname(os.path.abspath(__file__))  # Location of main.py
     if data_folder == 0:
-            data_folder = os.path.join(current_dir, "RaceData")
+            data_folder = "C:\\Users\\marco\\Documents\\GitHub\\UFC-DSE-Group27\\UAV_Sizing\\RaceData"
     if not os.path.exists(data_folder):
         print(f"Data folder {data_folder} does not exist.")
         return {}

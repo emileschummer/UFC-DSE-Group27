@@ -4,16 +4,16 @@ import aerosandbox as asb
 import pandas as pd
 
 
-def setup_wing_and_airplane(base_airfoil, num_spanwise_sections, r_chord, t_chord, r_twist, t_twist, sweep):
+def setup_wing_and_airplane(chosen_airfoil, num_spanwise_sections, r_chord, t_chord, r_twist, t_twist, sweep):
     """Define wing geometry and create an airplane object."""
     wing = asb.Wing(
         name="Wing",
         xsecs=[
             asb.WingXSec(
-                xyz_le=[0, 0, 0], chord=r_chord, twist=r_twist, airfoil=base_airfoil,
+                xyz_le=[0, 0, 0], chord=r_chord, twist=r_twist, airfoil=chosen_airfoil,
             ),
             asb.WingXSec(
-                xyz_le=[sweep, 1.5, 0], chord=t_chord, twist=t_twist, airfoil=base_airfoil,
+                xyz_le=[sweep, 1.5, 0], chord=t_chord, twist=t_twist, airfoil=chosen_airfoil,
             ),
         ],
         symmetric=True,
@@ -23,16 +23,16 @@ def setup_wing_and_airplane(base_airfoil, num_spanwise_sections, r_chord, t_chor
     # print(f"Wing Setup: Span={wing.span():.2f}m, Area={wing.area():.2f}m^2, AR={wing.aspect_ratio():.2f}")
     return wing, airplane
 
-def calculate_section_properties_and_reynolds(wing_obj, velocity_op, altitude):
+def calculate_section_properties_and_reynolds(wing_object, operational_velocity, operational_altitude):
     """Calculate geometric properties and Reynolds numbers for each wing section."""
     section_data_list = []
     #flow properties
-    op_point_for_atmo = asb.OperatingPoint(velocity=velocity_op, atmosphere=asb.Atmosphere(altitude=altitude))
-    rho = op_point_for_atmo.atmosphere.density()
-    mu = op_point_for_atmo.atmosphere.dynamic_viscosity()
+    operational_point_data = asb.OperatingPoint(velocity=operational_velocity, atmosphere=asb.Atmosphere(altitude=operational_altitude))
+    rho = operational_point_data.atmosphere.density()
+    mu = operational_point_data.atmosphere.dynamic_viscosity()
     nu = mu / rho
 
-    for i, (xsec_in, xsec_out) in enumerate(zip(wing_obj.xsecs[:-1], wing_obj.xsecs[1:])):
+    for i, (xsec_in, xsec_out) in enumerate(zip(wing_object.xsecs[:-1], wing_object.xsecs[1:])):
         chord_in = xsec_in.chord
         chord_out = xsec_out.chord
         y_in = xsec_in.xyz_le[1]
@@ -42,7 +42,7 @@ def calculate_section_properties_and_reynolds(wing_obj, velocity_op, altitude):
         y_j_mid = (y_in + y_out) / 2
         delta_y_j = y_out - y_in
         area_j = c_j * delta_y_j
-        Re_j = (velocity_op * c_j) / nu
+        Re_j = (operational_velocity * c_j) / nu
 
         section_data_list.append({
             'id': i, 'y_mid': y_j_mid, 'chord': c_j, 'span_segment': delta_y_j,
@@ -52,33 +52,33 @@ def calculate_section_properties_and_reynolds(wing_obj, velocity_op, altitude):
         # print(f"Section {i}: y_mid={y_j_mid:.2f}m, chord={c_j:.3f}m, Re={Re_j:.2e}")
     return section_data_list
 
-def generate_2d_stall_database(airfoil_profile, section_data, alphas_polar, xfoil_exe_path, ReNumbers):
+def generate_2d_stall_database(airfoil_profile, section_data, alpha_range2D, xfoil_path, Re_numbers):
     """Generate 2D airfoil polars across a range of Reynolds numbers using XFoil."""
     min_Re_section = min(s['Re'] for s in section_data)
     max_Re_section = max(s['Re'] for s in section_data)
     # print(f"Min/Max section Re for polars: {min_Re_section:.2e} / {max_Re_section:.2e}")
 
-    discrete_Res_polar = np.array(sorted(list(set(
-        np.round(np.geomspace(max(5e4, min_Re_section * 0.8), min(1e7, max_Re_section * 1.2), ReNumbers) / 1e4) * 1e4
+    discrete_Re_values = np.array(sorted(list(set(
+        np.round(np.geomspace(max(5e4, min_Re_section * 0.8), min(1e7, max_Re_section * 1.2), Re_numbers) / 1e4) * 1e4
     )))) #lower Re numbers more significant changes so log scale used
-    # print(f"Discrete Re for polars: {discrete_Res_polar}")
+    # print(f"Discrete Re for polars: {discrete_Re_values}")
 
-    stall_data_lookup = []
+    stall_data_dictionary = []
     airfoil_for_polars = asb.Airfoil(name=airfoil_profile.name, coordinates=airfoil_profile.coordinates)
 
-    for Re_val in discrete_Res_polar:
-        # print(f"Generating 2D polar for Re = {Re_val:.2e}...")
+    for Re_value in discrete_Re_values:
+        # print(f"Generating 2D polar for Re = {Re_value:.2e}...")
         airfoil_for_polars.generate_polars(
-            alphas=alphas_polar, Res=np.array([Re_val]),
-            xfoil_kwargs={"xfoil_command": xfoil_exe_path, "max_iter": 20, "verbose": False, "timeout": 60},
+            alphas=alpha_range2D, Res=np.array([Re_value]),
+            xfoil_kwargs={"xfoil_command": xfoil_path, "max_iter": 20, "verbose": False, "timeout": 60},
             include_compressibility_effects=False
         )
-        cls_2d = np.array([airfoil_for_polars.CL_function(alpha, Re_val) for alpha in alphas_polar])
+        cl_2D_array = np.array([airfoil_for_polars.CL_function(alpha, Re_value) for alpha in alpha_range2D])
 
         #identify stall cl and angle per airfoil analysis
-        idx_stall = np.nanargmax(cls_2d)
-        Cl_max_2D = cls_2d[idx_stall]
-        alpha_stall_2D = alphas_polar[idx_stall]
+        idx_stall = np.nanargmax(cl_2D_array)
+        Cl_max_2D = cl_2D_array[idx_stall]
+        alpha_stall_2D = alpha_range2D[idx_stall]
 
         # Estimate K_post (post-stall slope) from the airfoils to them use on vlm
         K_post = -0.05  # Default
@@ -86,9 +86,9 @@ def generate_2d_stall_database(airfoil_profile, section_data, alphas_polar, xfoi
         valid_post_stall_cls = []
         for i in range(1, 4):
             idx_after_stall = idx_stall + i
-            if idx_after_stall < len(alphas_polar) and not np.isnan(cls_2d[idx_after_stall]): #if stall angle index+i is not longer than the remaining indexes and is not a nan
-                valid_post_stall_alphas.append(alphas_polar[idx_after_stall])#then these are valid post stall points
-                valid_post_stall_cls.append(cls_2d[idx_after_stall])
+            if idx_after_stall < len(alpha_range2D) and not np.isnan(cl_2D_array[idx_after_stall]): #if stall angle index+i is not longer than the remaining indexes and is not a nan
+                valid_post_stall_alphas.append(alpha_range2D[idx_after_stall])#then these are valid post stall points
+                valid_post_stall_cls.append(cl_2D_array[idx_after_stall])
         
         if len(valid_post_stall_alphas) >= 2: #at least 2 points to get a slope
             try:
@@ -109,17 +109,17 @@ def generate_2d_stall_database(airfoil_profile, section_data, alphas_polar, xfoi
                 K_post = (valid_post_stall_cls[0] - Cl_max_2D) / \
                             (valid_post_stall_alphas[0] - alpha_stall_2D)
 
-        stall_data_lookup.append({
-            'Re_polar': Re_val, 'alpha_stall_2D': alpha_stall_2D,
+        stall_data_dictionary.append({
+            'Re_polar': Re_value, 'alpha_stall_2D': alpha_stall_2D,
             'Cl_max_2D': Cl_max_2D, 'K_post': K_post
         })
-        # print(f"  Re={Re_val:.2e}: alpha_stall_2D={alpha_stall_2D:.2f} deg, Cl_max_2D={Cl_max_2D:.3f}, K_post={K_post:.4f}")
+        # print(f"  Re={Re_value:.2e}: alpha_stall_2D={alpha_stall_2D:.2f} deg, Cl_max_2D={Cl_max_2D:.3f}, K_post={K_post:.4f}")
 
-    if not stall_data_lookup:
+    if not stall_data_dictionary:
         raise RuntimeError("Failed to generate any 2D polar data. Check XFoil setup and Re range.")
-    return pd.DataFrame(stall_data_lookup)
+    return pd.DataFrame(stall_data_dictionary)
 
-def interpolate_stall_data_for_sections(section_data, stall_df, delta_alpha_3d_correction):
+def interpolate_stall_data_for_sections(section_data, stall_df, delta_alpha_3D_correction):
     """Interpolates 2D stall data for each section's Re and calculates 3D stall angle."""
     for section in section_data:
         Re_j = section['Re']
@@ -127,89 +127,105 @@ def interpolate_stall_data_for_sections(section_data, stall_df, delta_alpha_3d_c
         section['alpha_stall_2D_interp'] = np.interp(Re_j, stall_df['Re_polar'], stall_df['alpha_stall_2D'])#Interpolate and add to the section disctionary the interpolation as an entry with key section["blabla"]
         section['Cl_max_2D_interp'] = np.interp(Re_j, stall_df['Re_polar'], stall_df['Cl_max_2D'])
         section['K_post_interp'] = np.interp(Re_j, stall_df['Re_polar'], stall_df['K_post'])
-        section['alpha_stall_3D'] = section['alpha_stall_2D_interp'] - delta_alpha_3d_correction #interpolated 2d stall angle minus delta 
+        section['alpha_stall_3D'] = section['alpha_stall_2D_interp'] - delta_alpha_3D_correction #interpolated 2d stall angle minus delta 
         # print(f"Section {section['id']}: Re={Re_j:.2e}, alpha_stall_3D={section['alpha_stall_3D']:.2f} deg, Cl_max_2D_interp={section['Cl_max_2D_interp']:.3f}")
     return section_data
 
-def run_vlm_sweep_with_stall_correction(alphas_to_sweep, vlm_airplane, velocity_op, 
-                                        section_data_list_prepared, num_wing_sections, wing_geom, altitude):
+def run_vlm_sweep_with_stall_correction(alpha_range3D, vlm_airplane, operational_velocity, 
+                                        section_data_list, num_spanwise_sections, wing, operational_altitude,
+                                        vlm_chordwise_resolution=6): # Added vlm_chordwise_resolution
     """Performs VLM alpha sweep and applies stall correction."""
     CLs_vlm, CDs_vlm, CLs_corrected_list = [], [], []
     lift_distribution = {"alpha": [], "CLs": []}
 
-    for alpha_val in alphas_to_sweep:
-        lift_distribution["alpha"].append(alpha_val)
+    for alpha_value in alpha_range3D: #per alpha
+        lift_distribution["alpha"].append(alpha_value) #save for lift distribution
         op_point = asb.OperatingPoint(
-            velocity=velocity_op, alpha=alpha_val, beta=0, atmosphere=asb.Atmosphere(altitude=altitude)
+            velocity=operational_velocity, alpha=alpha_value, beta=0, atmosphere=asb.Atmosphere(altitude=operational_altitude)
         )
-        vlm = asb.VortexLatticeMethod( #change spanwise and cordwise resolution for  better distribution approx
-            airplane=vlm_airplane, op_point=op_point, spanwise_resolution=1, chordwise_resolution=1 #must keep chord at 1 beacuse only want one vortex per spanwise segment
-        )
+        vlm = asb.VortexLatticeMethod( 
+            airplane=vlm_airplane, op_point=op_point, 
+            spanwise_resolution=1, # Keeps one VLM "strip" per subdivided wing section
+            chordwise_resolution=vlm_chordwise_resolution)
 
         results = vlm.run()
 
         CLs_vlm.append(results.get("CL", np.nan))
         CDs_vlm.append(results.get("CD", np.nan))
 
-        current_CL_corrected_for_this_alpha = np.nan
+        current_CL_corrected_for_this_alpha = np.nan #lift coefficent for current angle of attack after correctio for stall
         can_correct_this_alpha = False
-        Cl_loc_VLM_sections = []
+        CL_local_VLM_section = [] #local sectional lift coefficeint list of each spanwise section
         gamma_values_full_wing = vlm.vortex_strengths #compute cisrculation strength per panel, used to calculate sectional lift per panel
-        gamma_values_one_side = None
+        gamma_values_one_side = None #needed for symmetric analysis
 
-        if gamma_values_full_wing is not None: #to account for symmetry
-            if wing_geom.symmetric and len(gamma_values_full_wing) == 2 * num_wing_sections:
-                gamma_values_one_side = gamma_values_full_wing[:num_wing_sections]
-            elif len(gamma_values_full_wing) == num_wing_sections:
+        if gamma_values_full_wing is not None: #if contain data, VLM did't fail
+            expected_gamma_len_one_side = num_spanwise_sections * vlm_chordwise_resolution #expected number of vortexes for one side of wing
+            if wing.symmetric and len(gamma_values_full_wing) == 2 * expected_gamma_len_one_side: #check if wing symmetric and returned values form VLM is double the expecetd amount per wing 
+                gamma_values_one_side = gamma_values_full_wing[:expected_gamma_len_one_side] #extract vortex strength for just one side, slice from beginning to end for one side
+            elif not wing.symmetric and len(gamma_values_full_wing) == expected_gamma_len_one_side:
                 gamma_values_one_side = gamma_values_full_wing
             else:
-                print(f"Info @ alpha={alpha_val:.1f} deg: Gamma values length ({len(gamma_values_full_wing)}) unexpected. Fallback.")
+                print(f"Info @ alpha={alpha_value:.1f} deg: Gamma values length ({len(gamma_values_full_wing)}) unexpected for {num_spanwise_sections} sections and {vlm_chordwise_resolution} chordwise panels. Expected {2*expected_gamma_len_one_side if wing.symmetric else expected_gamma_len_one_side}. Fallback.")
 
-            if gamma_values_one_side is not None: #if vlm did calculate circulation
-                for j in range(num_wing_sections):
-                    section_chord_j = section_data_list_prepared[j]['chord'] #extracts chord length per section
-                    Cl_j = (2 * gamma_values_one_side[j]) / (velocity_op * section_chord_j) if velocity_op * section_chord_j != 0 else np.nan #compute cl per panel
-                    Cl_loc_VLM_sections.append(Cl_j)
-                if len(Cl_loc_VLM_sections) == num_wing_sections: #if number of computed lift coefficient matches number of sections then stall correction can be applied
-                    can_correct_this_alpha = True
+            if gamma_values_one_side is not None: #if vlm did calculate circulation and are of the expected array size
+                for j in range(num_spanwise_sections): #per spanwise section of half wing
+                    section_chord_j = section_data_list[j]['chord'] #chord legth of current spanwise section
+                    
+                    # Sum gammas for all chordwise panels in this spanwise section
+                    start_idx = j * vlm_chordwise_resolution
+                    end_idx = (j + 1) * vlm_chordwise_resolution
+                    gamma_list_for_section_j_panels = gamma_values_one_side[start_idx:end_idx] #slice array to extract all vortices of chorwise panels corresponding to a spanwise section
+                    
+                    if len(gamma_list_for_section_j_panels) != vlm_chordwise_resolution: #check if extracted vortices corresponds to expected number
+                        print(f"Error @ alpha={alpha_value:.1f} deg, section {j}: Incorrect number of gamma values found for chordwise sum. Expected {vlm_chordwise_resolution}, got {len(gamma_list_for_section_j_panels)}.")
+                        CL_local_VLM_section.append(np.nan) #if check fails append nan to local sectional lift coefficeint of spanwise sectio
+                        continue
+
+                    total_gamma_for_section_j = np.sum(gamma_list_for_section_j_panels) #sum of all vortex strengths for chordwise panels in corrent spanwise section. It is the total circulation around that 2D strip.
+                    
+                    #calculate sectional lift coefficient for spanwise section
+                    CL_j = (2 * total_gamma_for_section_j) / (operational_velocity * section_chord_j) if operational_velocity * section_chord_j != 0 else np.nan #safety check to prevent division by zero
+                    CL_local_VLM_section.append(CL_j) #append calculated CL per spanwise section
+                
+                if len(CL_local_VLM_section) == num_spanwise_sections: #check if have one lift coefficient per spanwise section
+                    can_correct_this_alpha = True #then can correct vlm
                 else:
-                    print(f"Error @ alpha={alpha_val:.1f} deg: Mismatch in Cl_loc_VLM_sections population.")
-        else:
-            print(f"Info @ alpha={alpha_val:.1f} deg: No 'vortex_strengths' on VLM object. Fallback.")
+                    print(f"Error @ alpha={alpha_value:.1f} deg: Mismatch in CL_local_VLM_section population after processing gammas.")
+        else: #if the VLM didn't run at the beginning so returned no vortex strengths
+            print(f"Info @ alpha={alpha_value:.1f} deg: No 'vortex_strengths' on VLM object. Fallback.")
         
         #build up lift per section
         if can_correct_this_alpha:
-            numerator_sum_cl_c_dy = 0 #sum of total lift
-            all_sections_valid_for_sum = True
-            for j in range(num_wing_sections): #per section
-                section = section_data_list_prepared[j]
-                Cl_vlm_j = Cl_loc_VLM_sections[j] #sectional lift from vlm
-                if np.isnan(Cl_vlm_j):
+            numerator_weightedaverage_CL = 0 #sum of local CL*area of panel
+            all_sections_valid_for_sum = True #set to true for later
+            for j in range(num_spanwise_sections): #sweep through number of wing sections
+                section = section_data_list[j]
+                Cl_vlm_j = CL_local_VLM_section[j] 
+                if np.isnan(Cl_vlm_j): #check if CL per spanwise section found from vortix is not nan
                     all_sections_valid_for_sum = False; break
                 
-                corrected_Cl_j = Cl_vlm_j #set corrected sectional lift to VLM result as default
-                if alpha_val >= section['alpha_stall_3D']: #if current alpha > 3d stall angle for section section is stalled
-                    delta_alpha = alpha_val - section['alpha_stall_3D']
-                    #create downwards slope equation
-                    cl_2D_model = section['Cl_max_2D_interp'] + section['K_post_interp'] * delta_alpha
-                    cl_2D_model = max(0, cl_2D_model)#limit lift to a min of 0
-                    corrected_Cl_j = min(Cl_vlm_j, cl_2D_model)#takes smallest between corrected lift and post stall model
-                    Cl_loc_VLM_sections[j] = corrected_Cl_j
-                numerator_sum_cl_c_dy += corrected_Cl_j * section['area'] #adds contribution of corrected sectional lift coeff times area
+                corrected_CL_j = Cl_vlm_j 
+                if alpha_value >= section['alpha_stall_3D']: #if above stall angle
+                    delta_alpha = alpha_value - section['alpha_stall_3D'] #how far ahead
+                    
+                    CL_2D_correction = section['Cl_max_2D_interp'] + section['K_post_interp'] * delta_alpha #perform correction using slope approximated earlier
+                    CL_2D_correction = max(0, CL_2D_correction) #limit to not be below zero
+                    corrected_CL_j = min(Cl_vlm_j, CL_2D_correction) #take the smallest of the two
+                    CL_local_VLM_section[j] = corrected_CL_j # Store corrected CL for this section
+                numerator_weightedaverage_CL += corrected_CL_j * section['area'] #weigh CL by sectional area and add to total
             
             if all_sections_valid_for_sum:
-                S_wing = wing_geom.area()
-                current_CL_corrected_for_this_alpha = (2 * numerator_sum_cl_c_dy) / S_wing if S_wing > 1e-9 else np.nan #twice for symmetry
+                S_wing = wing.area()#find total wing area
+                current_CL_corrected_for_this_alpha = (2 * numerator_weightedaverage_CL) / S_wing if S_wing > 1e-9 else np.nan #finish weighted average by deviding all summed CL*sectional area by total area
             else:
-                print(f"Warning @ alpha={alpha_val:.1f} deg: Sectional Cl (from gamma) is NaN. Corrected CL for this alpha will be NaN.")
-        lift_distribution['CLs'].append(Cl_loc_VLM_sections)
+                print(f"Warning @ alpha={alpha_value:.1f} deg: Sectional Cl (from gamma) is NaN for one or more sections. Corrected CL for this alpha will be NaN.")
+        lift_distribution['CLs'].append(CL_local_VLM_section if can_correct_this_alpha and len(CL_local_VLM_section) == num_spanwise_sections else [np.nan]*num_spanwise_sections) # Appends only if could correct and of appropriate length
         if np.isnan(current_CL_corrected_for_this_alpha) and not can_correct_this_alpha:
-            print(f"Info @ alpha={alpha_val:.1f} deg: Sectional correction could not be applied. Result for corrected CL is NaN.")
+            print(f"Info @ alpha={alpha_value:.1f} deg: Sectional correction could not be applied. Result for corrected CL is NaN.")
         
         CLs_corrected_list.append(current_CL_corrected_for_this_alpha)
-        # print(f"Number of VLM panels: {len(vlm.vortex_strengths)}")
-    # print(f"Number of VLM panels: {len(vlm.vortex_strengths)}")
-
+        
     return CLs_vlm, CDs_vlm, CLs_corrected_list, lift_distribution
 
 def plot_aerodynamic_coefficients(alphas, CLs_vlm, CLs_corrected, CDs_vlm, Plot = False):
@@ -236,4 +252,3 @@ def plot_aerodynamic_coefficients(alphas, CLs_vlm, CLs_corrected, CDs_vlm, Plot 
         plt.ylabel("Drag Coefficient (CD)")
         plt.legend(); plt.grid(True); plt.title("CD vs Alpha (VLM)")
         plt.show()
-
