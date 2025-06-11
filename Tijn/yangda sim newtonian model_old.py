@@ -5,8 +5,8 @@ from mpl_toolkits.mplot3d import Axes3D
 W = 200
 m = W/9.81
 piAe = 30
-Clalpha = 8
-Clhalpha = 8
+Clalpha = 4.5
+Clhalpha = 4.3
 Clvbeta = 8
 stall = 0.24
 stallh = 0.26
@@ -17,15 +17,15 @@ b = 3
 bh = 0.3
 bv = 0.3
 dihederal = 0.03
-S = 1.8
+S = 1
 Sh = 0.3
 Sv = 0.3
 rho = 1.2
 Cd0 = 0.05
 Cmac = -0.01
-Vx = 26
+Vx = 30
 Vy = 0
-Vz = 1
+Vz = 0
 V = (Vx**2 + Vy**2 + Vz**2)**0.5
 alpha = np.sin(Vz/V)
 beta = np.sin(Vy/V)
@@ -38,10 +38,10 @@ rollrate = 0
 p = 0
 q = 0
 r = 0
-lh = 1.4
-lv = 1.4
+lh = 1
+lv = 1
 l = 0
-c = 0.3
+c = 0.36
 Ix = 1.5
 Iy = 12
 Iz = 12
@@ -155,7 +155,7 @@ distance = [dist]
 
 
 while t < tend:
-
+    t = t +dt
 
 
     Fx = 0.5*rho*S*V**2 * get_Cx()

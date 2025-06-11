@@ -3,6 +3,17 @@ import matplotlib as plt
 import pandas as pd
 
 
+def Max_Force(l, F1_eq, F2_eq):
+    steps = l/0.001
+    Max = 0
+    for i in range(steps):
+        F1 = F1_eq*(i*0.001)
+        F2 = F2_eq*(i*0.001)
+        if (F1+F2)>Max:
+            Max = F1+F2
+    return Max
+
+
 def Bending_Simple(M,Y,I):
     Stress = (M*Y)/I
     return Stress
@@ -23,7 +34,7 @@ def Shear_Torsion(T,t,A):
     return Shear
 
 
-def Shear_Open(T,l,t): #Assuming plate theory, see SAD
+def Torsion_Open(T,l,t): #Assuming plate theory, see SAD
     Shear = (3*T)/(l*t**2)
     return Shear
 
@@ -86,3 +97,5 @@ def Von_Mises(Stress_X,Stress_Y,Stress_Z,Shear_XY,Shear_YZ,Shear_ZX):
 def Cut_Out_Corrections(Diamater, Width):#Diameter= Entire hole diameter, Width = panel width
     K_t = 2+(1 + (Diamater/Width))**3
     return K_t
+
+
