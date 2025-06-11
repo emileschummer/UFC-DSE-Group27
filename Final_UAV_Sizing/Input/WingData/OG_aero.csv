@@ -1,4 +1,4 @@
-Alpha (deg),CL (VLM),CD (VLM),CL (Corrected)
+alpha (deg),CL_corrected,CD_vlm,Cm_vlm
 -10.0,0.0521,0.00744,0.0443
 -9.0,0.1256,0.00740,0.1180
 -8.0,0.1992,0.00823,0.1916

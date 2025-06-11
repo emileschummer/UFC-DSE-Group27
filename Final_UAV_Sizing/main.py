@@ -4,24 +4,32 @@ import numpy as np
 import os
 import pandas as pd
 #import functions
-import Final_UAV_Sizing.Input.fixed_input_values as input
-from Final_UAV_Sizing.Modelling.Wing_Sizing.Functions import wing_geometry_calculator
-from Final_UAV_Sizing.Modelling.Wing_Sizing.AeroMain import run_full_aero
-from Final_UAV_Sizing.Modelling.Wing_Sizing.AerodynamicForces import load_distribution_halfspan
-from Final_UAV_Sizing.Modelling.Propeller_and_Battery_Sizing.Model.Battery_modelling import Battery_Model, Battery_Size
-from Final_UAV_Sizing.Modelling.Tail_Sizing.Tail_sizing_final import get_tail_size
+from Input import fixed_input_values as input
+from Modelling.Wing_Sizing.Functions import wing_geometry_calculator
+from Modelling.Wing_Sizing.AeroMain import run_full_aero
+from Modelling.Wing_Sizing.AerodynamicForces import load_distribution_halfspan
+from Modelling.Propeller_and_Battery_Sizing.Model.Battery_modelling import Battery_Model, Battery_Size
+from Modelling.Tail_Sizing.Tail_sizing_final import get_tail_size
 
 
 
-
+#Make this a main() function
 for number_relay_stations in range(1,input.max_RS):
+    M_list = [0]
     M_init = input.M_init
-    M_final = 0
+    M_list.append(M_init)
+    
+    i=0
     #0. Open General Files
     aero_df = pd.read_csv(input.OG_aero_csv)
-    while abs(M_init - M_final) > input.delta_mass:
-        M_init = M_final
+    while abs(M_list[-1] - M_list[-2]) > input.delta_mass:
+        print("--------------------------------------------------")
+        print(f"Iteration {i+1} for {number_relay_stations} Relay Stations with M_init ")
+        i+=1
+
 #1. Wing Sizing
+        print("--------------------------------------------------")
+        print("Wing Sizing")
     #1.1 Wing Geometry
         ##Prepare input values
         InputWeight = M_init * input.g
@@ -71,13 +79,17 @@ for number_relay_stations in range(1,input.max_RS):
         plot = input.show_plots
         ##Run
         load_distribution_halfspan(wing_geom,lift_distribution,alpha,half_span,plot)
-#2. Propeller Sizing   
+#2. Propeller Sizing 
+        print("--------------------------------------------------")
+        print("Propeller Sizing")  
         """From Prop, we need whatever values Jadon needs, such as
  T_props, Position of Props, No.Props	M_props, M_engines, CD0_total
  
  We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller mass estimated below roughly (pls change)"""
         M_prop = 2 #Placeholder for propeller mass
 #3. Battery Sizing
+        print("--------------------------------------------------")
+        print("Battery Sizing")
     #3.1 Battery Consumption Model
         ##Prepare Inputs
         output_folder = input.output_folder
@@ -113,6 +125,8 @@ for number_relay_stations in range(1,input.max_RS):
 
 
 #4. Tail Sizing
+        print("--------------------------------------------------")
+        print("Tail Sizing")
     #4.1 Horizontal Tail
         ##Prepare Inputs
         W = M_init*input.g
@@ -134,6 +148,10 @@ for number_relay_stations in range(1,input.max_RS):
         ##Run
         Sh, Clh0, span, cord,lh,max_tail_force = get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cd0,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax)
 #5. Structure Sizing
+        print("--------------------------------------------------")
+        print("Structure Sizing")
         M_struc = 5
 #6. Final Mass Calculation
         M_final = input.M_PL + M_prop +M_battery + M_struc
+        M_list.append(M_final)
+        print(f"Final Mass for {number_relay_stations} Relay Stations: {M_final} kg (iteration {i})")
