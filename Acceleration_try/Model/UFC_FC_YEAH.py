@@ -105,4 +105,3 @@ def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W,
     P_horizontal = np.interp(T_horizontal, df_horizontal['Thrust_N'], df_horizontal[' Power (W) ']) * numberengines_horizontal
     P = P_vertical + P_horizontal
     return P
-    
