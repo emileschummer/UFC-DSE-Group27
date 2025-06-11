@@ -19,8 +19,10 @@ def load_airfoil_dat(path):
 #taper between 0.4-0.6
 def wing_geometry_calculator(InputWeight, aero_df, velocity_op, altitude, taper_ratio, b):
     #from csv should take the CL assosciated to the alpha that want to analyse. it should take the old CL.
-    CL = aero_df["CL_corrected"][-2]
-
+    max_idx = aero_df["CL_corrected"].idxmax()
+    target_idx = max_idx - 3 if max_idx - 3 >= 0 else max_idx
+    CL = aero_df["CL_corrected"].iloc[target_idx]
+    
     op_point_for_atmo = asb.OperatingPoint(velocity=velocity_op, atmosphere=asb.Atmosphere(altitude=altitude))
     rho = op_point_for_atmo.atmosphere.density()
 

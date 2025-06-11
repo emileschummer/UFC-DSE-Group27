@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from math import ceil
 import os
 from datetime import datetime
-from Acceleration_try.Model.UFC_FC_YEAH import calculate_power_FC
-from Acceleration_try.Input import Strava_input_csv as sva
+from Modelling.Propeller_and_Battery_Sizing.Model.UFC_FC_YEAH import calculate_power_FC
+from Input.RaceData import Strava_input_csv as sva
 import numpy as np
 import pandas as pd
 

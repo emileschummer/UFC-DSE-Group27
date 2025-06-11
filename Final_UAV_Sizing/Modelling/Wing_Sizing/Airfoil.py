@@ -10,7 +10,7 @@ def setup_wing_and_airplane(chosen_airfoil, num_spanwise_sections, r_chord, t_ch
         name="Wing",
         xsecs=[
             asb.WingXSec(
-                xyz_le=[0, 0, 0], chord=r_chord, twist=r_twist, airfoil=chosen_airfoil,
+                xyz_le=[0 , 0, 0], chord=r_chord, twist=r_twist, airfoil=chosen_airfoil,
             ),
             asb.WingXSec(
                 xyz_le=[sweep, 1.5, 0], chord=t_chord, twist=t_twist, airfoil=chosen_airfoil,

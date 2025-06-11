@@ -3,10 +3,10 @@ import numpy as np
 import aerosandbox as asb
 import pandas as pd
 import os
-from Airfoil import setup_wing_and_airplane, calculate_section_properties_and_reynolds, generate_2d_stall_database, interpolate_stall_data_for_sections, run_vlm_sweep_with_stall_correction, plot_aerodynamic_coefficients
+from Modelling.Wing_Sizing.Airfoil import setup_wing_and_airplane, calculate_section_properties_and_reynolds, generate_2d_stall_database, interpolate_stall_data_for_sections, run_vlm_sweep_with_stall_correction, plot_aerodynamic_coefficients
 # from Test import setup_wing_and_airplane, calculate_section_properties_and_reynolds, generate_2d_stall_database, interpolate_stall_data_for_sections, run_vlm_sweep_with_stall_correction, plot_aerodynamic_coefficients
-from Functions import load_airfoil_dat
-from AerodynamicForces import load_distribution_halfspan
+from Modelling.Wing_Sizing.Functions import load_airfoil_dat
+from Modelling.Wing_Sizing.AerodynamicForces import load_distribution_halfspan
 
 
 
