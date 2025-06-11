@@ -8,70 +8,54 @@ from Acceleration_try.Input.Config import largest_real_positive_root
 
 
 g = 9.81
-def get_RPM_efficiency_vertical(Tvertical):
-    # Load or define your data arrays
-    thrust_data = np.array([1733, 1856, 2007, 2172, 2295, 2371, 2619, 2804, 2960, 3199, 3422, 3584, 3742, 3963, 4082, 4272, 4688, 5177, 6145, 7200])
 
-    rpm_data = np.array([1284, 1342, 1404, 1468, 1513, 1591, 1656, 1713, 1768, 1828, 1911, 1966, 2003, 2061, 2112, 2160, 2303, 2411, 2651, 2917])
-
-    efficiency_data = np.array([14.41, 14.1, 13.88, 13.57, 13.12, 12.37, 12.56, 12.44, 12.14, 12.08, 11.46, 11.3, 11.08, 11.0, 10.74, 10.55, 10.1, 9.78, 9.04, 8.32])
-
-    # Interpolate to get RPM and efficiency for given thrust
-    rpm = np.interp(Tvertical, thrust_data, rpm_data)
-    efficiency = np.interp(Tvertical, thrust_data, efficiency_data)
-
-    return rpm, efficiency
-
-def get_RPM_efficiency_horizontal(Thorizontal):
-    # Load or define your data arrays
-    thrust_data = 0
-
-    rpm_data = 0
-
-    efficiency_data = 0
-
-    # Interpolate to get RPM and efficiency for given thrust
-    rpm = np.interp(Thorizontal , thrust_data , rpm_data)
-    efficiency = np.interp(Thorizontal , thrust_data , efficiency_data)
-
-    return rpm , efficiency
-
-def flat_plate_drag_coefficient(V, rho, L, T):
+def flat_plate_drag_coefficient(V, rho, h, L):
+    T0 = 288.15
+    T = T0 + -0.0065 * h
     Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
     a= np.sqrt(1.4 * 287.05 * T)
-    CD_fp= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65)
-    return CD_fp
+    Cf_i= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65)
+    return Cf_i
 
-def fuselage_drag_coefficient(V, rho, L_n, L_c, T, d, S_wing):
+def cube_drag_coefficient(V, rho, h, S_wing):
+    T0 = 288.15
+    T = T0 + -0.0065 * h
+    L_cube = 0.12
+    Re= rho * V * L_cube / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
+    a= np.sqrt(1.4 * 287.05 * T)
+    CD_cube= (1.1 + 20/np.sqrt(Re)) * (1 + 0.15 * (V/a)**2) * L_cube**2/S_wing
+    return CD_cube
+
+def fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing):
     S_nose_tail = np.pi * d/2 * np.sqrt(L_n**2 + (d/2)**2) +2 * np.pi * (d/2)**2 
     S_cabin= np.pi * d * L_c 
     S_wet_fus= 2 * S_nose_tail + S_cabin
     L = 2 * L_n + L_c
     IF_fus= 1.05
     FF_fus= 1 + 60/ (L/d)**3 + 0.0025 * (L/d)**2 
-    Cf_i = flat_plate_drag_coefficient(V, rho, L, T)
-    CD_fus= Cf_i * IF_fus * FF_fus * S_wet_fus / S_wing
+    CD_fus= Cf_fus * IF_fus * FF_fus * S_wet_fus / S_wing
     return CD_fus
 
-def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency):
+def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_cube, Cf_blade, Cf_stab):
     L_req = np.cos(incline)*W + W/g * V * gamma_dot #vertical force required for flight (stationary or not)
     if V > V_vert_prop:
         CL = 2*L_req/(rho*S_wing*V**2)
-        CD = CD0_wing + CL**2/piAe
+        CD_wing = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
+        CD= CD_fus + CD_cube + CD_wing + 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
         D_wing = 0.5*rho*CD*S_wing*V**2
         T_horizontal = ((D_wing + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         T_vertical = 0
         
     else:
         CL = CLmax
-        CD = CD0_wing + CL**2/piAe
+        CD = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
         D_wing = 0.5*rho*CD*S_wing*V**2
         T_horizontal = ((D_wing + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         L_wing = 0.5*rho*CL*S_wing*V**2 * propeller_wake_efficiency  #Lifting force of the wing, parameter for wake of propellers
         L_prop = L_req - L_wing
         T_vertical = L_prop/numberengines_vertical #Thrust per vertical propeller
            
-    return T_vertical, T_horizontal
+    return T_vertical,T_horizontal
 
 def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency):
     T_vertical, T_horizontal = calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency)
