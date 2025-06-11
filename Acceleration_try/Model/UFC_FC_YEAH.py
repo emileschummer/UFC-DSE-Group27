@@ -36,6 +36,33 @@ def get_RPM_efficiency_horizontal(Thorizontal):
 
     return rpm , efficiency
 
+def flat_plate_drag_coefficient(V, rho, L, T):
+    Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
+    a= np.sqrt(1.4 * 287.05 * T)
+    CD_fp= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65)
+    return CD_fp
+
+def sphere_drag_coefficient(V, rho, L):
+    Re= rho * V * L / 1.81e-5
+    term1 = 24.0 / Re
+    term2 = 2.6 * (Re / 5.0) / (1.0 + (Re / 5.0)**1.52)
+    term3 = 0.411 * (Re / 2.63e5)**(-7.94) / (1.0 + (Re / 2.63e5)**(-8.00))
+    term4 = 0.25 * (Re / 1e6) / (1.0 + (Re / 1e6))
+
+    CD_sphere = term1 + term2 + term3 + term4
+    return CD_sphere
+
+def fuselage_drag_coefficient(K_n, K_c, d, V, rho, L, T):
+    CD_fp = flat_plate_drag_coefficient(V, rho, L, T)
+    R= d/2
+    e= np.sqrt(1 - (R/L)**2)
+    S_wet_cabin = np.pi * d * L  # Wet surface area of the cabin
+    S_wet_nose = np.pi * R**2 * (1 + (L/(R*e)) * np.arcsin(e))
+    S_front = (d/2)**2 *np.pi
+    S_wet = S_wet_cabin + S_wet_nose
+
+    CD_fus= (K_n * S_wet_nose/S_wet + K_c * S_wet_cabin/S_wet) * CD_fp *S_wet/S_front
+    return CD_fus
 
 
 def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency):
