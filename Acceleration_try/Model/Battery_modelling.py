@@ -7,20 +7,32 @@ import matplotlib.pyplot as plt
 from math import ceil
 import os
 from datetime import datetime
-from Acceleration_try.Model.UFC_FC_Battery_Model import *
+from Acceleration_try.Model.UFC_FC_YEAH import calculate_power_FC
 from Acceleration_try.Input import Strava_input_csv as sva
 import numpy as np
+import pandas as pd
 
-def Battery_Model(output_folder, V_vert_prop=6, W=250, D_rest=50, CLmax=2.2, S_wing=1.5, piAe=20.41, CD0_wing=0.0264, alpha_T=0.2, N_blades=2, Chord_blade=0.02, CD_blade=0.014, omega=300, r_prop_vertical=0.07, numberengines_vertical=4, numberengines_horizontal=1, eta_prop_horizontal=0.8, eta_prop_vertical=0.8, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,  show=False):
+def Battery_Model(output_folder, V_vert_prop=5, W=250, D_rest=50, CLmax=2.2, S_wing=1.5, piAe=20.41, CD0_wing=0.0264, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 124,  show=False):
     print("---------Plot Race Results---------")
     races = sva.make_race_dictionnary()
     race_results = {}
     for race_name, race_data in races.items():
         necessary_battery_capacity = 0
         print(f"---------{race_name}---------")
-        calculate_power = calculate_power_UFC_FC
+        """ change this for power"""
+        # Vertical Propeller 
+        csv_path = os.path.join(os.path.dirname(__file__), '..', 'Input', 'UAV_Propellers_and_Motor_Specs_Vertical.csv')
+        df_vertical = pd.read_csv(csv_path)
+        df_vertical['Thrust_N'] = df_vertical[' Thrust (g) '] * 9.81 / 1000
+
+        # Horizontal Propeller 
+        csv_path = os.path.join(os.path.dirname(__file__), '..', 'Input', 'UAV_Propellers_and_Motor_Specs_Horizontal.csv')
+        df_horizontal = pd.read_csv(csv_path)
+        df_horizontal['Thrust_N'] = df_horizontal[' Thrust (g) '] * 9.81 / 1000
+
+        calculate_power = calculate_power_FC
         # 1. Follow a cyclist with 1 battery, no relay station
-        time_plot, distance_plot, power_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot = simulate_1_battery(race_data, calculate_power, V_vert_prop, W, D_rest, CLmax, S_wing, piAe, CD0_wing, alpha_T, N_blades, Chord_blade, CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal, eta_prop_vertical, propeller_wake_efficiency)
+        time_plot, distance_plot, power_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot = simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power)
         
         # 2. Calculate battery capacity and threshold
         total_battery_energy = battery_energy_plot[-1]
@@ -105,30 +117,33 @@ def Battery_Model(output_folder, V_vert_prop=6, W=250, D_rest=50, CLmax=2.2, S_w
                     dt = (time_now - time_plot[j-1])
                     velocity = VCr
                     distance += VCr * dt
-                    gradient, altitude = get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot, altitude_plot)
+                    gradient_for_plot, altitude = get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot, altitude_plot)
+                    gradient = np.arctan(gradient_for_plot / 100)  # Convert percentage to radians
                     rho = sva.air_density_isa(altitude)
                     acceleration = 0
                     pitch_rate = (gradient - previous_pitch) / dt
                     previous_pitch = pitch_rate
-                    P = calculate_power(gradient, velocity, rho, V_vert_prop, W, acceleration, pitch_rate, D_rest, CLmax, S_wing, piAe, CD0_wing, alpha_T, N_blades, Chord_blade, CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal, eta_prop_vertical, propeller_wake_efficiency)
+                    P = calculate_power(df_vertical,df_horizontal,gradient,velocity,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency)
+                    P+= PL_power  # Add power for payload
                     energy +=  P*dt/3600  # Convert J to Wh
                 else: 
                     time_now = time_plot[j]
                     dt = (time_now - time_plot[j-1])
                     velocity = 0
                     distance += 0
-                    gradient, altitude = get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot, altitude_plot)
+                    gradient_for_plot, altitude = get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot, altitude_plot)
+                    gradient = np.arctan(gradient_for_plot / 100)  # Convert percentage to radians
                     rho = sva.air_density_isa(altitude)
                     acceleration = 0
                     pitch_rate = 0
                     previous_pitch = 0
-                    P = 0
+                    P = PL_power
                     energy +=  0
                 new_time.append(time_now)
                 new_distance.append(distance)
                 new_power.append(P)
                 new_speed.append(velocity)
-                new_gradient.append(gradient)
+                new_gradient.append(gradient_for_plot)
                 new_acceleration.append(acceleration)
                 new_pitch_rate.append(pitch_rate)
                 new_rho.append(rho)
@@ -167,15 +182,11 @@ def Battery_Model(output_folder, V_vert_prop=6, W=250, D_rest=50, CLmax=2.2, S_w
             # Plot original and new (with relay stations) on the same figure
             fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
             # Plot original
-            plot(
-                time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot,
-                race_name + " (original)", V_vert_prop, output_folder, False, battery_usable_capacity, axs=axs
-            )
+            plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot,
+                race_name + " (original)", V_vert_prop, battery_usable_capacity, axs=axs)
             # Plot new (with relay stations)
-            plot(
-                new_time, new_power, new_speed, new_gradient, new_battery_energy,
-                race_name + " (relay stations)", V_vert_prop, output_folder, False, battery_usable_capacity, multiple_RS=True, axs=axs
-            )
+            plot(new_time, new_power, new_speed, new_gradient, new_battery_energy,
+                race_name + " (relay stations)", V_vert_prop, battery_usable_capacity, multiple_RS=True, axs=axs)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             output_path = os.path.join(output_folder, f"Power_speed_gradient_energy_vs_time_{race_name.replace('.csv', '')}_{timestamp}.png")
             os.makedirs(output_folder, exist_ok=True)
@@ -200,7 +211,7 @@ def Battery_Model(output_folder, V_vert_prop=6, W=250, D_rest=50, CLmax=2.2, S_w
     print("Done")
     return max_battery_energy
 
-def simulate_1_battery(race_data, calculate_power, V_vert_prop, W, D_rest, CLmax, S_wing, piAe, CD0_wing, alpha_T, N_blades, Chord_blade, CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal, eta_prop_vertical, propeller_wake_efficiency):
+def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power):
     # Prepare arrays
     time_plot, distance_plot, power_plot, speed_plot = [], [], [], []
     gradient_plot, acceleration_plot, pitch_rate_plot = [], [], []
@@ -222,7 +233,8 @@ def simulate_1_battery(race_data, calculate_power, V_vert_prop, W, D_rest, CLmax
                 pitch_rate = 0
             prev_velocity = velocity_smooth
             prev_grade_smooth = grade_smooth
-            P = calculate_power(grade_smooth, velocity_smooth, rho, V_vert_prop, W, acceleration, pitch_rate, D_rest, CLmax, S_wing, piAe, CD0_wing, alpha_T, N_blades, Chord_blade, CD_blade, omega, r_prop_vertical, numberengines_vertical, numberengines_horizontal, eta_prop_horizontal, eta_prop_vertical, propeller_wake_efficiency)
+            P = calculate_power(df_vertical,df_horizontal,grade_smooth,velocity_smooth,rho, acceleration,pitch_rate, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency)
+            P+= PL_power  # Add power for payload
             energy += time_diff * P/3600  # Convert J to Wh
             t = time
             time_plot.append(time)
@@ -237,7 +249,7 @@ def simulate_1_battery(race_data, calculate_power, V_vert_prop, W, D_rest, CLmax
             battery_energy_plot.append(energy)
     return time_plot, distance_plot, power_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot
 
-def plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot, race_name, V_vert_prop, output_folder, show, battery_usable_capacity, axs=None,multiple_RS=False):
+def plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot, race_name, V_vert_prop, battery_usable_capacity, axs=None,multiple_RS=False):
     import matplotlib.pyplot as plt
 
     fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True) if axs is None else (plt.gcf(), axs)
@@ -300,4 +312,4 @@ def get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot
     frac = (distance - d0) / (d1 - d0)
     gradient = g0 + frac * (g1 - g0)
     altitude = a0 + frac * (a1 - a0)
-    return np.arctan(gradient/100), altitude
+    return gradient, altitude
