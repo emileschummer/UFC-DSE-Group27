@@ -33,3 +33,8 @@ def air_density_isa(h):
 
     return rho
 
+def temperature_isa(h):
+    T0 = 288.15  # Sea level standard temperature (K)
+    L = -0.0065  # Temperature lapse rate (K/m)
+    T = T0 + L * h
+    return T
