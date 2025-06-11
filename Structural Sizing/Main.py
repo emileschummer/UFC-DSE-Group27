@@ -281,6 +281,7 @@ Fuselage_length_sec2 = 0.4
 Fuselage_length_sec3 = 0.3
 
 Payload_Location = 0.6-Fuselage_length_sec1 #edit the o.6 to the location, starting from the back of the fuselage
+Wing_Hole_location = 0.8-Fuselage_length_sec1-Fuselage_length_sec2 #edit the 0.8, again measurong from the start of the back of the plane
 
 #fUSELAGE lOADS
 Fuselage_Sec1_Load = 10 #N*m distributed load
@@ -303,12 +304,7 @@ while Big_Owie_Fuselage_Flying:
 
     Fuselage_VonMises_Sec1_Stress, Fuselage_VonMises_Sec1_Shear = Von_Mises(Stress_X=(Main_Engine_Thrust/Tube_Area(R_in=R_in_fuselage,R_out=R_out_fuselage)),Stress_Y=0,Stress_Z=Fuselage_Bending_Stress_sec1,Shear_XY=(Fuselage_Transverse_Shear_sec1+Fuselage_Torsion_Sec1),Shear_YZ=0, Shear_ZX=0)
 
-    if Fuselage_VonMises_Sec1_Stress < Yield_Stress_Fuselage and Fuselage_VonMises_Sec1_Stress < Fuselage_Buckle_sec1 and Fuselage_VonMises_Sec1_Shear < Yield_shear_Fuselage:
-        print("Passes Section 1")
-        Big_Owie_Fuselage_Flying = False 
-    else:
-        R_out_fuselage +=1/1000
-        Big_Owie_Fuselage_Flying = True 
+
         
 
     #SECTION 2:
@@ -323,27 +319,42 @@ while Big_Owie_Fuselage_Flying:
 
     Fuselage_VonMises_Sec2_Stress, Fuselage_VonMises_Sec2_Shear = Von_Mises(Stress_X=(Main_Engine_Thrust/0.5*Tube_Area(R_in=R_in_fuselage,R_out=R_out_fuselage)),Stress_Y=0,Stress_Z=Fuselage_Bending_Stress_sec2,Shear_XY=(Fuselage_Transverse_Shear_sec2+Fuselage_Torsion_Sec2),Shear_YZ=0, Shear_ZX=0)
 
-    if Fuselage_VonMises_Sec2_Stress < Yield_Stress_Fuselage and Fuselage_VonMises_Sec2_Stress < Fuselage_Buckle_sec2 and Fuselage_VonMises_Sec2_Shear < Yield_shear_Fuselage:
-        Big_Owie_Fuselage_Flying = False 
-        print("Passes Section 2")
-    else:
-        R_out_fuselage +=1/1000
-        Big_Owie_Fuselage_Flying = False 
-
 
     #SECTION 3:
     Fuselage_t = R_out_fuselage-R_in_fuselage
     Fuselage_Sec2_Load_Total = Fuselage_Sec1_Load*Fuselage_length_sec1+Payload_Force+Fuselage_length_sec2*Fuselage_sec2_load
+    Fuselage_Sec3_X_Load = Main_Engine_Thrust-Payload_Drag
 
     Fuselage_J_sec3 = Circle_Polar_Moment_of_Inertia(R_out=R_out_fuselage,R_in=R_in_fuselage)
     Fuselage_I_sec3 = Circle_Moment_of_Inertia(R_Out=R_out_fuselage , R_in=R_in_fuselage)
+    Cutout_Correction = Cut_Out_Corrections(Diamater=R_out_WingBox,Width=Fuselage_length_sec3)
 
     Fuselage_Torsion_Sec3 = Shear_Circle_Torsion(T=Main_Engine_Torque,r=R_out_fuselage,J=Fuselage_J_sec3)
-    Fuselage_Buckle_sec2 = Buckling_Stress(E=Material_Fuselage.E, L=Fuselage_length_sec3, I= Fuselage_I_sec3, A=Tube_Area(R_out=R_out_fuselage,R_in=R_in_fuselage), K=2)
+    Fuselage_Buckle_sec3 = Buckling_Stress(E=Material_Fuselage.E, L=Fuselage_length_sec3, I= Fuselage_I_sec3, A=Tube_Area(R_out=R_out_fuselage,R_in=R_in_fuselage), K=2)
     Fuselage_Transverse_Shear_sec3 = Shear_Transverse_Circle(R_in=R_in_fuselage,R_out=R_out_fuselage,F=(Main_Engine_Thrust-Payload_Drag))
+    Fuselage_Bending_Stress_sec3 = Bending_Simple(M=(Fuselage_Sec2_Load_Total*Wing_Hole_location),Y=R_out_fuselage,I=Fuselage_I_sec3) #Bending(Mx=(),Ix=Fuselage_I_sec3,X=R_out_fuselage,My=(),Iy=Fuselage_I_sec3,Y=R_out_fuselage)
+
+    Fuselage_VonMises_Sec3_Stress, Fuselage_VonMises_Sec3_Shear = Von_Mises(Stress_X=(Fuselage_Sec3_X_Load*Tube_Area(R_out=R_out_fuselage,R_in=R_in_fuselage)),Stress_Y=0, Stress_Z=Fuselage_Bending_Stress_sec3, Shear_XY=(Fuselage_Torsion_Sec3+Fuselage_Transverse_Shear_sec3),Shear_YZ=0,Shear_ZX=0 )
 
 
 
+
+    if Fuselage_VonMises_Sec1_Stress < Yield_Stress_Fuselage and Fuselage_VonMises_Sec1_Stress < Fuselage_Buckle_sec1 and Fuselage_VonMises_Sec1_Shear < Yield_shear_Fuselage:
+        print("Passes Section 1")
+        if Fuselage_VonMises_Sec2_Stress < Yield_Stress_Fuselage and Fuselage_VonMises_Sec2_Stress < Fuselage_Buckle_sec2 and Fuselage_VonMises_Sec2_Shear < Yield_shear_Fuselage:
+            print("Passes Section 2")
+            if Fuselage_VonMises_Sec3_Stress < Yield_Stress_Fuselage and Fuselage_VonMises_Sec3_Stress < Fuselage_Buckle_sec3 and Fuselage_VonMises_Sec3_Shear < Yield_shear_Fuselage:
+                print("Passes Section 3")
+                Big_Owie_Fuselage_Flying = False 
+            else:
+                R_out_fuselage +=1/1000
+                Big_Owie_Fuselage_Flying = True 
+        else:
+            R_out_fuselage +=1/1000
+            Big_Owie_Fuselage_Flying = True 
+    else:
+        R_out_fuselage +=1/1000
+        Big_Owie_Fuselage_Flying = True 
 
 
 

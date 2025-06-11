@@ -36,12 +36,12 @@ def get_Cmy(alpha, V, Vz, q, Clh0, Sh,Clalpha,Cl0,Cd0,piAe,Clhalpha,lh,l,c,Cmac,
     Cmy =  Cm + Cmh
     return Cmy
 
-def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cd0,Cmac,lh,l,Iy,c,plot,tail_span):
+def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cd0,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax):
     rho = 1.2
     m = W/9.81
     results = [[],[],[],[]]
     progress = 0
-    iteration = 50
+    iteration = 10
     for Clh0 in np.linspace(-0.4,0.4,iteration):
         progress = progress + 1
         for Sh in np.linspace(0,1,iteration):
@@ -110,9 +110,10 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cd0,Cmac,lh,l,Iy,c,plot,tail_
     pitch_result = results[3][min_index]
     span = tail_span
     cord = Sh/span
-    return Sh, Clh0, span, cord,alpha_result*180/np.pi,pitch_result*180/np.pi
+    max_tail_force = 0.5*rho*Sh*Clhmax*33**2
+    return Sh, Clh0, span, cord,lh,max_tail_force#alpha_result*180/np.pi,pitch_result*180/np.pi
 
-print(get_tail_size(200,30,4.635,4,0.7,2,0.05,-0.5,1,0,14,0.36,True,0.7366))
+print(get_tail_size(200,30,4.635,4,0.7,2,0.05,-0.5,1,0,14,0.36,True,0.7366,1.5))
 plt.show()
 
 
