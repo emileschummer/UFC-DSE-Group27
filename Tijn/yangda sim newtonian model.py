@@ -20,7 +20,7 @@ bh = 0.3
 bv = 0.3
 dihederal = 0
 S = 1
-Sh = 0.35
+Sh = 0.2
 Sv = 0.2
 rho = 1.2
 Cd0 = 0.05
@@ -43,7 +43,7 @@ r = 0
 
 lv = 2
 l = 0.0146
-lh = l +1
+lh = 1
 c = 0.36
 Ix = 1.5
 Iy = 14
@@ -144,7 +144,7 @@ def get_Cmy(): #pitch moment
 
 
 t = 0
-tend = 24.96
+tend = 60
 dt = 0.005
 
 velocity = [V]
@@ -196,20 +196,28 @@ while t < tend:
     error_D = error - error0
     error0 = error
     if V > 1*Vstall:
-        elevator_delta = -error*1.5 + error_I*0.1 + q*1.5 -pitch_error*10 - pitch_error_I*10
-        diff_thrust_pitch = ( -error*1.5 + error_I*0.7 + q*4 -pitch_error*1 - pitch_error_I*1)*-200
+        Clh0 = -error*1.5 + error_I*0.1 + q*5 -pitch_error*10 - pitch_error_I*10
+        diff_thrust_pitch = ( -error*1.5 + error_I*0.7 + q*10 -pitch_error*0.2 - pitch_error_I*1)*-200
     else:
-        diff_thrust_pitch = ( -error*0.5 + error_I*0.9 -pitch_error*5 + pitch_error_I*0.001 + q*1)*-300
-    if diff_thrust_pitch > 100:
-        diff_thrust_pitch = 100
-    elif diff_thrust_pitch < -100:
-        diff_thrust_pitch = -100
+        Clh0 = -error*1.5 + error_I*0.1 + q*10 -pitch_error*10 - pitch_error_I*10
+        diff_thrust_pitch = (  -pitch_error*5 + pitch_error_I*0.001 + q*1)*-300
+
+    if diff_thrust_pitch > 70:
+        diff_thrust_pitch = 70
+    elif diff_thrust_pitch < -70:
+        diff_thrust_pitch = -70
     if Tz > 250:
         Tz = 250
+    if t > 26:
+        Tx = (30-V)*7
+    if Clh0 > 1:
+        Clh0 = 1
+    elif Clh0 < -1:
+        Clh0 = -1
     Tzlst.append(Tz)
     target_AoA.append(alpha_target*180/np.pi)
     pitch_tagetangle.append(target_pitch*180/np.pi)
-    elevator_moment.append(elevator_delta)
+    elevator_moment.append((Clh0/Clhalpha)*180/np.pi)
     diff_pitch_moment.append(diff_thrust_pitch)
     Vstallst.append(Vstall)
 #end of cpontroler stuff
@@ -304,12 +312,22 @@ if plot_mode == 0:
     ax3.plot(time, pitch_tagetangle, label = 'target pitch angle [degrees]')
     ax3.set_title("pitch")
     ax3.legend()
-    ax4.plot(time, diff_pitch_moment, label = 'differential thrust in pitch [Nm]')
-    ax4.plot(time, Tzlst, label = 'vertical thrust [N]')
+    # First y-axis
+    ax4.plot(time, diff_pitch_moment, label='differential thrust in pitch [Nm]')
+    ax4.plot(time, Tzlst, label='vertical thrust [N]')
     ax4.set_title("input")
     ax4.grid(True)
     ax4.set_xlabel("Time [s]")
-    ax4.legend()
+
+    # Second y-axis for elevator moment
+    ax4b = ax4.twinx()
+    ax4b.plot(time, elevator_moment, label='tail deflection [degrees]', color='tab:red')  # Choose a distinct color
+    ax4b.set_ylabel("Tail deflection")  # Optional: label the second y-axis
+
+    # Combine legends from both axes
+    lines, labels = ax4.get_legend_handles_labels()
+    lines2, labels2 = ax4b.get_legend_handles_labels()
+    ax4.legend(lines + lines2, labels + labels2, loc='upper right')
 
 
 else:
