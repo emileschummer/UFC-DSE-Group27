@@ -11,9 +11,11 @@ from AirFoilDataExtraction import *
 #TODO ADD A SAFETY FACTOR 1.5
 #TODO VIBRATIONS --> FLUTTER !!!!
 #TODO ASK ALEX FOR FEEDBACK
-#TODO DRAG AND TORQUE FORCES FROM PAYLOAD
+#TODO DRAG AND TORQUE FORCES FROM PAYLOAD---> TORQUE 0 APPARAENTLY
 #TODO gps location
 #TODO INCLUDE TAIL IN ENGINE FORCE
+#TODO NEST THE FUSELAGE IF'S
+#TODO CHECK VON MISES OF SEC 2
 #------------------------------------------------------
 
 #Things to run
@@ -278,9 +280,13 @@ Fuselage_length_sec1 = 0.2
 Fuselage_length_sec2 = 0.4
 Fuselage_length_sec3 = 0.3
 
+Payload_Location = 0.6-Fuselage_length_sec1 #edit the o.6 to the location, starting from the back of the fuselage
+
 #fUSELAGE lOADS
 Fuselage_Sec1_Load = 10 #N*m distributed load
 Fuselage_sec2_load = 15 #Battery
+Payload_Force = 9.81*0.7 #Newtons, includes Gimbal and Camera
+Payload_Drag = 10
 
 
 while Big_Owie_Fuselage_Flying:
@@ -298,10 +304,12 @@ while Big_Owie_Fuselage_Flying:
     Fuselage_VonMises_Sec1_Stress, Fuselage_VonMises_Sec1_Shear = Von_Mises(Stress_X=(Main_Engine_Thrust/Tube_Area(R_in=R_in_fuselage,R_out=R_out_fuselage)),Stress_Y=0,Stress_Z=Fuselage_Bending_Stress_sec1,Shear_XY=(Fuselage_Transverse_Shear_sec1+Fuselage_Torsion_Sec1),Shear_YZ=0, Shear_ZX=0)
 
     if Fuselage_VonMises_Sec1_Stress < Yield_Stress_Fuselage and Fuselage_VonMises_Sec1_Stress < Fuselage_Buckle_sec1 and Fuselage_VonMises_Sec1_Shear < Yield_shear_Fuselage:
+        print("Passes Section 1")
         Big_Owie_Fuselage_Flying = False 
     else:
         R_out_fuselage +=1/1000
-
+        Big_Owie_Fuselage_Flying = True 
+        
 
     #SECTION 2:
     Fuselage_t = R_out_fuselage-R_in_fuselage
@@ -310,19 +318,30 @@ while Big_Owie_Fuselage_Flying:
 
     Fuselage_Torsion_Sec2 = Torsion_Open(T=Main_Engine_Torque, l= Fuselage_length_sec2, t=Fuselage_t)
     Fuselage_Buckle_sec2 = Buckling_Stress(E=Material_Fuselage.E, L=Fuselage_length_sec2, I=Fuselage_I_sec2, A=0.5*Tube_Area(R_out=R_out_fuselage,R_in=R_in_fuselage), K=0.5)
-    Fuselage_Transverse_Shear_sec2 = Shear_Transverse_General(F=(Fuselage_Sec1_Load_Total+Fuselage_length_sec2*Fuselage_Sec1_Load),Q=First_Area_Q_SemiCircle(R_in=R_in_fuselage,R_out=R_out_fuselage,t=Fuselage_t), I=Fuselage_I_sec2,t=Fuselage_t)  
+    Fuselage_Transverse_Shear_sec2 = Shear_Transverse_General(F=(Fuselage_Sec1_Load_Total+Fuselage_length_sec2*Fuselage_Sec1_Load+Payload_Force*Payload_Location),Q=First_Area_Q_SemiCircle(R_in=R_in_fuselage,R_out=R_out_fuselage,t=Fuselage_t), I=Fuselage_I_sec2,t=Fuselage_t)  
     Fuselage_Bending_Stress_sec2 = Bending_Simple(M=-(Fuselage_Sec1_Load_Total+0.5*Fuselage_sec2_load*(Fuselage_length_sec2**2)), Y=R_out_fuselage,I=Fuselage_I_sec2)
 
     Fuselage_VonMises_Sec2_Stress, Fuselage_VonMises_Sec2_Shear = Von_Mises(Stress_X=(Main_Engine_Thrust/0.5*Tube_Area(R_in=R_in_fuselage,R_out=R_out_fuselage)),Stress_Y=0,Stress_Z=Fuselage_Bending_Stress_sec2,Shear_XY=(Fuselage_Transverse_Shear_sec2+Fuselage_Torsion_Sec2),Shear_YZ=0, Shear_ZX=0)
 
     if Fuselage_VonMises_Sec2_Stress < Yield_Stress_Fuselage and Fuselage_VonMises_Sec2_Stress < Fuselage_Buckle_sec2 and Fuselage_VonMises_Sec2_Shear < Yield_shear_Fuselage:
         Big_Owie_Fuselage_Flying = False 
+        print("Passes Section 2")
     else:
         R_out_fuselage +=1/1000
+        Big_Owie_Fuselage_Flying = False 
 
 
     #SECTION 3:
     Fuselage_t = R_out_fuselage-R_in_fuselage
+    Fuselage_Sec2_Load_Total = Fuselage_Sec1_Load*Fuselage_length_sec1+Payload_Force+Fuselage_length_sec2*Fuselage_sec2_load
+
+    Fuselage_J_sec3 = Circle_Polar_Moment_of_Inertia(R_out=R_out_fuselage,R_in=R_in_fuselage)
+    Fuselage_I_sec3 = Circle_Moment_of_Inertia(R_Out=R_out_fuselage , R_in=R_in_fuselage)
+
+    Fuselage_Torsion_Sec3 = Shear_Circle_Torsion(T=Main_Engine_Torque,r=R_out_fuselage,J=Fuselage_J_sec3)
+    Fuselage_Buckle_sec2 = Buckling_Stress(E=Material_Fuselage.E, L=Fuselage_length_sec3, I= Fuselage_I_sec3, A=Tube_Area(R_out=R_out_fuselage,R_in=R_in_fuselage), K=2)
+    Fuselage_Transverse_Shear_sec3 = Shear_Transverse_Circle(R_in=R_in_fuselage,R_out=R_out_fuselage,F=(Main_Engine_Thrust-Payload_Drag))
+
 
 
 
