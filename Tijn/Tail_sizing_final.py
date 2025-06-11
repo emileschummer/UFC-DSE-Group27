@@ -42,7 +42,7 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cd0,Cmac,lh,l,Iy,c,plot,tail_
     results = [[],[],[],[]]
     progress = 0
     iteration = 50
-    for Clh0 in np.linspace(-0.6,0.6,iteration):
+    for Clh0 in np.linspace(-0.4,0.4,iteration):
         progress = progress + 1
         for Sh in np.linspace(0,1,iteration):
             V = 30
@@ -112,7 +112,7 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cd0,Cmac,lh,l,Iy,c,plot,tail_
     cord = Sh/span
     return Sh, Clh0, span, cord,alpha_result*180/np.pi,pitch_result*180/np.pi
 
-print(get_tail_size(200,30,4.635,4,0.7,1,0.05,-0.5,1,0,14,0.36,True,0.7366))
+print(get_tail_size(200,30,4.635,4,0.7,2,0.05,-0.5,1,0,14,0.36,True,0.7366))
 plt.show()
 
 

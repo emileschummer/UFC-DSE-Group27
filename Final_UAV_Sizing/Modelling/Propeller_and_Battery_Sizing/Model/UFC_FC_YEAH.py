@@ -42,29 +42,41 @@ def flat_plate_drag_coefficient(V, rho, L, T):
     CD_fp= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65)
     return CD_fp
 
-def fuselage_drag_coefficient(V, rho, L_n, L_c, T, d, S_wing):
-    S_nose_tail = np.pi * d/2 * np.sqrt(L_n**2 + (d/2)**2) +2 * np.pi * (d/2)**2 
-    S_cabin= np.pi * d * L_c 
-    S_wet_fus= 2 * S_nose_tail + S_cabin
-    L = 2 * L_n + L_c
-    IF_fus= 1.05
-    FF_fus= 1 + 60/ (L/d)**3 + 0.0025 * (L/d)**2 
-    Cf_i = flat_plate_drag_coefficient(V, rho, L, T)
-    CD_fus= Cf_i * IF_fus * FF_fus * S_wet_fus / S_wing
+def sphere_drag_coefficient(V, rho, L):
+    Re= rho * V * L / 1.81e-5
+    term1 = 24.0 / Re
+    term2 = 2.6 * (Re / 5.0) / (1.0 + (Re / 5.0)**1.52)
+    term3 = 0.411 * (Re / 2.63e5)**(-7.94) / (1.0 + (Re / 2.63e5)**(-8.00))
+    term4 = 0.25 * (Re / 1e6) / (1.0 + (Re / 1e6))
+
+    CD_sphere = term1 + term2 + term3 + term4
+    return CD_sphere
+
+def fuselage_drag_coefficient(K_n, K_c, d, V, rho, L, T):
+    CD_fp = flat_plate_drag_coefficient(V, rho, L, T)
+    R= d/2
+    e= np.sqrt(1 - (R/L)**2)
+    S_wet_cabin = np.pi * d * L  # Wet surface area of the cabin
+    S_wet_nose = np.pi * R**2 * (1 + (L/(R*e)) * np.arcsin(e))
+    S_front = (d/2)**2 *np.pi
+    S_wet = S_wet_cabin + S_wet_nose
+
+    CD_fus= (K_n * S_wet_nose/S_wet + K_c * S_wet_cabin/S_wet) * CD_fp *S_wet/S_front
     return CD_fus
 
-def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency):
+
+def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency):
     L_req = np.cos(incline)*W + W/g * V * gamma_dot #vertical force required for flight (stationary or not)
     if V > V_vert_prop:
         CL = 2*L_req/(rho*S_wing*V**2)
-        CD = CD0_wing + CL**2/piAe
+        CD = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
         D_wing = 0.5*rho*CD*S_wing*V**2
         T_horizontal = ((D_wing + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         T_vertical = 0
         
     else:
         CL = CLmax
-        CD = CD0_wing + CL**2/piAe
+        CD = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
         D_wing = 0.5*rho*CD*S_wing*V**2
         T_horizontal = ((D_wing + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         L_wing = 0.5*rho*CL*S_wing*V**2 * propeller_wake_efficiency  #Lifting force of the wing, parameter for wake of propellers
@@ -73,8 +85,8 @@ def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, 
            
     return T_vertical, T_horizontal
 
-def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency):
-    T_vertical, T_horizontal = calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency)
+def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency):
+    T_vertical, T_horizontal = calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency)
     
     #Vertical power
     max_thrust = df_vertical['Thrust_N'].max()
@@ -93,3 +105,4 @@ def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W,
     P_horizontal = np.interp(T_horizontal, df_horizontal['Thrust_N'], df_horizontal[' Power (W) ']) * numberengines_horizontal
     P = P_vertical + P_horizontal
     return P
+    
