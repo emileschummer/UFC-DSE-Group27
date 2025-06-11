@@ -65,19 +65,18 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     print(f"Total runtime:        {t6 - t0:.2f} s")
 
     # distribution = load_distribution_halfspan(wing_geom, lift_distribution, 10, half_span=1.5, plot = True)
-    if csv_path:
-        df = pd.DataFrame({
-            "alpha (deg)": alpha_range3D,
-            "CL_corrected": CLs_corrected,
-            "CD_vlm": CDs_vlm_original,
-        })
-        print(df.head())  # Debugging: Print the first few rows of the DataFrame
-        try:
-            os.makedirs(os.path.dirname(csv_path), exist_ok=True)  # Ensure directory exists
-            df.to_csv(csv_path, index=False)
-            print(f"Saved α–CL–CD sweep to '{csv_path}'")
-        except Exception as e:
-            print(f"Failed to save CSV: {e}")
+    # Always save output to Final_UAV_Sizing/Output regardless of csv_path argument
+    # Always save output to Final_UAV_Sizing/Output, using the filename from csv_path
+    df = pd.DataFrame({
+        "alpha (deg)": alpha_range3D,
+        "CL_corrected": CLs_corrected,
+        "CD_vlm": CDs_vlm_original,
+    })
+    try:
+        df.to_csv(csv_path, index=False)
+        print(f"Saved α–CL–CD sweep to '{csv_path}'")
+    except Exception as e:
+        print(f"Failed to save CSV: {e}")
 
     return {
         "wing_geom": wing_geom,
@@ -145,21 +144,3 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
 
 #     # Optional: Render the wing
 #     # wing_geom.draw(show=True)
-
-    
-
-    
-
-
-
-if __name__ == "__main__":
-    for i in [r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat", 
-              #r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\CLARKY.dat", 
-            #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\E423.dat", 
-            #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\NACA4412.dat", 
-            #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\NACA23012.dat"
-            ]:
-    # Run with all defaults (just adjust paths if needed):
-        results = run_full_aero(airfoil_dat_path = i)
-        
-    # ‘results’ now holds everything if you want to inspect or post‐process further
