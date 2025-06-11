@@ -43,7 +43,7 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Clmax,Cl0,S,Cd0,Cmac,lh,l,Iy,c):
     m = W/9.81
     results = [[],[],[],[]]
     progress = 0
-    iteration = 20
+    iteration = 50
     for Clh0 in np.linspace(-0.6,0.6,iteration):
         progress = progress + 1
         for Sh in np.linspace(0,1,iteration):
@@ -96,7 +96,6 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Clmax,Cl0,S,Cd0,Cmac,lh,l,Iy,c):
                     time.append(t)
 
 
-            plt.plot(time,pitchangle)
             print(100*progress/iteration, '%')
             if not stop and t > 0.9*tend:
                 results[0].append(Sh)
@@ -105,14 +104,14 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Clmax,Cl0,S,Cd0,Cmac,lh,l,Iy,c):
                 results[3].append(pitch)
                 plt.plot(time,pitchangle)
     plt.show()
-    min_val = min(results[0])
-    min_index = results[0].index(min_val)
-    corresponding_val = results[1][min_index]
+    Sh = min(results[0])
+    min_index = results[0].index(Sh)
+    Clh0 = results[1][min_index]
     alpha_result = results[2][min_index]
     pitch_result = results[3][min_index]
-    return min_val, corresponding_val,alpha_result*180/np.pi,pitch_result*180/np.pi
+    return Sh, Clh0,alpha_result*180/np.pi,pitch_result*180/np.pi
 
-print(get_tail_size(200,30,4.635,4,2.4,1,1,0.05,-0.5,2,0,14,0.36))
+print(get_tail_size(200,30,4.635,4,2.4,0.7,1,0.05,-0.5,1.6,0,14,0.36))
 plt.show()
 
 
