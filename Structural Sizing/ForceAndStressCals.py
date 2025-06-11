@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib as plt
 import pandas as pd
+from scipy.integrate import quad
 
 
 def Max_Force(l, F1_eq, F2_eq):
@@ -97,5 +98,15 @@ def Von_Mises(Stress_X,Stress_Y,Stress_Z,Shear_XY,Shear_YZ,Shear_ZX):
 def Cut_Out_Corrections(Diamater, Width):#Diameter= Entire hole diameter, Width = panel width
     K_t = 2+(1 + (Diamater/Width))**3
     return K_t
+
+
+#LIFT CALCULATOR
+#TAKEN FROM CHATGPT, BUT VERIFIED BY HAND
+def compute_total_lift_and_centroid(Y_func, a, b):
+    total_lift, _ = quad(Y_func, a, b)
+    moment, _ = quad(lambda x: x * Y_func(x), a, b)
+    x_centroid = moment / total_lift if total_lift != 0 else np.nan
+
+    return total_lift, x_centroid
 
 
