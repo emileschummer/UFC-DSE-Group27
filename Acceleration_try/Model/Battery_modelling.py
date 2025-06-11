@@ -12,7 +12,7 @@ from Acceleration_try.Input import Strava_input_csv as sva
 import numpy as np
 import pandas as pd
 
-def Battery_Model(output_folder, V_vert_prop=5, W=250, D_rest=50, CLmax=2.2, S_wing=1.5, piAe=20.41, CD0_wing=0.0264, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 124,  show=False):
+def Battery_Model(output_folder, V_vert_prop=5, W=250, D_rest=50, CLmax=2.2, S_wing=1.5, piAe=20.41, CD0_wing=0.0264, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 189,  show=False):
     print("---------Plot Race Results---------")
     races = sva.make_race_dictionnary()
     race_results = {}
