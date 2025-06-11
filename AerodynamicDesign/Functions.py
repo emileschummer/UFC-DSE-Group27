@@ -16,6 +16,7 @@ def load_airfoil_dat(path):
                 continue
     return np.array(coords)
 
+#do not taper
 def wing_geometry_calculator(InputWeight, alpha, csv, velocity_op, altitude, taper_ratio, b):
     #from csv should take the CL assosciated to the alpha that want to analyse. it should take the old CL.
     
@@ -29,3 +30,4 @@ def wing_geometry_calculator(InputWeight, alpha, csv, velocity_op, altitude, tap
     ct = cr*taper_ratio
 
     return S, cr, ct
+
