@@ -4,7 +4,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 from datetime import datetime
 
 from Modelling.races import *
-from Sensitivity_Analysis.plot_power import *
+from Midterm_Battery_Modelling.Modelling.plot_power import *
 from Input import Configuration_inputs as config
 
 def main(output_folder="Battery_Modelling/Output"):
