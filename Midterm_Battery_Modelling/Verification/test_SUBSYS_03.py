@@ -3,7 +3,7 @@ import os
 
 # Add the parent directory of 'Midterm_Battery_Modelling' to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from Midterm_Battery_Modelling.Sensitivity_Analysis.plot_power import *
+from Midterm_Battery_Modelling.Modelling.plot_power import *
 
 import pytest
 from unittest.mock import patch, MagicMock
