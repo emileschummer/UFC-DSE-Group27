@@ -47,6 +47,14 @@ PL_power = 155 # [W] power consumption of payload
 battery_safety_margin = 1.2 # [-] safety margin for battery capacity
 battery_energy_density = 450 # [Wh/kg] energy density of battery
 battery_volumetric_density =  1851.9 # [kg/m^3] volumetric density of battery
+"""Explain where these values come from and if linked to iteration (Roan knows)"""
+L_n = 0.2
+L_c = 0.6
+L_fus = L_n+L_c
+d=0.25
+L_blade = 0.7366
+L_stab = 0.6
+"""until here"""
 ##4. Tail Sizing
 e = 0.8 # [-] Oswald Efficiency
 Clhalpha = 4.3 # [-] Clalpha of the tail

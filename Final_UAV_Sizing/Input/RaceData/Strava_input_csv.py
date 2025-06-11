@@ -32,4 +32,21 @@ def air_density_isa(h):
     rho = p / (R * T)
 
     return rho
+def altitude_from_density(rho):
+    T0 = 288.15  # Sea level standard temperature (K)
+    p0 = 101325  # Sea level standard pressure (Pa)
+    L = -0.0065  # Temperature lapse rate (K/m)
+    g = 9.80665  # Gravity (m/s^2)
+    R = 287.058  # Specific gas constant for air (J/kg·K)
+
+    # Rearranged ISA formula to solve for h given rho
+    # rho = p0 / (R * T0) * (1 + (L * h) / T0) ** (-(g / (L * R) + 1))
+    # Let A = -(g / (L * R) + 1)
+    A = -(g / (L * R) + 1)
+    rho0 = p0 / (R * T0)
+    ratio = rho / rho0
+    # (1 + (L * h) / T0) = ratio ** (1 / A)
+    temp = ratio ** (1 / A)
+    h = (temp - 1) * T0 / L
+    return h
 

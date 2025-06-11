@@ -94,8 +94,14 @@ for number_relay_stations in range(1,input.max_RS):
         battery_recharge_time_min = input.battery_recharge_time_min
         PL_power = input.PL_power
         show = input.show_plots
+        L_n = input.L_n
+        L_c = input.L_c
+        L_fus = L_n+L_c
+        d = input.d
+        L_blade = input.L_blade
+        L_stab = input.L_stab
         ##Run
-        max_battery_energy = Battery_Model(output_folder,aero_df,V_vert_prop,W,CLmax,S_wing,numberengines_vertical,numberengines_horizontal,propeller_wake_efficiency,number_relay_stations,UAV_off_for_recharge_time_min,battery_recharge_time_min,PL_power,show)
+        max_battery_energy = Battery_Model(output_folder,aero_df,V_vert_prop,W,CLmax,S_wing,numberengines_vertical,numberengines_horizontal,propeller_wake_efficiency,number_relay_stations,UAV_off_for_recharge_time_min,battery_recharge_time_min,PL_power,show,L_fus,L_n,L_c,d,L_blade,L_stab)
     #3.2 Battery Sizing
         ##Prepare Inputs
         max_battery_energy = max_battery_energy
