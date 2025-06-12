@@ -175,6 +175,7 @@ elevator_moment = [0]
 diff_pitch_moment = [0]
 Vstallst = [0]
 Tzlst = [0]
+stal_tail = 1.5/Clhalpha
 while t < tend:
     Vstall = (2*W/(rho*S*Clmax))**0.5
     alphastall = (Clmax - Cl0)/Clalpha
@@ -197,7 +198,7 @@ while t < tend:
     error0 = error
     if V > 1*Vstall:
         Clh0 = -error*1.5 + error_I*0.1 + q*5 -pitch_error*10 - pitch_error_I*10
-        diff_thrust_pitch = ( -error*1.5 + error_I*0.7 + q*10 -pitch_error*0.2 - pitch_error_I*1)*-200
+        diff_thrust_pitch = ( -error*1.5 + error_I*0.7 + q*10 -pitch_error*0.2 - pitch_error_I*1)*-0
     else:
         Clh0 = -error*1.5 + error_I*0.1 + q*10 -pitch_error*10 - pitch_error_I*10
         diff_thrust_pitch = (  -pitch_error*5 + pitch_error_I*0.001 + q*1)*-300
@@ -208,12 +209,12 @@ while t < tend:
         diff_thrust_pitch = -70
     if Tz > 250:
         Tz = 250
-    if t > 26:
+    if t > 34.5:
         Tx = (30-V)*7
-    if Clh0 > 1:
-        Clh0 = 1
-    elif Clh0 < -1:
-        Clh0 = -1
+    if Clhalpha*alpha + Clh0 >1.5:
+        Clh0 = 1.5 - Clhalpha*alpha
+    elif Clhalpha*alpha + Clh0 <-1.5:
+        Clh0 = -1.5 - Clhalpha*alpha
     Tzlst.append(Tz)
     target_AoA.append(alpha_target*180/np.pi)
     pitch_tagetangle.append(target_pitch*180/np.pi)
