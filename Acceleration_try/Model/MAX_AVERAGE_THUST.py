@@ -14,11 +14,19 @@ numberengines_vertical = 4
 numberengines_horizontal = 1
 propeller_wake_efficiency = 0.7
 L_blade = 0.7366
+w_blade = 0.075
 L_stab= 0.6
+w_stab= 0.5
+L_poles= 3.6*L_blade/2 + 0.5
+w_poles= 0.34
+L_motor = 0.3
+L_gimbal = 0.12
+L_speaker = 0.1
 
 L_n = 0.2
 L_c = 0.6
 L_fus = L_n + L_c
+w_fus = S_wing / L_fus
 d = 0.25
 
 aero_df = pd.read_csv(os.path.join(os.path.dirname(__file__), 'aero.csv'))
@@ -41,10 +49,13 @@ for race_name, race_data in races.items():
         grade_smooth = np.arctan(row[" grade_smooth"] / 100)
         altitude = row[" altitude"]
         rho = sva.air_density_isa(altitude)
-        Cf_blade= flat_plate_drag_coefficient(velocity_smooth, rho, altitude, L_blade)
-        Cf_stab = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, L_stab)
-        Cf_fus = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, L_fus)
-        CD_cube = cube_drag_coefficient(velocity_smooth, rho, altitude, S_wing)
+        Cf_blade= flat_plate_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_blade, w_blade)
+        Cf_stab = flat_plate_drag_coefficient(velocity_smooth, rho, altitude,S_wing,L_stab, w_stab)
+        Cf_poles = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_poles, w_poles)
+        Cf_fus = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_fus, w_fus)
+        CD_speaker = cube_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_speaker)
+        CD_gimbal = cube_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_gimbal)
+        CD_motor = cube_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_motor)
         CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing)
 
         
@@ -61,7 +72,7 @@ for race_name, race_data in races.items():
         prev_grade_smooth = grade_smooth
         t = time
 
-        Tvertical, Thorizontal = calculate_thrust_UFC_FC(grade_smooth, velocity_smooth, rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical, numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_cube, Cf_blade, Cf_stab)
+        Tvertical, Thorizontal = calculate_thrust_UFC_FC(grade_smooth, velocity_smooth, rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, Cf_blade, Cf_stab, Cf_poles)
         Tvertical_list.append(Tvertical)
         Thorizontal_list.append(Thorizontal)
     
@@ -113,3 +124,27 @@ for race_name, race_data in races.items():
     plt.tight_layout()
     plt.show()
 
+'''
+    # Create a new figure for velocity vs gradient plot
+    plt.figure(figsize=(10, 6))
+
+    # Create bins for gradient values
+    gradient_bins = np.arange(-20, 21, 1)  # Adjust range as needed
+    max_velocities = []
+    bin_centers = []
+
+    # Group data by gradient and find maximum velocity for each group
+    for i in range(len(gradient_bins)-1):
+        mask = (race_data[' grade_smooth'] >= gradient_bins[i]) & (race_data[' grade_smooth'] < gradient_bins[i+1])
+        if mask.any():
+            max_velocities.append(race_data[' velocity_smooth'][mask].max())
+            bin_centers.append((gradient_bins[i] + gradient_bins[i+1]) / 2)
+
+    # Plot maximum velocity vs gradient
+    plt.plot(bin_centers, max_velocities, 'bo-')
+    plt.xlabel('Gradient (%)')
+    plt.ylabel('Maximum Velocity (m/s)')
+    plt.title(f'{race_name} - Maximum Velocity vs Gradient')
+    plt.grid(True)
+    plt.show()
+'''
