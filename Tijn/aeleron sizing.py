@@ -2,18 +2,18 @@ import numpy as np
 b = 3.15
 b2 = 3.15/2
 b1 = 3.14/2
-max_deflection = 20
-V = 10
+max_deflection = 15
+V = 15
 croot = 1.3
 ctip = 1
 Sref = 2
-tau = 0.4
+tau = 0.5
 Clalpha = 4.7
 Ptarget = 90
 P = 0
 Cd0 = 0.05
 def get_Cldeltaa(Clalpha,tau,Sref,b,croot,ctip,b1,b2):
-    dy = 0.001
+    dy = 0.0001
     integral = 0
     y = b1
     while y < b2:
@@ -23,7 +23,7 @@ def get_Cldeltaa(Clalpha,tau,Sref,b,croot,ctip,b1,b2):
     Cldeltaa = integral*2*Clalpha*tau/(Sref*b)
     return Cldeltaa
 def get_Clp(Clalpha,Cd0,Sref,b,ctip,croot):
-    dy = 0.001
+    dy = 0.0001
     integral = 0
     y = 0
     while y < b/2:
@@ -35,4 +35,4 @@ def get_Clp(Clalpha,Cd0,Sref,b,ctip,croot):
 while P < Ptarget:
     b1 = b1 - 0.01
     P = -(get_Cldeltaa(Clalpha,tau,Sref,b,croot,ctip,b1,b2)/get_Clp(Clalpha,Cd0,Sref,b,ctip,croot))*max_deflection*(2*V/b)
-    print(P,b1,b2)
+print(P,b1,b2)
