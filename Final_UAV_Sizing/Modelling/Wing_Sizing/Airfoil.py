@@ -10,7 +10,7 @@ def setup_wing_and_airplane(chosen_airfoil, num_spanwise_sections, r_chord, t_ch
         name="Wing",
         xsecs=[
             asb.WingXSec(
-                xyz_le=[0, 0, 0], chord=r_chord, twist=r_twist, airfoil=chosen_airfoil,
+                xyz_le=[0 , 0, 0], chord=r_chord, twist=r_twist, airfoil=chosen_airfoil,
             ),
             asb.WingXSec(
                 xyz_le=[sweep, 1.5, 0], chord=t_chord, twist=t_twist, airfoil=chosen_airfoil,
@@ -135,7 +135,7 @@ def run_vlm_sweep_with_stall_correction(alpha_range3D, vlm_airplane, operational
                                         section_data_list, num_spanwise_sections, wing, operational_altitude,
                                         vlm_chordwise_resolution=6): # Added vlm_chordwise_resolution
     """Performs VLM alpha sweep and applies stall correction."""
-    CLs_vlm, CDs_vlm, CLs_corrected_list = [], [], []
+    CLs_vlm, CDs_vlm, CLs_corrected_list, Cm = [], [], [], []
     lift_distribution = {"alpha": [], "CLs": []}
 
     for alpha_value in alpha_range3D: #per alpha
@@ -152,6 +152,8 @@ def run_vlm_sweep_with_stall_correction(alpha_range3D, vlm_airplane, operational
 
         CLs_vlm.append(results.get("CL", np.nan))
         CDs_vlm.append(results.get("CD", np.nan))
+        Cm.append(results.get("Cm", np.nan))
+
 
         current_CL_corrected_for_this_alpha = np.nan #lift coefficent for current angle of attack after correctio for stall
         can_correct_this_alpha = False
@@ -226,7 +228,7 @@ def run_vlm_sweep_with_stall_correction(alpha_range3D, vlm_airplane, operational
         
         CLs_corrected_list.append(current_CL_corrected_for_this_alpha)
         
-    return CLs_vlm, CDs_vlm, CLs_corrected_list, lift_distribution
+    return CLs_vlm, CDs_vlm, CLs_corrected_list, lift_distribution, Cm
 
 def plot_aerodynamic_coefficients(alphas, CLs_vlm, CLs_corrected, CDs_vlm, Plot = False):
     """Plots the CL and CD curves."""

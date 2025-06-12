@@ -7,32 +7,32 @@ import matplotlib.pyplot as plt
 from math import ceil
 import os
 from datetime import datetime
-from Acceleration_try.Model.UFC_FC_YEAH import calculate_power_FC
-from Acceleration_try.Input import Strava_input_csv as sva
+from Modelling.Propeller_and_Battery_Sizing.Model.UFC_FC_YEAH import calculate_power_FC
+from Input.RaceData import Strava_input_csv as sva
 import numpy as np
 import pandas as pd
 
-def Battery_Model(output_folder,aero_df, V_vert_prop=5, W=250, D_rest=50, CLmax=2.2, S_wing=1.5, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 189,  show=False):
+def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizing/Input/RaceData", V_vert_prop=5, W=250, CLmax=2.2, S_wing=1.5, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 189,  show=False,L_fus = 0.8,L_n = 0.2,L_c= 0.6,d=0.25,L_blade=0.7366,L_stab=0.6):
     print("---------Plot Race Results---------")
-    races = sva.make_race_dictionnary()
+    races = sva.make_race_dictionnary(data_folder)
     race_results = {}
     for race_name, race_data in races.items():
         necessary_battery_capacity = 0
         print(f"---------{race_name}---------")
         """ change this for power"""
         # Vertical Propeller 
-        csv_path = os.path.join(os.path.dirname(__file__), '..', 'Input', 'UAV_Propellers_and_Motor_Specs_Vertical.csv')
+        csv_path = os.path.join(input_folder,'UAV_Propellers_and_Motor_Specs_Vertical.csv')
         df_vertical = pd.read_csv(csv_path)
         df_vertical['Thrust_N'] = df_vertical[' Thrust (g) '] * 9.81 / 1000
 
         # Horizontal Propeller 
-        csv_path = os.path.join(os.path.dirname(__file__), '..', 'Input', 'UAV_Propellers_and_Motor_Specs_Horizontal.csv')
+        csv_path = os.path.join(input_folder,'UAV_Propellers_and_Motor_Specs_Horizontal.csv')
         df_horizontal = pd.read_csv(csv_path)
         df_horizontal['Thrust_N'] = df_horizontal[' Thrust (g) '] * 9.81 / 1000
 
         calculate_power = calculate_power_FC
         # 1. Follow a cyclist with 1 battery, no relay station
-        time_plot, distance_plot, power_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot = simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power)
+        time_plot, distance_plot, power_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot = simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power,L_fus,L_n,L_c,d,L_blade,L_stab)
         
         # 2. Calculate battery capacity and threshold
         total_battery_energy = battery_energy_plot[-1]
@@ -123,7 +123,7 @@ def Battery_Model(output_folder,aero_df, V_vert_prop=5, W=250, D_rest=50, CLmax=
                     acceleration = 0
                     pitch_rate = (gradient - previous_pitch) / dt
                     previous_pitch = pitch_rate
-                    P = calculate_power(df_vertical,df_horizontal,gradient,velocity,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency)
+                    P = calculate_power(df_vertical,df_horizontal,gradient,velocity,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c,d,L_blade,L_stab)
                     P+= PL_power  # Add power for payload
                     energy +=  P*dt/3600  # Convert J to Wh
                 else: 
@@ -211,7 +211,7 @@ def Battery_Model(output_folder,aero_df, V_vert_prop=5, W=250, D_rest=50, CLmax=
     print("Done")
     return max_battery_energy
 
-def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power):
+def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power,L_fus,L_n,L_c,d,L_blade,L_stab):
     # Prepare arrays
     time_plot, distance_plot, power_plot, speed_plot = [], [], [], []
     gradient_plot, acceleration_plot, pitch_rate_plot = [], [], []
@@ -233,7 +233,7 @@ def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, 
                 pitch_rate = 0
             prev_velocity = velocity_smooth
             prev_grade_smooth = grade_smooth
-            P = calculate_power(df_vertical,df_horizontal,grade_smooth,velocity_smooth,rho, acceleration,pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency)
+            P = calculate_power(df_vertical,df_horizontal,grade_smooth,velocity_smooth,rho,acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c,d,L_blade,L_stab)
             P+= PL_power  # Add power for payload
             energy += time_diff * P/3600  # Convert J to Wh
             t = time
@@ -316,5 +316,5 @@ def get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot
 
 def Battery_Size(max_battery_energy, battery_safety_margin = 1.2, battery_energy_density = 450, battery_volumetric_density= 200):
     battery_mass = max_battery_energy * battery_safety_margin / battery_energy_density  # in kg
-    battery_volume = max_battery_energy * battery_safety_margin / battery_volumetric_density  # in m^3
+    battery_volume = battery_mass / battery_volumetric_density  # in m^3
     return battery_mass,battery_volume
