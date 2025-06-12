@@ -10,9 +10,9 @@ from AerodynamicForces import load_distribution_halfspan
 
 
 
-def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat",
+def run_full_aero( airfoil_dat_path: str = r"C:\Users\Emile\OneDrive - Delft University of Technology\TUDelft\Bachelor Year 3\Design Synthesis Exercise\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat",
     name = "S1223",
-    xfoil_path: str = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe",
+    xfoil_path: str = r"C:\Users\Emile\Downloads\XFOIL6.99",
     operational_velocity: float = 5.0,
     num_spanwise_sections: int = 200,
     vlm_chordwise_resolution = 6,
@@ -27,7 +27,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     operational_altitude: float = 0.0,
     Re_numbers: int = 8,
     Plot = True,
-    csv_path: str = "C:\\Users\\marco\\Documents\\GitHub\\UFC-DSE-Group27\\AerodynamicDesign\\aero.csv") -> dict:
+    csv_path: str = r"C:\Users\Emile\OneDrive - Delft University of Technology\TUDelft\Bachelor Year 3\Design Synthesis Exercise\UFC-DSE-Group27\AerodynamicDesign\aero.csv") -> dict:
 
     # Load and build Airfoil
     airfoil_coordinates = load_airfoil_dat(airfoil_dat_path)
@@ -149,17 +149,16 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     
 
     
+run_full_aero()
 
-
-
-if __name__ == "__main__":
-    for i in [r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat", 
+#"""if __name__ == "__main__":
+ #   for i in [r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat", 
               #r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\CLARKY.dat", 
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\E423.dat", 
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\NACA4412.dat", 
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\NACA23012.dat"
-            ]:
+ #           ]:
     # Run with all defaults (just adjust paths if needed):
-        results = run_full_aero(airfoil_dat_path = i)
+  #      results = run_full_aero(airfoil_dat_path = i)
         
-    # ‘results’ now holds everything if you want to inspect or post‐process further
+    # ‘results’ now holds everything if you want to inspect or post‐process further"""

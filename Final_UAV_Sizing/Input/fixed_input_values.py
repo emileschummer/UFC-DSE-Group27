@@ -17,13 +17,13 @@ delta_mass = 0.01 # [kg], mass convergence
 max_RS = 6 # [-] maximum number of relay stations
 
 ##1. Wing Sizing Parameters
-xfoil = "Xfoil" # [str] path to xfoil executable
+xfoil = r"Final_UAV_Sizing\XFOIL6.99\xfoil.exe"#"Final_UAV_Sizing/Xfoil" # [str] path to xfoil executable
 """Find adequate values for below"""
 altitude =  0 # [m] operational altitude for wing sizing
 taper_ratio = 0.4 # [-] taper ratio for wing sizing
 """Stop here"""
 b = 3 # [m] wing span
-num_spanwise_sections = 200 # [-] number of spanwise sections for VLM analysis
+num_spanwise_sections = int(200) # [-] number of spanwise sections for VLM analysis
 vlm_chordwise_resolution = 6 # [-] chordwise resolution for VLM analysis
 delta_alpha_3D_correction = 1.0 # [deg] correction for 3D stall angle
 alpha_range2D= np.linspace(-10, 25, 36) # [deg] angle of attack range for 2D stall database
@@ -39,6 +39,7 @@ numberengines_horizontal = 1
 propeller_wake_efficiency = 0.7
 
 ##3. Battery Sizing
+input_folder = "Final_UAV_Sizing/Input/Prop_Engine_Data" 
 output_folder = "Final_UAV_Sizing/Output/Battery" # [str] folder to save battery data
 UAV_off_for_recharge_time_min = 15 # [min] time UAV is not filming to recharge
 battery_recharge_time_min = 5 # [min] time to change/recharge battery
@@ -58,7 +59,6 @@ L_stab = 0.6
 ##4. Tail Sizing
 e = 0.8 # [-] Oswald Efficiency
 Clhalpha = 4.3 # [-] Clalpha of the tail
-Cd0 = 0.00744 +0.1#rest
 lh = 1 # [m] tail length from CG
 l = 0 # [m] distance between CG and AC
 Iy = 14 # [kgm^2] Mass Moment of Inertia

@@ -8,20 +8,26 @@ from Input.fixed_input_values import g
 import Input.RaceData.Strava_input_csv as sva
 
 def flat_plate_drag_coefficient(V, rho, h, L):
-    T0 = 288.15
-    T = T0 + -0.0065 * h
-    Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
-    a= np.sqrt(1.4 * 287.05 * T)
-    Cf_i= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65)
+    if V>0:
+        T0 = 288.15
+        T = T0 + -0.0065 * h
+        Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
+        a= np.sqrt(1.4 * 287.05 * T)
+        Cf_i= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65)
+    else:
+        Cf_i = 0.0
     return Cf_i
 
 def cube_drag_coefficient(V, rho, h, S_wing):
-    T0 = 288.15
-    T = T0 + -0.0065 * h
-    L_cube = 0.12
-    Re= rho * V * L_cube / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
-    a= np.sqrt(1.4 * 287.05 * T)
-    CD_cube= (1.1 + 20/np.sqrt(Re)) * (1 + 0.15 * (V/a)**2) * L_cube**2/S_wing
+    if V>0:
+        T0 = 288.15
+        T = T0 + -0.0065 * h
+        L_cube = 0.12
+        Re= rho * V * L_cube / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
+        a= np.sqrt(1.4 * 287.05 * T)
+        CD_cube= (1.1 + 20/np.sqrt(Re)) * (1 + 0.15 * (V/a)**2) * L_cube**2/S_wing
+    else:
+        CD_cube = 0.0
     return CD_cube
 
 def fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing):
