@@ -14,7 +14,7 @@ from Modelling.Tail_Sizing.Tail_sizing_final import get_tail_size
 
 
 #Make this a main() function
-for number_relay_stations in range(1,input.max_RS):
+for number_relay_stations in range(input.min_RS,input.max_RS):
     M_list = [0]
     M_init = input.M_init
     M_list.append(M_init)
