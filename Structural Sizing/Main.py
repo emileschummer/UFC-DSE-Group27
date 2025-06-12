@@ -228,8 +228,6 @@ while Big_owie_WingBox:
     Von_Mises_Wingbox_Stress, Von_Mises_Wingbox_Shear = Von_Mises(Stress_X=WingBox_Bending_X,Stress_Y=WingBox_Bending_Y,Stress_Z=WingBox_Bending_Z,
                                                                   Shear_XY=(WingBox_Torsion_Shear_Z+WingBox_Transverse_Shear), Shear_YZ=0,Shear_ZX=0)
     
-    # WingBox_Twist_Angle = 0
-    # WingBox_Total_Deflection = 0
 
     print("----------------------------------------------------")
     print("The Von Mises Stress Wingbox:",Von_Mises_Wingbox_Stress,"The yield stress", Yield_Stress_WingBox)
@@ -323,11 +321,10 @@ while Big_Owie_Fuselage_Flying:
         else:
             R_out_fuselage +=1/1000
             Big_Owie_Fuselage_Flying = True 
+            print("running Section 2")
     else:
         R_out_fuselage +=1/1000
         Big_Owie_Fuselage_Flying = True 
-
-
 
 
 
