@@ -100,8 +100,6 @@ def Cut_Out_Corrections(Diamater, Width):#Diameter= Entire hole diameter, Width 
     return K_t
 
 
-#LIFT CALCULATOR
-#TAKEN FROM CHATGPT, BUT VERIFIED BY HAND
 def Compute_Total_Lift_and_Centroid(Y_func, a, b):
     total_lift, _ = quad(Y_func, a, b)
     moment, _ = quad(lambda x: x * Y_func(x), a, b)
@@ -109,10 +107,6 @@ def Compute_Total_Lift_and_Centroid(Y_func, a, b):
 
     return total_lift, x_centroid
 
-
-# Example lift distribution: parabolic
-Y = lambda x: 1000 * (1 - (x/10)**2)  # Lift from root (x=0) to tip (x=10 m)
-
-lift, centroid = Compute_Total_Lift_and_Centroid(Y, 0, 10)
-print(f"Total Lift: {lift:.2f} N")
-print(f"Centroid (spanwise): {centroid:.2f} m")
+# lift, centroid = Compute_Total_Lift_and_Centroid(Y, 0, 10)
+# print(f"Total Lift: {lift:.2f} N")
+# print(f"Centroid (spanwise): {centroid:.2f} m")

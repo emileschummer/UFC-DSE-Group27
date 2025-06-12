@@ -56,7 +56,7 @@ R_out_VTOL_front = 0.1705
 d_prop= 0.7366
 R_prop = d_prop/2	
 MAC= 0.35
-Vtol_Pole_Length_front = 1.1*R_prop+ 0.12*MAC
+Vtol_Pole_Length_front = 1.1*R_prop + 0.2*MAC
 
 #VTOL POLES BACK GEOMETRY
 R_in_VTOL_back = 0.17
@@ -64,7 +64,7 @@ R_out_VTOL_back = 0.1705
 d_prop= 0.7366
 R_prop = d_prop/2	
 MAC= 0.35
-Vtol_Pole_Length_back = 1.1*R_prop+ 0.24*MAC
+Vtol_Pole_Length_back = 1.1*R_prop+ 0.8*MAC
 
 
 #FUSELAGE GEOMETRY
@@ -112,11 +112,11 @@ Fuselage_sec2_load = 15 #N*m BATTERY+PARACHUTE
 Payload_Force = 9.81*0.7 #N includes Gimbal and Camera weight
 Payload_Drag = 10 #N includes Gimbal and Camera drag
 
-
 #LEG LOADS
 Leg_Force = (25*9.81)/4
 Leg_Force_X = Leg_Force*np.sin(Leg_Angle)
 Leg_Force_Y = Leg_Force*np.cos(Leg_Angle)
+
 
 
 #THE SIMULATION
@@ -170,8 +170,10 @@ R_out_WingBox = 0.11
 
 #WING LOADS
 Wing_Torque = 100 #MAX WING TORQUE
-Wing_Lift_Distribution = 10 #Should be an elliptical func, we will figure it out later REMEMBER -WL^2/2
+Wing_Lift_Distribution = lambda x: 1000 * (1 - (x/10)**2)  # Lift from root (x=0) to tip (x=10 m) #Should be an elliptical func, we will figure it out later REMEMBER -WL^2/2
 Wing_Max_Lift = 100
+Wing_Total_Lift, Wing_Lift_Centroid_Location = Compute_Total_Lift_and_Centroid(Wing_Lift_Distribution,0,WingBox_length)
+
 
 #NEWLY DEFINED FROM VTOL
 Wing_MY=Tail_Effective_Length*Tail_loading_horizontal_Distributed*(Entire_Tail_Length-0.5*Tail_Effective_Length)
