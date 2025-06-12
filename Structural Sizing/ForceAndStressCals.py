@@ -71,6 +71,12 @@ def Tip_Deflection(F,L,E,I):
     print(V_tip)
     return V_tip
 
+
+def Tip_Deflection_angle(F,L,E,I):
+    Angle = (F*L**2)/(2*E*I)
+    return Angle
+
+
 def Twist(T,L,G,J):
     angle = np.rad2deg( (T*L)/(G*J) )
     print(angle)
