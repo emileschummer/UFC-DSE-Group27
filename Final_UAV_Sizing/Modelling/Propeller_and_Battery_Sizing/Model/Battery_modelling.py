@@ -12,21 +12,21 @@ from Input.RaceData import Strava_input_csv as sva
 import numpy as np
 import pandas as pd
 
-def Battery_Model(output_folder,aero_df, V_vert_prop=5, W=250, CLmax=2.2, S_wing=1.5, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 189,  show=False,L_fus = 0.8,L_n = 0.2,L_c= 0.6,d=0.25,L_blade=0.7366,L_stab=0.6):
+def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizing/Input/RaceData", V_vert_prop=5, W=250, CLmax=2.2, S_wing=1.5, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 189,  show=False,L_fus = 0.8,L_n = 0.2,L_c= 0.6,d=0.25,L_blade=0.7366,L_stab=0.6):
     print("---------Plot Race Results---------")
-    races = sva.make_race_dictionnary()
+    races = sva.make_race_dictionnary(data_folder)
     race_results = {}
     for race_name, race_data in races.items():
         necessary_battery_capacity = 0
         print(f"---------{race_name}---------")
         """ change this for power"""
         # Vertical Propeller 
-        csv_path = os.path.join(os.path.dirname(__file__), '..', 'Input', 'UAV_Propellers_and_Motor_Specs_Vertical.csv')
+        csv_path = os.path.join(input_folder,'UAV_Propellers_and_Motor_Specs_Vertical.csv')
         df_vertical = pd.read_csv(csv_path)
         df_vertical['Thrust_N'] = df_vertical[' Thrust (g) '] * 9.81 / 1000
 
         # Horizontal Propeller 
-        csv_path = os.path.join(os.path.dirname(__file__), '..', 'Input', 'UAV_Propellers_and_Motor_Specs_Horizontal.csv')
+        csv_path = os.path.join(input_folder,'UAV_Propellers_and_Motor_Specs_Horizontal.csv')
         df_horizontal = pd.read_csv(csv_path)
         df_horizontal['Thrust_N'] = df_horizontal[' Thrust (g) '] * 9.81 / 1000
 

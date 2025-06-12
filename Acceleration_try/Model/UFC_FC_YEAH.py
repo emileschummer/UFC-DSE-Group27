@@ -5,9 +5,12 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 import numpy as np
 import matplotlib.pyplot as plt
 from Acceleration_try.Input.Config import largest_real_positive_root
+from Acceleration_try.Input import Strava_input_csv as sva
 
 
-g = 9.81
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 def flat_plate_drag_coefficient(V, rho, h, L):
     T0 = 288.15
@@ -36,30 +39,37 @@ def fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing):
     CD_fus= Cf_fus * IF_fus * FF_fus * S_wet_fus / S_wing
     return CD_fus
 
+
 def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_cube, Cf_blade, Cf_stab):
     L_req = np.cos(incline)*W + W/g * V * gamma_dot #vertical force required for flight (stationary or not)
     if V > V_vert_prop:
         CL = 2*L_req/(rho*S_wing*V**2)
         CD_wing = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
         CD= CD_fus + CD_cube + CD_wing + 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
-        D = 0.5*rho*CD*S_wing*V**2
-        T_horizontal = ((D + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
+        D_wing = 0.5*rho*CD*S_wing*V**2
+        T_horizontal = ((D_wing + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         T_vertical = 0
         
     else:
         CL = CLmax
         CD_wing = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
         CD= CD_fus + CD_cube + CD_wing + 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
-        D = 0.5*rho*CD*S_wing*V**2
-        T_horizontal = ((D + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
+        D_wing = 0.5*rho*CD*S_wing*V**2
+        T_horizontal = ((D_wing + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         L_wing = 0.5*rho*CL*S_wing*V**2 * propeller_wake_efficiency  #Lifting force of the wing, parameter for wake of propellers
         L_prop = L_req - L_wing
         T_vertical = L_prop/numberengines_vertical #Thrust per vertical propeller
            
     return T_vertical,T_horizontal
 
-def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_cube, Cf_blade, Cf_stab):
-    T_vertical, T_horizontal = calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, CD0_wing, piAe, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_cube, Cf_blade, Cf_stab)
+def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c,d,L_blade,L_stab):
+    Cf_fus = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), L_fus)
+    CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing)
+    CD_cube = cube_drag_coefficient(V, rho, sva.altitude_from_density(rho), S_wing)
+    Cf_blade = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), L_blade)
+    Cf_stab = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), L_stab)
+
+    T_vertical, T_horizontal = calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_cube, Cf_blade, Cf_stab)
     
     #Vertical power
     max_thrust = df_vertical['Thrust_N'].max()
