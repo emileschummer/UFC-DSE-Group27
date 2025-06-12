@@ -5,48 +5,46 @@ from InertiaCalcs import *
 from ForceAndStressCals import *
 from Materials import *
 from AirFoilDataExtraction import *
-
-
+from scipy.integrate import quad
 
 #------------------------------------------------------
 #TODO ADD A SAFETY FACTOR 1.5
-#TODO VIBRATIONS --> FLUTTER !!!!
+#TODO VIBRATIONS --> FLUTTER !!!!---->no, just,no >:(
 #TODO ASK ALEX FOR FEEDBACK
 #TODO INCLUDE TAIL IN ENGINE FORCE
 #TODO CHECK VON MISES FO ALL, ITS FOR CROSS SECTION POINT, NOT ENTIRE CROSS SECTION FFFFFFUUUUUUUUUUUCCCCCCCCCKKKKKKKKKK
 #------------------------------------------------------
 
 #FUNCTIONS TO RUN
-Big_Owie_Tail = False
-Big_owie_WingBox = True #UNDER RENOVATIONS
+Big_owie_WingBox = False #UNDER RENOVATIONS
 Big_Owie_VTOL_front = True
 Big_Owie_VTOL_back = True
 Big_Owie_Fuselage_Flying = True
-Big_Owie_Leg = False
+Big_Owie_Leg = True
 
 
 #Create the material
-Material_Tail = PLA3DPrintMaterial()
+Material_Tail = PLA3DPrintMaterial() # DogshitTestMaterial() #
 Yield_shear_Tail= Material_Tail.Yield_Shear
 Yield_Stress_Tail = Material_Tail.Yield_Stress
 Density_Tail = Material_Tail.Density
 
-Material_VTOL = PLA3DPrintMaterial()
+Material_VTOL = PLA3DPrintMaterial()# DogshitTestMaterial() #
 Yield_shear_VTOL= Material_VTOL.Yield_Shear
 Yield_Stress_VTOL = Material_VTOL.Yield_Stress
 Density_VTOL = Material_VTOL.Density
 
-Material_WingBox = PLA3DPrintMaterial()
+Material_WingBox = PLA3DPrintMaterial() #DogshitTestMaterial() #
 Yield_shear_WingBox= Material_WingBox.Yield_Shear
 Yield_Stress_WingBox = Material_WingBox.Yield_Stress
 Density_WingBox = Material_WingBox.Density
 
-Material_Leg = PLA3DPrintMaterial()
+Material_Leg = PLA3DPrintMaterial() #DogshitTestMaterial() #
 Yield_shear_Leg = Material_Leg.Yield_Shear
 Yield_Stress_Leg = Material_Leg.Yield_Stress
 Density_Leg = Material_Leg.Density
 
-Material_Fuselage = PLA3DPrintMaterial()
+Material_Fuselage = PLA3DPrintMaterial() #DogshitTestMaterial() #
 Yield_shear_Fuselage = Material_Fuselage.Yield_Shear
 Yield_Stress_Fuselage = Material_Fuselage.Yield_Stress
 Density_Fuselage = Material_Fuselage.Density
@@ -121,26 +119,7 @@ Leg_Force_X = Leg_Force*np.sin(Leg_Angle)
 Leg_Force_Y = Leg_Force*np.cos(Leg_Angle)
 
 
-# while Big_Owie_Tail:
-#     Ix = Circle_Moment_of_Inertia(R_out_Tail,R_in_Tail)
-#     Iy = Ix
-
-#     Bending_Stress_Tail = Bending(M_x_Tail,Ix,R_out_Tail,M_y_Tail,Iy,R_out_Tail)
-#     Trans_Shear_Y_Tail = Shear_Transverse_Circle(R_in_Tail,R_out_Tail,Tail_Vertical_Force)
-#     Trans_Shear_x_Tail= Shear_Transverse_Circle(R_in_Tail,R_out_Tail,Tail_Horizontal_Force)
-
-#     Tail_Total_Shear = np.sqrt(Trans_Shear_x_Tail**2 + Trans_Shear_Y_Tail**2)
-
-#     print("----------------------------------------------------")
-#     print("The Max Shear WingBox:",Tail_Total_Shear, "The Yield Shear:", Yield_shear_Tail)
-#     print("The Max Stress Wingbox:",Bending_Stress_Tail,"The yield stress", Yield_Stress_Tail)
-#     print("Thickness Tail:",R_out_Tail-R_in_Tail)
-
-#     if Bending_Stress_Tail <= Yield_Stress_Tail and Tail_Total_Shear <=Yield_shear_Tail:
-#         Big_Owie_Tail = False
-#     else:
-#         R_out_Tail +=0.001
-
+#THE SIMULATION
 while Big_Owie_VTOL_front:
     VTOL_I_Front = Circle_Moment_of_Inertia(R_out_VTOL_front,R_in_VTOL_front)
 
@@ -173,14 +152,14 @@ while Big_Owie_VTOL_back:
     VTOL_VonMises_Back_Stress,VTOL_VonMises_Back_Shear = Von_Mises(Stress_X=0,Stress_Y=0,Stress_Z=VTOL_stress_Back,Shear_XY=VTOL_Trans_Shear_Back_Y,Shear_YZ=VTOL_Trans_Shear_Back_Z,Shear_ZX=0)
 
     print("----------------------------------------------------")
-    print("The Max Shear FRONT VTOL:",VTOL_VonMises_Back_Stress, "The Yield Shear:", Yield_shear_VTOL)
-    print("The Max Stress FRONT VTOL:",VTOL_VonMises_Back_Shear,"The yield stress", Yield_Stress_VTOL)
-    print("The FRONT VTOL Thickness:",R_out_VTOL_back-R_in_VTOL_back)
+    print("The Max Shear BACK VTOL:",VTOL_VonMises_Back_Stress, "The Yield Shear:", Yield_shear_VTOL)
+    print("The Max Stress BACK VTOL:",VTOL_VonMises_Back_Shear,"The yield stress", Yield_Stress_VTOL)
+    print("The BACK VTOL Thickness:",R_out_VTOL_back-R_in_VTOL_back)
 
     if VTOL_VonMises_Back_Stress < Yield_Stress_VTOL and VTOL_VonMises_Back_Shear <Yield_shear_VTOL:
         Big_Owie_VTOL_back = False
     else:
-        R_out_VTOL_Back +=0.001
+        R_out_VTOL_back +=0.001
 
 
 #WINGBOX GEOMETRY
@@ -255,13 +234,12 @@ while Big_Owie_Leg:
 
     Leg_Von_Mises_Stress, Leg_Von_Mises_Shear = Von_Mises(Stress_X=Leg_Bending,Stress_Y=(Leg_Force_Y/Tube_Area(R_in=R_in_Leg,R_out=R_out_Leg)),Stress_Z=0,Shear_XY=Leg_Transverse_Shear,Shear_YZ=0,Shear_ZX=0)
 
-    
     print("----------------------------------------------------")
     print("The Von Mises Stress Leg:",Leg_Von_Mises_Stress,"The yield stress", Yield_Stress_Leg)
     print("The Von Mises Shear Leg:",Leg_Von_Mises_Shear,"The yield stress", Yield_shear_Leg)
-    print("The Wingbox Leg:",R_out_Leg-R_in_Leg)
+    print("The Leg:",R_out_Leg-R_in_Leg)
 
-    if Leg_Von_Mises_Stress < Yield_Stress_Leg and Leg_Von_Mises_Shear < Yield_shear_Leg and Leg_Buckle < Yield_Stress_Leg:
+    if Leg_Von_Mises_Stress < Yield_Stress_Leg and Leg_Von_Mises_Shear < Yield_shear_Leg and Leg_Buckle > Yield_Stress_Leg:
         Big_Owie_Leg = False
     else:
         R_out_Leg +=(1/1000)
@@ -333,21 +311,21 @@ while Big_Owie_Fuselage_Flying:
 
 
 #Calculate Mass
-
-#WingBox_Mass = Volume(A=Tube_Area(R_out=R_out_WingBox,R_in=R_in_WingBox), L=WingBox_length)*Density_WingBox
-
+print("-------------------------------------------")
 Vtol_Pole_Mass_front = Volume(A=Tube_Area(R_out=R_out_VTOL_front,R_in=R_in_VTOL_front), L=Vtol_Pole_Length_front)*Density_VTOL
 Vtol_Pole_Mass_back = Volume(A=Tube_Area(R_out=R_out_VTOL_back,R_in=R_in_VTOL_back), L=Entire_Tail_Length)*Density_VTOL
-Vtol_Pole_Mass = Vtol_Pole_Mass_front + Vtol_Pole_Mass_back
-print(Vtol_Pole_Mass)
+Vtol_Pole_Mass = 2*(Vtol_Pole_Mass_front + Vtol_Pole_Mass_back)
+print("VTOL POLE MASS:", Vtol_Pole_Mass)
 
 Fuselage_Mass = Volume(A=Tube_Area(R_in=R_in_fuselage,R_out=R_out_fuselage), L=(Fuselage_length_sec2+Fuselage_length_sec1+Fuselage_length_sec3))*Density_Fuselage
-print(Fuselage_Mass)
+print('FUSELAGE MASS:', Fuselage_Mass)
 
+Leg_Mass = 4*( Volume(A=Tube_Area(R_out=R_out_Leg,R_in=R_in_Leg) ,L=Leg_Length) )
+print("LEG MASS:", Leg_Mass)
 
-print("Yippee")
-print("Yippee")
-print("Yippee")
+Total_Mass = Leg_Mass+Vtol_Pole_Mass+Fuselage_Mass
+print("-------------------------------------------")
+print("THE FINAL FUCKING MASS:", Total_Mass)
 print("-------------------------------------------")
 
 
