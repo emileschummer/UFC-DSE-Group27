@@ -68,7 +68,6 @@ def Shear_Torsional(T,A_m,t):
 
 def Tip_Deflection(F,L,E,I):
     V_tip = (F*L**4)/(8*E*I)
-    print(V_tip)
     return V_tip
 
 
@@ -78,8 +77,7 @@ def Tip_Deflection_angle(F,L,E,I):
 
 
 def Twist(T,L,G,J):
-    angle = np.rad2deg( (T*L)/(G*J) )
-    print(angle)
+    angle = ( (T*L)/(G*J) )
     return angle
 
 #TRESCA AND VON MISES
@@ -113,6 +111,4 @@ def Compute_Total_Lift_and_Centroid(Y_func, a, b):
 
     return total_lift, x_centroid
 
-# lift, centroid = Compute_Total_Lift_and_Centroid(Y, 0, 10)
-# print(f"Total Lift: {lift:.2f} N")
-# print(f"Centroid (spanwise): {centroid:.2f} m")
+

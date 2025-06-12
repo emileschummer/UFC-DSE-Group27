@@ -42,6 +42,10 @@ def Circle_Polar_Moment_of_Inertia(R_out,R_in):
     J = (np.pi/2)*(R_out**4 - R_in**4)
     return J
 
+def Circle_Polar_Moment_of_Inertia2(t,R_out):
+    d = R_out*2
+    J = (np.pi*t*d**3)/4
+    return J
 
 def Semi_Circle_Moment_of_Inertia(R_out,t):
     I = (np.pi/2 - 4/np.pi)*t*R_out**3
