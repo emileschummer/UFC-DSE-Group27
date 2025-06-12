@@ -55,9 +55,9 @@ while V < 120/3.6:
     velocity.append(V)
 
 import matplotlib.pyplot as plt
-plt.plot(velocity,Pe,label = 'Roll rate due to differential thrust')
-plt.plot(velocity,Pw, label = 'Roll rate due to aeleron')
-plt.plot(velocity,Pt, label = 'Total maximum roll rate')
+plt.plot(velocity,Pe,label = 'Differential thrust contribution')
+plt.plot(velocity,Pw, label = 'Aileron contribution')
+plt.plot(velocity,Pt, label = 'Maximum roll rate')
 plt.xlabel("Velocity [m/s]")
 plt.ylabel("Roll rate degree/s")
 plt.legend()
