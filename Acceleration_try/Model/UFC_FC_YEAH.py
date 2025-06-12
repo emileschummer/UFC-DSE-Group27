@@ -12,21 +12,21 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-def flat_plate_drag_coefficient(V, rho, h, L):
+g=9.81
+def flat_plate_drag_coefficient(V, rho, h, S_wing, L, w):
     T0 = 288.15
     T = T0 + -0.0065 * h
     Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
     a= np.sqrt(1.4 * 287.05 * T)
-    Cf_i= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65)
+    Cf_i= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65) * L*w/S_wing
     return Cf_i
 
-def cube_drag_coefficient(V, rho, h, S_wing):
+def cube_drag_coefficient(V, rho, h, S_wing, L):
     T0 = 288.15
     T = T0 + -0.0065 * h
-    L_cube = 0.12
-    Re= rho * V * L_cube / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
+    Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
     a= np.sqrt(1.4 * 287.05 * T)
-    CD_cube= (1.1 + 20/np.sqrt(Re)) * (1 + 0.15 * (V/a)**2) * L_cube**2/S_wing
+    CD_cube= (1.1 + 20/np.sqrt(Re)) * (1 + 0.15 * (V/a)**2) * L**2/S_wing
     return CD_cube
 
 def fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing):
@@ -40,12 +40,12 @@ def fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing):
     return CD_fus
 
 
-def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_cube, Cf_blade, Cf_stab):
+def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, Cf_blade, Cf_stab, Cf_poles):
     L_req = np.cos(incline)*W + W/g * V * gamma_dot #vertical force required for flight (stationary or not)
     if V > V_vert_prop:
         CL = 2*L_req/(rho*S_wing*V**2)
         CD_wing = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
-        CD= CD_fus + CD_cube + CD_wing + 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
+        CD= CD_fus + CD_gimbal + CD_speaker + CD_wing + 4 * CD_motor + 2 * Cf_poles+ 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
         D_wing = 0.5*rho*CD*S_wing*V**2
         T_horizontal = ((D_wing + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         T_vertical = 0
@@ -53,7 +53,7 @@ def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, 
     else:
         CL = CLmax
         CD_wing = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
-        CD= CD_fus + CD_cube + CD_wing + 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
+        CD= CD_fus + CD_gimbal + CD_speaker + CD_wing + 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
         D_wing = 0.5*rho*CD*S_wing*V**2
         T_horizontal = ((D_wing + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         L_wing = 0.5*rho*CL*S_wing*V**2 * propeller_wake_efficiency  #Lifting force of the wing, parameter for wake of propellers
