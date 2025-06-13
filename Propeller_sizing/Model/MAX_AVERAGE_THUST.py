@@ -77,18 +77,11 @@ for race_name, race_data in races.items():
         CD_list.append(CD)
     
     # Statistics calculations
-    non_zero_vertical = [t for t in Tvertical_list if t != 0]
-    non_negative_horizontal = [t for t in Thorizontal_list if t >= 0]
     print(f"\nRace: {race_name}")
     print(f"Maximum absolute vertical thrust: {max(abs(np.array(Tvertical_list))):.2f} N")
     print(f"Maximum absolute horizontal thrust: {max(abs(np.array(Thorizontal_list))):.2f} N")
-    print(f"Average vertical thrust (excluding zeros): {sum(non_zero_vertical)/len(non_zero_vertical):.2f} N")
-    print(f"Average horizontal thrust (excluding negative): {sum(non_negative_horizontal)/len(non_negative_horizontal):.2f} N")
-    try:
-        print(f"Most common vertical thrust value (excluding zeros): {mode(non_zero_vertical):.2f} N")
-        print(f"Most common horizontal thrust value (excluding negative): {mode(Thorizontal_list):.2f} N")
-    except StatisticsError:
-        print("No unique mode found for thrust values")
+    print(f"Average vertical thrust (excluding zeros): {sum(Tvertical_list)/len(Tvertical_list):.2f} N")
+    print(f"Average horizontal thrust (excluding negative): {sum(Thorizontal_list)/len(Thorizontal_list):.2f} N")
 
     print(f"Average CD: {sum(CD_list)/len(CD_list):.6f}")
     
@@ -117,36 +110,12 @@ for race_name, race_data in races.items():
     ax3.legend()
     
     # Plot acceleration
-    ax4.plot(time_points, acceleration_list, 'm-', label='Acceleration')
+    ax4.plot(time_points, race_data[' altitude'], 'm-', label='Altitude')
     ax4.set_xlabel('Time (s)')
-    ax4.set_ylabel('Acceleration (m/s²)')
+    ax4.set_ylabel('Altitude (m)')
     ax4.grid(True)
     ax4.legend()
     
     plt.tight_layout()
-    #plt.show()
-
-'''
-    # Create a new figure for velocity vs gradient plot
-    plt.figure(figsize=(10, 6))
-
-    # Create bins for gradient values
-    gradient_bins = np.arange(-20, 21, 1)  # Adjust range as needed
-    max_velocities = []
-    bin_centers = []
-
-    # Group data by gradient and find maximum velocity for each group
-    for i in range(len(gradient_bins)-1):
-        mask = (race_data[' grade_smooth'] >= gradient_bins[i]) & (race_data[' grade_smooth'] < gradient_bins[i+1])
-        if mask.any():
-            max_velocities.append(race_data[' velocity_smooth'][mask].max())
-            bin_centers.append((gradient_bins[i] + gradient_bins[i+1]) / 2)
-
-    # Plot maximum velocity vs gradient
-    plt.plot(bin_centers, max_velocities, 'bo-')
-    plt.xlabel('Gradient (%)')
-    plt.ylabel('Maximum Velocity (m/s)')
-    plt.title(f'{race_name} - Maximum Velocity vs Gradient')
-    plt.grid(True)
     plt.show()
-'''
+

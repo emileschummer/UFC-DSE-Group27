@@ -89,7 +89,9 @@ def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, 
         L_wing = 0.5*rho*CL*S_wing*V**2 * propeller_wake_efficiency  #Lifting force of the wing, parameter for wake of propellers
         L_prop = L_req - L_wing
         T_vertical = L_prop/numberengines_vertical #Thrust per vertical propeller
-           
+
+    if T_horizontal < 0:
+        T_horizontal = 0       
     return T_vertical,T_horizontal, CD
 
 def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c,d,L_blade,L_stab):
