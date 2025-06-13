@@ -36,34 +36,24 @@ def get_Cmy(alpha, V, Vz, q, Clh0, Sh,Clalpha,Cl0,Cd0,piAe,Clhalpha,lh,l,c,Cmac,
     Cmy =  Cm + Cmh
     return Cmy
 
-def get_tail_size(W, piAe, Clalpha, Clhalpha,Clmax,Cl0,S,Cd0,Cmac,lh,l,Iy,c):
+def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cd0,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax):
     rho = 1.2
-
-    stall_alpha = (Clmax - Cl0)/Clalpha
     m = W/9.81
     results = [[],[],[],[]]
     progress = 0
-    iteration = 50
-    for Clh0 in np.linspace(-0.6,0.6,iteration):
+    iteration = 10
+    for Clh0 in np.linspace(-0.4,0.4,iteration):
         progress = progress + 1
         for Sh in np.linspace(0,1,iteration):
-            V = 34
-            Vx = np.cos(stall_alpha)*V
-            Vz = np.sin(stall_alpha)*V
+            V = 30
+            Vx = 30#np.cos(stall_alpha)*V
+            Vz = 0#np.sin(stall_alpha)*V
             alpha = np.arcsin(Vz/V)
-
             pitch = 0
-
-
-
-
             q = 0
             t = 0
             tend = 100
             dt = 0.01
-
-
-
             pitchangle = []
 
             time = []
@@ -103,15 +93,19 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Clmax,Cl0,S,Cd0,Cmac,lh,l,Iy,c):
                 results[2].append(alpha)
                 results[3].append(pitch)
                 plt.plot(time,pitchangle)
-    plt.show()
+    if plot:
+        plt.show()
     Sh = min(results[0])
     min_index = results[0].index(Sh)
     Clh0 = results[1][min_index]
     alpha_result = results[2][min_index]
     pitch_result = results[3][min_index]
-    return Sh, Clh0,alpha_result*180/np.pi,pitch_result*180/np.pi
+    span = tail_span
+    cord = Sh/span
+    max_tail_force = 0.5*rho*Sh*Clhmax*33**2
+    return Sh, Clh0, span, cord,lh,max_tail_force##alpha_result*180/np.pi,pitch_result*180/np.pi
 
-print(get_tail_size(200,30,4.635,4,2.4,0.7,1,0.05,-0.5,1.6,0,14,0.36))
+print(get_tail_size(200,30,4.635,4.5,0.7,2,0.05,-0.5,1,0,14,0.36,True,0.7366,1.5))
 plt.show()
 
 

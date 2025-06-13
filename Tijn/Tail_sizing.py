@@ -6,9 +6,9 @@ Clhalpha = 4.158
 Clmax = 2.2
 Clhmax = 1.5
 Cmac = -0.5
-S = 1
+S = 2
 c = 0.36
-lh = 1
+lh = 0.5
 ARh = 6
 show = True
 def get_tail(show,Clalpha,Clhalpha,Clmax,Clhmax,Cmac,S,c,lh,ARh):

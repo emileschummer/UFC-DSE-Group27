@@ -42,6 +42,10 @@ def Circle_Polar_Moment_of_Inertia(R_out,R_in):
     J = (np.pi/2)*(R_out**4 - R_in**4)
     return J
 
+def Circle_Polar_Moment_of_Inertia2(t,R_out):
+    d = R_out*2
+    J = (np.pi*t*d**3)/4
+    return J
 
 def Semi_Circle_Moment_of_Inertia(R_out,t):
     I = (np.pi/2 - 4/np.pi)*t*R_out**3
@@ -70,6 +74,12 @@ def First_Area_Q_Circle(R_out,R_in,t):
     A = 0.5*np.pi*(R_out**2 - R_in**2)
     Q = Y*A
     return Q
+
+
+def First_Area_Q_SemiCircle(t,R_in,R_out):
+    Q = 2*t*(0.5*(R_in+R_out))**2
+    return Q
+
 
 #-----------------------------------------------------------------------
 #OTHER

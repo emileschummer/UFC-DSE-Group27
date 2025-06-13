@@ -5,9 +5,9 @@ from mpl_toolkits.mplot3d import Axes3D
 W = 200
 m = W/9.81
 piAe = 30
-Clalpha = 8
-Clhalpha = 8
-Clvbeta = 8
+Clalpha = 4.5
+Clhalpha = 4.3
+Clvbeta = 4.3
 stall = 0.24
 stallh = 0.26
 stalv = 0.3
@@ -17,15 +17,15 @@ b = 3
 bh = 0.3
 bv = 0.3
 dihederal = 0.03
-S = 1.8
+S = 1
 Sh = 0.3
-Sv = 0.3
+Sv = 0.1
 rho = 1.2
 Cd0 = 0.05
 Cmac = -0.01
-Vx = 26
-Vy = 0
-Vz = 1
+Vx = 30
+Vy = 2
+Vz = 0
 V = (Vx**2 + Vy**2 + Vz**2)**0.5
 alpha = np.sin(Vz/V)
 beta = np.sin(Vy/V)
@@ -38,10 +38,10 @@ rollrate = 0
 p = 0
 q = 0
 r = 0
-lh = 1.4
-lv = 1.4
+lh = 1
+lv = 1
 l = 0
-c = 0.3
+c = 0.36
 Ix = 1.5
 Iy = 12
 Iz = 12
@@ -109,7 +109,7 @@ def get_Cmx_vertical_yawrate_and_sideslip():
     Clv = -beta*Clvbeta*(Sv/S) + (lv*yawrate/V)*Clvbeta*(Sv/S) - Clvdelta*rudder_delta*(Sv/S)  #due to sideslip on the vertical stabilizer
     Cy = np.cos(beta)*Clv
     Cmv_beta = Cy*bv/c 
-    return Cmv_beta
+    return 0*Cmv_beta
 
 
 def get_Cmx(): #roll moment add roll due to vertical tail lift and due to yaw rate 
@@ -134,7 +134,7 @@ def get_Cmy(): #pitch moment
     return Cmy
 
 t = 0
-tend = 60
+tend = 9
 dt = 0.005
 
 velocity = [V]
@@ -155,7 +155,7 @@ distance = [dist]
 
 
 while t < tend:
-
+    t = t +dt
 
 
     Fx = 0.5*rho*S*V**2 * get_Cx()
@@ -218,7 +218,7 @@ while t < tend:
     Ylst.append(Y)
     Zlst.append(Z)
     distance.append(dist)
-plot_mode = 0
+plot_mode = 1
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
 
 if plot_mode == 0:

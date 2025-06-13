@@ -1,4 +1,8 @@
+#------------------------------------------------------------------------
 #create material classes, and add properties. INCLUDE UNIT!!!!!!!!!
+#MUST BE DUCTILE
+#MUST HAVE (QUASI) ISENTROPIC PROPERTIES
+#------------------------------------------------------------------------
 
 class Material:
     def __init__(self, E, G, Density, Yield_Shear, Yield_Stress):
