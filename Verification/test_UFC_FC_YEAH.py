@@ -34,7 +34,7 @@ V=10
 rho=1.225  # Density of air at sea level in kg/m^3
 h= 0
 
-# UNIT 02
+# UNIT 03
 expected_CD= 0.000141103
 def test_flat_plate_drag_coefficient():
 
@@ -42,7 +42,7 @@ def test_flat_plate_drag_coefficient():
 
     assert pt.approx(result, rel=1e-6) == expected_CD
 
-#UNIT 03
+#UNIT 04
 expected_CD_cube = 0.008426384
 def test_cube_drag_coefficient():
 
@@ -51,7 +51,7 @@ def test_cube_drag_coefficient():
     assert pt.approx(result, rel=1e-6) == expected_CD_cube
 
 
-# UNIT 04
+# UNIT 05
 expected_CD_fus = 0.004261856
 def test_fuselage_drag_coefficient():
 
