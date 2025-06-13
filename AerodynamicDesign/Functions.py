@@ -34,4 +34,3 @@ def wing_geometry_calculator(InputWeight, alpha, csv, velocity_op, altitude, tap
 #returns the offset to apply to have no quarter chord sweep
 def no_quarterchord_sweep(cr,ct):
     return cr*0.25-ct*0.25
-
