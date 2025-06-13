@@ -16,8 +16,6 @@ def main(output_folder="Battery_Modelling/Output"):
     print(Battery_Model(output_folder, show=True))
 
 if __name__ == "__main__":
-    W = input_list_final[0]
-    CLmax = input_list_final[5]
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_folder = f"test"
+    output_folder = f"battery_test"
     main(output_folder)

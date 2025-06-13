@@ -1,18 +1,10 @@
-import pywhatkit
+import numpy as np
 
-number= 1
-Message= 'Tijn braincell'
-while number < 100:
-    print(number , Message)
-    number += 1
-    # Replace with the recipient's phone number (including country code)
-    phone_number = "+31648443464"  # Dutch format example
+T = 11.1893
+L = 1.5
+Theta = np.deg2rad(1)
+G=1.3e9
+d = 2*0.384
 
-    # Send each message
-    for i in range(1, 100):
-        message = f"{i} {Message}"
-        # Schedule message with 30 second intervals to avoid blocking
-        pywhatkit.sendwhatmsg_instantly(phone_number, message, 15, True)
-
-
-        
+t = (T*L*4)/(Theta*G*np.pi*d**3)
+print(t)

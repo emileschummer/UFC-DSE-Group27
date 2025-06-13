@@ -1,0 +1,3 @@
+To begin with have to run in Functions wing_geometry_calculator to find S, ct and cr. (cannot get to save in csv results from AeroMain)
+Then move on to AeroMain and run run_full_aero.
+If you want the loading can then run on the output of run_full_aero called lift_distribution into load_distribution_halfspan form AerodynamicForces and get it for a specific alpha.
