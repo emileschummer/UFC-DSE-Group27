@@ -97,6 +97,20 @@ def TheSuperSecretFunction():
     time.sleep(1.5) 
 
 
+def SummonTheCouncil():
+    import time
+    import webbrowser
+    Member1 = "https://chatgpt.com/?model=gpt-4o"
+    Member2 = "https://chat.deepseek.com/"
+    Member3 = "https://gemini.google.com/app"
+    Member4 = "https://chat.mistral.ai/chat?q="
+    webbrowser.open(Member1)
+    webbrowser.open(Member2)
+    webbrowser.open(Member3)
+    webbrowser.open(Member4)
+
+
+
 #-----------------------------------------------------------------------
 #AREA AND VOLUME
 #-----------------------------------------------------------------------
@@ -117,5 +131,3 @@ def WingBox_Area(B,H,t):
 
 def Volume(A,L):
     return A*L
-
-

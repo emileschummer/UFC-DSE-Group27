@@ -171,18 +171,19 @@ def Structures_Main():
 
 
 
+
     while Big_Owie_VTOL_back:
         VTOL_I_Back = Circle_Moment_of_Inertia(R_out_VTOL_back,R_in_VTOL_back)
         VTOL_J_Back = Circle_Polar_Moment_of_Inertia(R_out=R_out_VTOL_back,R_in=R_in_VTOL_back)
 
-        #VTOL_stress_Front = Bending_Simple(M=F_Vtol*Vtol_Pole_Length_front , Y=R_out_VTOL_front, I=VTOL_I_Front) #Bending(M_y, Iy, R_out_VTOL_front, M_z, Iz, R_out_VTOL_front)
         VTOL_Trans_Shear_Back_Y = Shear_Transverse_Circle(R_in=R_in_VTOL_back,R_out=R_out_VTOL_back,F=(F_Vtol+Tail_loading_Vertical_Distributed*Tail_Effective_Length))
         VTOL_Trans_Shear_Back_Z = Shear_Transverse_Circle(R_in=R_in_VTOL_back,R_out=R_out_VTOL_back,F=Tail_Effective_Length*Tail_loading_horizontal_Distributed)
         VTOL_stress_Back = Bending(Mx=(T_Vtol+Tail_loading_horizontal_Distributed*Tail_Effective_Length*(Entire_Tail_Length-0.5*Tail_Effective_Length))
                                     ,Ix=VTOL_I_Back,X=R_out_VTOL_back, Iy=VTOL_I_Back,Y=R_out_VTOL_back,
                                     My=(F_Vtol*Vtol_Pole_Length_back+Tail_loading_Vertical_Distributed*Tail_Effective_Length*(Entire_Tail_Length-0.5*Tail_Effective_Length)))
 
-        VTOL_VonMises_Back_Stress,VTOL_VonMises_Back_Shear = Von_Mises(Stress_X=0,Stress_Y=0,Stress_Z=VTOL_stress_Back,Shear_XY=VTOL_Trans_Shear_Back_Y,Shear_YZ=VTOL_Trans_Shear_Back_Z,Shear_ZX=0)
+        VTOL_VonMises_Back_Stress,VTOL_VonMises_Back_Shear = Von_Mises(Stress_X=0,Stress_Y=0,Stress_Z=VTOL_stress_Back,
+                                                                       Shear_XY=VTOL_Trans_Shear_Back_Y,Shear_YZ=VTOL_Trans_Shear_Back_Z,Shear_ZX=0)
 
         print("----------------------------------------------------")
         print("The Max Shear BACK VTOL:",VTOL_VonMises_Back_Stress, "The Yield Shear:", Yield_shear_VTOL)
@@ -389,10 +390,10 @@ def Structures_Main():
     Structure_mass = Leg_Mass+Vtol_Pole_Mass+Fuselage_Mass+WingBox_Mass
     Total_Mass = Structure_mass+Fuselage_Sec1_mass+Fuselage_Sec2_mass
     print("-------------------------------------------")
-    print("THE STRUCTURE FUCKING MASS:", Structure_mass)
+    print("THE STRUCTURE MASS:", Structure_mass)
     print("-------------------------------------------")
     print("-------------------------------------------")
-    print("THE FINAL FUCKING MASS:", Total_Mass)
+    print("THE FINAL MASS:", Total_Mass)
     print("-------------------------------------------")
 
 
