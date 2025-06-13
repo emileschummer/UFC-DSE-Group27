@@ -14,7 +14,13 @@ from scipy.integrate import quad
 #TODO CHECK VON MISES FO ALL, ITS FOR CROSS SECTION POINT, NOT ENTIRE CROSS SECTION FFFFFFUUUUUUUUUUUCCCCCCCCCKKKKKKKKKK
 #------------------------------------------------------
 
-def FUCKTHOMAS():
+def Structures_Main():
+    #--------------------------------------------------
+    #UNPACKING MATERIALS
+    #--------------------------------------------------
+
+
+
     #--------------------------------------------------
     #FUNCTIONS
     #--------------------------------------------------
@@ -359,6 +365,11 @@ def FUCKTHOMAS():
 
 
     #Calculate Mass
+    # R_out_VTOL_back = R_in_VTOL_back+0.001
+    # R_out_VTOL_front = R_in_VTOL_front +0.001
+    # R_in_WingBox = R_out_WingBox - 0.001
+    # R_out_fuselage = R_in_fuselage +0.001
+
     print("-------------------------------------------")
     Vtol_Pole_Mass_front = Volume(A=Tube_Area(R_out=R_out_VTOL_front,R_in=R_in_VTOL_front), L=Vtol_Pole_Length_front)*Density_VTOL
     Vtol_Pole_Mass_back = Volume(A=Tube_Area(R_out=R_out_VTOL_back,R_in=R_in_VTOL_back), L=Entire_Tail_Length)*Density_VTOL
@@ -388,4 +399,4 @@ def FUCKTHOMAS():
     return Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Fuselage_Mass,Structure_mass,Total_Mass
 
 
-FUCKTHOMAS()
+Structures_Main()
