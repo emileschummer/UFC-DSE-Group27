@@ -1,11 +1,11 @@
 import sys
 import os
 
-# Add the parent directory of 'Acceleration_try' to the Python path
+# Add the parent directory of 'Propeller_sizing' to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pytest as pt
-from Acceleration_try.Input.Strava_input_csv import air_density_isa
+from Propeller_sizing.Input.Strava_input_csv import air_density_isa
 
 #Test parameters
 h=1200

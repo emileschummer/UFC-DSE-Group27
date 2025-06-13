@@ -2,9 +2,8 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 import pandas as pd
-import Acceleration_try.Input.Config as config
-from Acceleration_try.Model.UFC_FC_YEAH import *
-import Acceleration_try.Input.Strava_input_csv as sva
+from Propeller_sizing.Model.UFC_FC_YEAH import *
+import Propeller_sizing.Input.Strava_input_csv as sva
 from statistics import mode, StatisticsError
 W= 250
 S_wing = 2
@@ -32,7 +31,6 @@ d = 0.25
 aero_df = pd.read_csv(os.path.join(os.path.dirname(__file__), 'aero.csv'))
 
 races = sva.make_race_dictionnary()
-inputs = config.input_list_final
 
 
 for race_name, race_data in races.items():

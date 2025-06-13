@@ -4,8 +4,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from Acceleration_try.Input.Config import largest_real_positive_root
-from Acceleration_try.Input import Strava_input_csv as sva
+from Propeller_sizing.Input import Strava_input_csv as sva
 import pandas as pd
 
 import sys
