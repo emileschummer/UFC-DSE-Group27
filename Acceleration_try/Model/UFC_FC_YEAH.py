@@ -6,27 +6,58 @@ import numpy as np
 import matplotlib.pyplot as plt
 from Acceleration_try.Input.Config import largest_real_positive_root
 from Acceleration_try.Input import Strava_input_csv as sva
-
+import pandas as pd
 
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 g=9.81
+W= 250
+S_wing = 2
+CLmax = 2
+V_vert_prop = 11
+numberengines_vertical = 4
+numberengines_horizontal = 1
+propeller_wake_efficiency = 0.7
+L_blade = 0.7366
+w_blade = 0.075
+L_stab= 0.6
+w_stab= 0.5
+L_poles= 3.6*L_blade/2 + 0.5
+w_poles= 0.34
+L_motor = 0.3
+L_gimbal = 0.12
+L_speaker = 0.1
+
+L_n = 0.2
+L_c = 0.6
+L_fus = 2*L_n + L_c
+w_fus = S_wing / L_fus
+d = 0.25
+
+aero_df = pd.read_csv(os.path.join(os.path.dirname(__file__), 'aero.csv'))
 def flat_plate_drag_coefficient(V, rho, h, S_wing, L, w):
-    T0 = 288.15
-    T = T0 + -0.0065 * h
-    Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
-    a= np.sqrt(1.4 * 287.05 * T)
-    Cf_i= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65) * L*w/S_wing
+    if V <= 0:
+        Cf_i = 0
+    else:
+        T0 = 288.15
+        T = T0 + -0.0065 * h
+        Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
+        a= np.sqrt(1.4 * 287.05 * T)
+        Cf_i= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65) * L*w/S_wing
     return Cf_i
 
 def cube_drag_coefficient(V, rho, h, S_wing, L):
-    T0 = 288.15
-    T = T0 + -0.0065 * h
-    Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
-    a= np.sqrt(1.4 * 287.05 * T)
-    CD_cube= (1.1 + 20/np.sqrt(Re)) * (1 + 0.15 * (V/a)**2) * L**2/S_wing
+    if V <= 0:
+        CD_cube = 0
+        return CD_cube
+    else:
+        T0 = 288.15
+        T = T0 + -0.0065 * h
+        Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
+        a= np.sqrt(1.4 * 287.05 * T)
+        CD_cube= (1.1 + 20/np.sqrt(Re)) * (1 + 0.15 * (V/a)**2) * L**2/S_wing
     return CD_cube
 
 def fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing):
@@ -60,16 +91,20 @@ def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, 
         L_prop = L_req - L_wing
         T_vertical = L_prop/numberengines_vertical #Thrust per vertical propeller
            
-    return T_vertical,T_horizontal
+    return T_vertical,T_horizontal, CD
 
 def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c,d,L_blade,L_stab):
-    Cf_fus = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), L_fus)
+    altitude = sva.altitude_from_density(rho)
+    Cf_blade= flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_blade, w_blade)
+    Cf_stab = flat_plate_drag_coefficient(V, rho, altitude,S_wing,L_stab, w_stab)
+    Cf_poles = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_poles, w_poles)
+    Cf_fus = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_fus, w_fus)
+    CD_speaker = cube_drag_coefficient(V, rho, altitude, S_wing, L_speaker)
+    CD_gimbal = cube_drag_coefficient(V, rho, altitude, S_wing, L_gimbal)
+    CD_motor = cube_drag_coefficient(V, rho, altitude, S_wing, L_motor)
     CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing)
-    CD_cube = cube_drag_coefficient(V, rho, sva.altitude_from_density(rho), S_wing)
-    Cf_blade = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), L_blade)
-    Cf_stab = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), L_stab)
 
-    T_vertical, T_horizontal = calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_cube, Cf_blade, Cf_stab)
+    T_vertical, T_horizontal, CD = calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, Cf_blade, Cf_stab, Cf_poles)
     
     #Vertical power
     max_thrust = df_vertical['Thrust_N'].max()

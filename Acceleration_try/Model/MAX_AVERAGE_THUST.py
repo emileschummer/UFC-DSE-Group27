@@ -25,7 +25,7 @@ L_speaker = 0.1
 
 L_n = 0.2
 L_c = 0.6
-L_fus = L_n + L_c
+L_fus = 2*L_n + L_c
 w_fus = S_wing / L_fus
 d = 0.25
 
@@ -40,6 +40,7 @@ for race_name, race_data in races.items():
     Tvertical_list= []
     Thorizontal_list = []
     acceleration_list = []
+    CD_list = []
     t = 0
     prev_velocity = 0 
     prev_grade_smooth= 0 
@@ -72,9 +73,10 @@ for race_name, race_data in races.items():
         prev_grade_smooth = grade_smooth
         t = time
 
-        Tvertical, Thorizontal = calculate_thrust_UFC_FC(grade_smooth, velocity_smooth, rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, Cf_blade, Cf_stab, Cf_poles)
+        Tvertical, Thorizontal, CD = calculate_thrust_UFC_FC(grade_smooth, velocity_smooth, rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, Cf_blade, Cf_stab, Cf_poles)
         Tvertical_list.append(Tvertical)
         Thorizontal_list.append(Thorizontal)
+        CD_list.append(CD)
     
     # Statistics calculations
     non_zero_vertical = [t for t in Tvertical_list if t != 0]
@@ -89,6 +91,8 @@ for race_name, race_data in races.items():
         print(f"Most common horizontal thrust value (excluding negative): {mode(Thorizontal_list):.2f} N")
     except StatisticsError:
         print("No unique mode found for thrust values")
+
+    print(f"Average CD: {sum(CD_list)/len(CD_list):.6f}")
     
     # Create subplots
     fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(12, 16), sharex=True)
@@ -122,7 +126,7 @@ for race_name, race_data in races.items():
     ax4.legend()
     
     plt.tight_layout()
-    plt.show()
+    #plt.show()
 
 '''
     # Create a new figure for velocity vs gradient plot
