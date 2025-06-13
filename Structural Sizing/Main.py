@@ -16,9 +16,8 @@ from scipy.integrate import quad
 
 def Structures_Main():
     #--------------------------------------------------
-    #UNPACKING MATERIALS
+    #UNPACKING INPUTS
     #--------------------------------------------------
-
 
 
     #--------------------------------------------------
@@ -37,22 +36,22 @@ def Structures_Main():
     #--------------------------------------------------
     #MATERIALS
     #--------------------------------------------------
-    Material_VTOL = PLA3DPrintMaterial()# DogshitTestMaterial() #
+    Material_VTOL = AL()# DogshitTestMaterial() #
     Yield_shear_VTOL= Material_VTOL.Yield_Shear
     Yield_Stress_VTOL = Material_VTOL.Yield_Stress
     Density_VTOL = Material_VTOL.Density
 
-    Material_WingBox = PLA3DPrintMaterial() #DogshitTestMaterial() #
+    Material_WingBox = AL() #DogshitTestMaterial() #
     Yield_shear_WingBox= Material_WingBox.Yield_Shear
     Yield_Stress_WingBox = Material_WingBox.Yield_Stress
     Density_WingBox = Material_WingBox.Density
 
-    Material_Leg = PLA3DPrintMaterial() #DogshitTestMaterial() #
+    Material_Leg = AL() #DogshitTestMaterial() #
     Yield_shear_Leg = Material_Leg.Yield_Shear
     Yield_Stress_Leg = Material_Leg.Yield_Stress
     Density_Leg = Material_Leg.Density
 
-    Material_Fuselage = PLA3DPrintMaterial() #DogshitTestMaterial() #
+    Material_Fuselage = AL() #DogshitTestMaterial() #
     Yield_shear_Fuselage = Material_Fuselage.Yield_Shear
     Yield_Stress_Fuselage = Material_Fuselage.Yield_Stress
     Density_Fuselage = Material_Fuselage.Density
@@ -61,14 +60,14 @@ def Structures_Main():
     #--------------------------------------------------
     #VTOL POLE ARMS
     #--------------------------------------------------
-    R_in_VTOL_front = 0.17 
-    R_out_VTOL_front = 0.17+(1/1000)
+    R_in_VTOL_front = 0.01 
+    R_out_VTOL_front = 0.01+(1/1000)
     d_prop= 0.7366
     R_prop = d_prop/2	
     Vtol_Pole_Length_front = 1.1*R_prop + 0.2*MAC
 
-    R_in_VTOL_back = 0.17
-    R_out_VTOL_back = 0.17+(1/1000)
+    R_in_VTOL_back = 0.01
+    R_out_VTOL_back = 0.01+(1/1000)
     d_prop= 0.7366
     R_prop = d_prop/2	
     Vtol_Pole_Length_back = 1.1*R_prop+ 0.8*MAC
@@ -102,8 +101,8 @@ def Structures_Main():
     #--------------------------------------------------
     #FUSELAGE
     #--------------------------------------------------
-    R_in_fuselage = 0.2
-    R_out_fuselage = 0.2+1/1000 
+    R_in_fuselage = (0.125)
+    R_out_fuselage = 0.125+1/1000 
 
     Fuselage_length_sec1 = 0.1
     Fuselage_length_sec2 = 0.4
@@ -136,6 +135,9 @@ def Structures_Main():
     Wing_Lift_Distribution = lambda x: 1000 * (1 - (x/10)**2)  # Lift from root (x=0) to tip (x=10 m) #Should be an elliptical func, we will figure it out later REMEMBER -WL^2/2
     Wing_Total_Lift, Wing_Lift_Centroid_Location = Compute_Total_Lift_and_Centroid(Wing_Lift_Distribution,0,WingBox_length)
     Wing_Total_Lift=Wing_Total_Lift*Safety_Factor
+    Wing_Drag_Distribution = (lambda x: 1000 * (1 - (x/10)**2))
+    Wing_Total_Drag, Wing_Drag_Centroid_Location = Compute_Total_Lift_and_Centroid(Wing_Drag_Distribution,0,WingBox_length)
+
 
 
     #NEWLY DEFINED FROM VTOL
@@ -273,6 +275,7 @@ def Structures_Main():
         else:
             R_leg +=(1/1000)
 
+    
 
     while Big_Owie_Fuselage_Flying:
         #SECTION 1:
@@ -293,7 +296,8 @@ def Structures_Main():
 
         #SECTION 2:
         Fuselage_Sec1_Load_Total = Fuselage_Sec1_Load*Fuselage_length_sec1
-        Fuselage_I_sec2 = Semi_Circle_Moment_of_Inertia(R_out=(R_out_fuselage-0.5*Fuselage_t), t=Fuselage_t)
+        #Fuselage_I_sec2 = Semi_Circle_Moment_of_Inertia(R_out=R_out_fuselage,R_in=R_in_fuselage)
+        Fuselage_I_sec2 = Semi_Circle_Moment_of_Inertia_Fuselage(R_out=R_out_fuselage,R_in=R_in_fuselage,t_Ibeam=1/1000,B=0.02,H=0.02)
 
         Fuselage_Torsion_Sec2 = Torsion_Open(T=Main_Engine_Torque, l= Fuselage_length_sec2, t=Fuselage_t)
         Fuselage_Buckle_sec2 = Buckling_Stress(E=Material_Fuselage.E, L=Fuselage_length_sec2, I=Fuselage_I_sec2, A=0.5*Tube_Area(R_out=R_out_fuselage,R_in=R_in_fuselage), K=0.5)
