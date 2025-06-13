@@ -13,7 +13,7 @@ def setup_wing_and_airplane(chosen_airfoil, num_spanwise_sections, r_chord, t_ch
                 xyz_le=[0, 0, 0], chord=r_chord, twist=r_twist, airfoil=chosen_airfoil,
             ),
             asb.WingXSec(
-                xyz_le=[sweep, 1.5, 0], chord=t_chord, twist=t_twist, airfoil=chosen_airfoil,
+                xyz_le=[sweep, 1.575, 0], chord=t_chord, twist=t_twist, airfoil=chosen_airfoil,
             ),
         ],
         symmetric=True,
@@ -56,7 +56,7 @@ def generate_2d_stall_database(airfoil_profile, section_data, alpha_range2D, xfo
     """Generate 2D airfoil polars across a range of Reynolds numbers using XFoil."""
     min_Re_section = min(s['Re'] for s in section_data)
     max_Re_section = max(s['Re'] for s in section_data)
-    # print(f"Min/Max section Re for polars: {min_Re_section:.2e} / {max_Re_section:.2e}")
+    print(f"Min/Max section Re for polars: {min_Re_section:.2e} / {max_Re_section:.2e}")
 
     discrete_Re_values = np.array(sorted(list(set(
         np.round(np.geomspace(max(5e4, min_Re_section * 0.8), min(1e7, max_Re_section * 1.2), Re_numbers) / 1e4) * 1e4
@@ -230,13 +230,13 @@ def run_vlm_sweep_with_stall_correction(alpha_range3D, vlm_airplane, operational
 
 def plot_aerodynamic_coefficients(alphas, CLs_vlm, CLs_corrected, CDs_vlm, Plot = False):
     """Plots the CL and CD curves."""
-    # print("\nAlpha Sweep Results (Original VLM vs. Corrected CL):")
-    # print("----------------------------------------------------------")
-    # print("Alpha (deg) | CL (VLM) | CD (VLM) | CL (Corrected)")
-    # print("----------------------------------   ------------------------")
-    # for i in range(len(alphas)):
-    #     print(f"{alphas[i]:11.1f} | {CLs_vlm[i]:8.4f} | {CDs_vlm[i]:8.5f} | {CLs_corrected[i]:12.4f}")
-    # print("----------------------------------------------------------")
+    print("\nAlpha Sweep Results (Original VLM vs. Corrected CL):")
+    print("----------------------------------------------------------")
+    print("Alpha (deg) | CL (VLM) | CD (VLM) | CL (Corrected)")
+    print("----------------------------------   ------------------------")
+    for i in range(len(alphas)):
+        print(f"{alphas[i]:11.1f} | {CLs_vlm[i]:8.4f} | {CDs_vlm[i]:8.5f} | {CLs_corrected[i]:12.4f}")
+    print("----------------------------------------------------------")
     if Plot == True:
         plt.figure(figsize=(10, 7))
         plt.plot(alphas, CLs_vlm, label="CL (VLM Original)", marker='o', linestyle='--')

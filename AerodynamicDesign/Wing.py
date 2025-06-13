@@ -6,19 +6,22 @@ from Functions import load_airfoil_dat
 from AirfoilAnalysis import my_airfoil  
 
 
+def no_quarterchord_sweep(cr,ct):
+    return cr*0.25-ct*0.25
+
 # Define your wing
 wing = Wing(
     name="Demo Wing",
     xsecs=[
         WingXSec(
             xyz_le=[0, 0, 0],
-            chord=0.6,
+            chord=0.91,
             twist=0,
             airfoil=my_airfoil,  
         ),
         WingXSec(
-            xyz_le=[0, 1.5, 0],
-            chord=0.6,
+            xyz_le=[no_quarterchord_sweep(0.91, 0.37), 1.575, 0],
+            chord=0.37,
             twist=0,
             airfoil=my_airfoil,
         ),
@@ -46,6 +49,7 @@ print("mean geometric chord", wing.mean_geometric_chord())
 print("mean aerodynamic chord", wing.mean_aerodynamic_chord())
 print("aerodynamic center", wing.aerodynamic_center())
 print("volume", wing.volume())
+print("sweep", wing.mean_sweep_angle())
 
 # Sweep alpha and collect CL, CD
 alphas = np.linspace(-10, 30, 41)

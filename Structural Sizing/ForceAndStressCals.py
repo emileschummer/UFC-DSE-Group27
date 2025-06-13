@@ -68,12 +68,16 @@ def Shear_Torsional(T,A_m,t):
 
 def Tip_Deflection(F,L,E,I):
     V_tip = (F*L**4)/(8*E*I)
-    print(V_tip)
     return V_tip
 
+
+def Tip_Deflection_angle(F,L,E,I):
+    Angle = (F*L**2)/(2*E*I)
+    return Angle
+
+
 def Twist(T,L,G,J):
-    angle = np.rad2deg( (T*L)/(G*J) )
-    print(angle)
+    angle = ( (T*L)/(G*J) )
     return angle
 
 #TRESCA AND VON MISES
@@ -100,8 +104,6 @@ def Cut_Out_Corrections(Diamater, Width):#Diameter= Entire hole diameter, Width 
     return K_t
 
 
-#LIFT CALCULATOR
-#TAKEN FROM CHATGPT, BUT VERIFIED BY HAND
 def Compute_Total_Lift_and_Centroid(Y_func, a, b):
     total_lift, _ = quad(Y_func, a, b)
     moment, _ = quad(lambda x: x * Y_func(x), a, b)
@@ -110,9 +112,3 @@ def Compute_Total_Lift_and_Centroid(Y_func, a, b):
     return total_lift, x_centroid
 
 
-# Example lift distribution: parabolic
-Y = lambda x: 1000 * (1 - (x/10)**2)  # Lift from root (x=0) to tip (x=10 m)
-
-lift, centroid = Compute_Total_Lift_and_Centroid(Y, 0, 10)
-print(f"Total Lift: {lift:.2f} N")
-print(f"Centroid (spanwise): {centroid:.2f} m")
