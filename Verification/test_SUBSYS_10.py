@@ -6,7 +6,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pytest as pt
 import numpy as np
-from Acceleration_try.Model.UFC_FC_YEAH import *
+from Propeller_sizing.Model.UFC_FC_YEAH import *
 
 
 
