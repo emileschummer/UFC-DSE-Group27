@@ -2,7 +2,7 @@ import sys
 import os
 
 # Add the parent directory of 'Midterm_Battery_Modelling' to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pytest
 import pandas as pd

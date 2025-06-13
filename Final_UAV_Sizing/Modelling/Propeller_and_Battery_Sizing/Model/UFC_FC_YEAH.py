@@ -78,7 +78,9 @@ def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W,
         print(f"{T_vertical-max_thrust} Vertical thrust exceeded")
         T_vertical = max_thrust
         #raise ValueError(f"T_vertical ({T_vertical:.2f} N) exceeds the maximum thrust in the CSV ({max_thrust:.2f} N).")
-    P_vertical = np.interp(T_vertical, df_vertical['Thrust_N'], df_vertical[' Power (W) '])*numberengines_vertical
+    if T_vertical<0:
+        P_vertical = 0
+    else: P_vertical = np.interp(T_vertical, df_vertical['Thrust_N'], df_vertical[' Power (W) '])*numberengines_vertical
     
     # Horizontal power
     max_thrust = df_horizontal['Thrust_N'].max()
@@ -86,6 +88,9 @@ def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W,
         #print(f"{T_horizontal-max_thrust} Horizontal thrust exceeded")
         T_horizontal = max_thrust
         #raise ValueError(f"T_horizontal ({T_horizontal:.2f} N) exceeds the maximum thrust in the CSV ({max_thrust:.2f} N).")
-    P_horizontal = np.interp(T_horizontal, df_horizontal['Thrust_N'], df_horizontal[' Power (W) ']) * numberengines_horizontal
+    if T_horizontal < 0:
+        P_horizontal = 0
+    else:
+        P_horizontal = np.interp(T_horizontal, df_horizontal['Thrust_N'], df_horizontal[' Power (W) ']) * numberengines_horizontal
     P = P_vertical + P_horizontal
     return P
