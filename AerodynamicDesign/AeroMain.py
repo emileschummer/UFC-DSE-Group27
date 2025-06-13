@@ -161,5 +161,3 @@ run_full_aero()
  #           ]:
     # Run with all defaults (just adjust paths if needed):
         results = run_full_aero(airfoil_dat_path = i)
-        
-    # ‘results’ now holds everything if you want to inspect or post‐process further
