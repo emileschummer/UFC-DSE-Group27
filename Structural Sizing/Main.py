@@ -64,8 +64,8 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     R_prop = d_prop/2	
     Vtol_Pole_Length_front = 1.1*R_prop + 0.2*MAC
 
-    R_in_VTOL_back = 0.01
-    R_out_VTOL_back = 0.01+(1/1000)
+    R_in_VTOL_back = VTOL_Input[0]
+    R_out_VTOL_back = R_in_VTOL_back+(1/1000)
     Vtol_Pole_Length_back = 1.1*R_prop+ 0.8*MAC
 
     F_Vtol = VTOL_Input[2]*Safety_Factor ##Newtons 70.6
@@ -403,12 +403,13 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
 
     return Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Fuselage_Mass,Structure_mass,Total_Mass
 
-
+Lift_Thing = lift_distribution_test
+Dra_Thing = Drag_distribution_test
 #RUN IT
-Structure_Main(Materials_Input=[],
-               VTOL_Input=[],
-               Tail_Input=[],
-               Legs_Input=[],
-               Wing_Input=[],
-               uselage_Input=[],
+Structure_Main(Materials_Input=[],#BRAM MOLEST HERE 
+               VTOL_Input=[0.01,0.736,70.6,2.28],
+               Tail_Input=[0.15,3,20,30],
+               Legs_Input=[0.25,25],
+               Wing_Input=[105,0.65,18,Lift_Thing,Dra_Thing],
+               Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,50,10,2,5,0.8,10],
                SF=1.5,BigG=1.1)
