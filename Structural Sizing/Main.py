@@ -28,29 +28,29 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
 
 
     #--------------------------------------------------
-    #MATERIALS
+    #MATERIALS BRAM EDIT HERE
     #--------------------------------------------------
-    Material_VTOL = Materials_Input[0] #AL()
+    Material_VTOL = Aluminum7075T6() #Materials_Input[0] #AL()
     Yield_shear_VTOL= Material_VTOL.Yield_Shear
     Yield_Stress_VTOL = Material_VTOL.Yield_Stress
     Density_VTOL = Material_VTOL.Density
 
-    Material_WingBox = Materials_Input[1] #AL() 
+    Material_WingBox = Aluminum7075T6() #Materials_Input[1] #AL() 
     Yield_shear_WingBox= Material_WingBox.Yield_Shear
     Yield_Stress_WingBox = Material_WingBox.Yield_Stress
     Density_WingBox = Material_WingBox.Density
 
-    Material_Leg = Materials_Input[2] #AL() 
+    Material_Leg = Aluminum7075T6() #Materials_Input[2] #AL() 
     Yield_shear_Leg = Material_Leg.Yield_Shear
     Yield_Stress_Leg = Material_Leg.Yield_Stress
     Density_Leg = Material_Leg.Density
 
-    Material_Fuselage = Materials_Input[3] #AL() 
+    Material_Fuselage = Aluminum7075T6() #Materials_Input[3] #AL() 
     Yield_shear_Fuselage = Material_Fuselage.Yield_Shear
     Yield_Stress_Fuselage = Material_Fuselage.Yield_Stress
     Density_Fuselage = Material_Fuselage.Density
 
-    Material_Airfoil = Materials_Input[4] #PLA3DPrintMaterial()
+    Material_Airfoil = Aluminum7075T6() #Materials_Input[4] #PLA3DPrintMaterial()
     Density_Fuselage = Material_Airfoil.Density
 
 
@@ -58,7 +58,7 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     #VTOL POLE ARMS
     #--------------------------------------------------
     R_in_VTOL_front = VTOL_Input[0]
-    R_out_VTOL_front = R_in_VTOL_front(1/1000)
+    R_out_VTOL_front = R_in_VTOL_front+(1/1000)
 
     d_prop= VTOL_Input[1] #0.7366
     R_prop = d_prop/2	
@@ -406,7 +406,7 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
 Lift_Thing = lift_distribution_test
 Dra_Thing = Drag_distribution_test
 #RUN IT
-Structure_Main(Materials_Input=[],#BRAM MOLEST HERE 
+Structure_Main(Materials_Input=[AL(),AL(),AL(),AL(),AL()],#BRAM MOLEST HERE 
                VTOL_Input=[0.01,0.736,70.6,2.28],
                Tail_Input=[0.15,3,20,30],
                Legs_Input=[0.25,25],
