@@ -12,15 +12,15 @@ from AerodynamicForces import load_distribution_halfspan
 
 def run_full_aero( airfoil_dat_path: str = r"C:\Users\Emile\OneDrive - Delft University of Technology\TUDelft\Bachelor Year 3\Design Synthesis Exercise\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat",
     name = "S1223",
-    xfoil_path: str = r"C:\Users\Emile\Downloads\XFOIL6.99",
+    xfoil_path: str = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe",
     operational_velocity: float = 5.0,
     num_spanwise_sections: int = 200,
     vlm_chordwise_resolution = 6,
     delta_alpha_3D_correction: float = 1.0,
     alpha_range2D: np.ndarray = np.linspace(-10, 25, 36),
     alpha_range3D: np.ndarray = np.linspace(-10, 30, 41),
-    r_chord: float = 0.35,
-    t_chord: float = 0.35,
+    r_chord: float = 0.91,
+    t_chord: float = 0.36,
     r_twist: float = 0.0,
     t_twist: float = 0.0,
     sweep: float = 0.0,
@@ -64,7 +64,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\Emile\OneDrive - Delft Uni
     print(f"6) Plotting:          {t6 - t5:.2f} s")
     print(f"Total runtime:        {t6 - t0:.2f} s")
 
-    # distribution = load_distribution_halfspan(wing_geom, lift_distribution, 10, half_span=1.5, plot = True)
+    distribution = load_distribution_halfspan(wing_geom, lift_distribution, 15, half_span=1.5, plot = True)
     if csv_path:
         df = pd.DataFrame({
             "alpha (deg)": alpha_range3D,
@@ -85,7 +85,8 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\Emile\OneDrive - Delft Uni
         "CDs_vlm_original": CDs_vlm_original,
         "CLs_corrected": CLs_corrected,
         "lift_distribution": lift_distribution,
-        "alphas" : alpha_range3D
+        "alphas" : alpha_range3D,
+        "airplane_object" : airplane_geom
         # "timings": {
         #     "wing_setup": t1 - t0,
         #     "section_calc": t2 - t1,
@@ -159,6 +160,4 @@ run_full_aero()
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\NACA23012.dat"
  #           ]:
     # Run with all defaults (just adjust paths if needed):
-  #      results = run_full_aero(airfoil_dat_path = i)
-        
-    # ‘results’ now holds everything if you want to inspect or post‐process further"""
+        results = run_full_aero(airfoil_dat_path = i)
