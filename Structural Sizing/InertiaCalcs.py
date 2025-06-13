@@ -47,10 +47,23 @@ def Circle_Polar_Moment_of_Inertia2(t,R_out):
     J = (np.pi*t*d**3)/4
     return J
 
-def Semi_Circle_Moment_of_Inertia(R_out,t):
-    I = (np.pi/2 - 4/np.pi)*t*R_out**3
-    return I
 
+def Semi_Circle_Moment_of_Inertia_Fuselage(R_out,R_in,B,H,t_Ibeam):
+    #I = (np.pi/2 - 4/np.pi)*t*R_out**3
+    I_Semi = (np.pi/8)*(R_out**4 - R_in**4)
+    Centre = (2*R_out/np.pi)
+    I_Beam = I_Beam_Moment_of_Inertia(t1=t_Ibeam,t2=t_Ibeam,t3=t_Ibeam,B=B,H=H)
+    I_Semi_parallel = I_Semi + 0.5*Tube_Area(R_out=R_out,R_in=R_in)*(Centre)**2
+    I_Beam_parallel = I_Beam + I_beam_Area(t1=t_Ibeam,t2=t_Ibeam,t3=t_Ibeam,B=B,H=H)*(R_out-Centre-0.5*H)**2
+    I_total = I_Beam_parallel+I_Semi_parallel
+    return I_total
+
+
+def Semi_Circle_Moment_of_Inertia(R_in,R_out):
+    I_Base = (np.pi/8)*(R_out**4 - R_in**4)
+    Centre = (2*R_out/np.pi)
+    I = I_Base + 0.5*Tube_Area(R_out=R_out,R_in=R_in)*(Centre)**2
+    return I
 
 #-----------------------------------------------------------------------
 #FIRST MOMENT AREA (Q)
@@ -100,10 +113,10 @@ def TheSuperSecretFunction():
 def SummonTheCouncil():
     import time
     import webbrowser
-    Member1 = "https://chatgpt.com/?model=gpt-4o"
-    Member2 = "https://chat.deepseek.com/"
+    Member1 = "https://chat.deepseek.com/"
+    Member2 = "https://chat.mistral.ai/chat?q="
     Member3 = "https://gemini.google.com/app"
-    Member4 = "https://chat.mistral.ai/chat?q="
+    Member4 = "https://chatgpt.com/?model=gpt-4o"
     webbrowser.open(Member1)
     webbrowser.open(Member2)
     webbrowser.open(Member3)
@@ -131,3 +144,10 @@ def WingBox_Area(B,H,t):
 
 def Volume(A,L):
     return A*L
+
+
+X1 = (Semi_Circle_Moment_of_Inertia(R_out=0.2,R_in=0.19))
+X2 = (Semi_Circle_Moment_of_Inertia_Fuselage(R_out=0.2,R_in=0.19,t_Ibeam=0.001,H=0.02,B=0.01))
+print(X2,X1,X2-X1)
+if X1 > X2:
+    print("hm, le feck")

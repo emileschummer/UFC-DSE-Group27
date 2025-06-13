@@ -87,7 +87,8 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
         "CLs_corrected": CLs_corrected,
         "lift_distribution": lift_distribution,
         "alphas" : alpha_range3D,
-        "airplane_object" : airplane_geom
+        "airplane_object" : airplane_geom,
+        "CM_vlm" : CM_vlm
         # "timings": {
         #     "wing_setup": t1 - t0,
         #     "section_calc": t2 - t1,
@@ -163,3 +164,12 @@ if __name__ == "__main__":
             ]:
     # Run with all defaults (just adjust paths if needed):
         results = run_full_aero(airfoil_dat_path = i)
+        import matplotlib.pyplot as plt
+
+        plt.figure()
+        plt.plot(results["alphas"], results["CM_vlm"], marker="o")
+        plt.xlabel("Alpha (deg)")
+        plt.ylabel("CM VLM")
+        plt.title("CM VLM vs. Angle of Attack")
+        plt.grid(True)
+        plt.show()
