@@ -147,7 +147,7 @@ def Volume(A,L):
 
 
 X1 = (Semi_Circle_Moment_of_Inertia(R_out=0.2,R_in=0.19))
-X2 = (Semi_Circle_Moment_of_Inertia_Fuselage(R_out=0.2,R_in=0.19,t_Ibeam=0.001,H=0.02,B=0.01))
+X2 = (Semi_Circle_Moment_of_Inertia_Fuselage(R_out=0.2,R_in=0.19,t_Ibeam=0.002,H=0.02,B=0.01))
 print(X2,X1,X2-X1)
 if X1 > X2:
     print("hm, le feck")

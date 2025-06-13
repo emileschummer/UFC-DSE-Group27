@@ -1,41 +1,23 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
+from scipy.integrate import quad
 
-def CallChatGPT(request):
-    # Initialize the WebDriver (replace with your WebDriver path)
-    driver = webdriver.Chrome(executable_path="C:\Program Files\Google\Chrome\Application\chrome.exe")
-    
-    try:
-        # Open ChatGPT
-        driver.get("https://chatgpt.com/?model=gpt-4o")
-        
-        # Wait for the page to load (you may need to manually log in the first time)
-        time.sleep(5)  # Adjust as needed
-        
-        # Find the input box (ChatGPT's textarea has a specific ID or class)
-        # Note: The selector may change if ChatGPT updates their UI
-        input_box = WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "textarea#prompt-textarea"))
-        )
-        
-        # Enter the request and submit
-        input_box.send_keys(request)
-        input_box.send_keys(Keys.RETURN)
-        
-        print("Request submitted to ChatGPT.")
-        
-        # Keep the browser open for a while to see the result
-        time.sleep(10)
-        
-    except Exception as e:
-        print(f"An error occurred: {e}")
-    finally:
-        # Close the browser
-        driver.quit()
+# Define the lift distribution function: L(z) = 111.11 * z^2
+def lift_distribution(z):
+    return 111.11 * z**2
 
-# Example usage
-CallChatGPT("Please recommend things to do on holiday in South Africa")
+# Centroid and total lift computation function
+def Compute_Total_Lift_and_Centroid(Y_func, a, b):
+    total_lift, _ = quad(Y_func, a, b)
+    moment, _ = quad(lambda x: x * Y_func(x), a, b)
+    x_centroid = moment / total_lift 
+    return total_lift, x_centroid
+
+# Inputs
+a = 0         # start of the beam (root)
+b = 1.5       # end of the beam (tip)
+
+# Run the calculation
+lift, centroid = Compute_Total_Lift_and_Centroid(lift_distribution, a, b)
+
+# Output the results
+print(f"Total lift: {lift:.3f} N")
+print(f"Centroid location: {centroid:.4f} m")
