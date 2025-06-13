@@ -1,10 +1,10 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 import numpy as np
 import matplotlib.pyplot as plt
-from Input.fixed_input_values import g
+from Final_UAV_Sizing.Input.fixed_input_values import g
 import Input.RaceData.Strava_input_csv as sva
 
 def flat_plate_drag_coefficient(V, rho, h, S_wing, L, w):
