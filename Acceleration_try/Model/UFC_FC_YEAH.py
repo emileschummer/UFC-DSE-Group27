@@ -14,19 +14,26 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 
 g=9.81
 def flat_plate_drag_coefficient(V, rho, h, S_wing, L, w):
-    T0 = 288.15
-    T = T0 + -0.0065 * h
-    Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
-    a= np.sqrt(1.4 * 287.05 * T)
-    Cf_i= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65) * L*w/S_wing
+    if V <= 0:
+        Cf_i = 0
+    else:
+        T0 = 288.15
+        T = T0 + -0.0065 * h
+        Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
+        a= np.sqrt(1.4 * 287.05 * T)
+        Cf_i= 0.455/ ((np.log10(Re))**2.58 * (1 + 0.144 * (V/a)**2)**0.65) * L*w/S_wing
     return Cf_i
 
 def cube_drag_coefficient(V, rho, h, S_wing, L):
-    T0 = 288.15
-    T = T0 + -0.0065 * h
-    Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
-    a= np.sqrt(1.4 * 287.05 * T)
-    CD_cube= (1.1 + 20/np.sqrt(Re)) * (1 + 0.15 * (V/a)**2) * L**2/S_wing
+    if V <= 0:
+        CD_cube = 0
+        return CD_cube
+    else:
+        T0 = 288.15
+        T = T0 + -0.0065 * h
+        Re= rho * V * L / 1.81e-5  # Reynolds number, assuming a kinematic viscosity of air at sea level
+        a= np.sqrt(1.4 * 287.05 * T)
+        CD_cube= (1.1 + 20/np.sqrt(Re)) * (1 + 0.15 * (V/a)**2) * L**2/S_wing
     return CD_cube
 
 def fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing):
@@ -60,7 +67,7 @@ def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, 
         L_prop = L_req - L_wing
         T_vertical = L_prop/numberengines_vertical #Thrust per vertical propeller
            
-    return T_vertical,T_horizontal
+    return T_vertical,T_horizontal, CD
 
 def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c,d,L_blade,L_stab):
     Cf_fus = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), L_fus)
