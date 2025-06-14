@@ -1,10 +1,23 @@
-import numpy as np
+from scipy.integrate import quad
 
-T = 11.1893
-L = 1.5
-Theta = np.deg2rad(1)
-G=1.3e9
-d = 2*0.384
+# Define the lift distribution function: L(z) = 111.11 * z^2
+def lift_distribution(z):
+    return 111.11 * z**2
 
-t = (T*L*4)/(Theta*G*np.pi*d**3)
-print(t)
+# Centroid and total lift computation function
+def Compute_Total_Lift_and_Centroid(Y_func, a, b):
+    total_lift, _ = quad(Y_func, a, b)
+    moment, _ = quad(lambda x: x * Y_func(x), a, b)
+    x_centroid = moment / total_lift 
+    return total_lift, x_centroid
+
+# Inputs
+a = 0         # start of the beam (root)
+b = 1.5       # end of the beam (tip)
+
+# Run the calculation
+lift, centroid = Compute_Total_Lift_and_Centroid(lift_distribution, a, b)
+
+# Output the results
+print(f"Total lift: {lift:.3f} N")
+print(f"Centroid location: {centroid:.4f} m")

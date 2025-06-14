@@ -1,12 +1,41 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 import numpy as np
 import matplotlib.pyplot as plt
-from Final_UAV_Sizing.Input.fixed_input_values import g
-import Input.RaceData.Strava_input_csv as sva
+from Propeller_sizing.Input import Strava_input_csv as sva
+import pandas as pd
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
+g=9.81
+W= 250
+S_wing = 2
+CLmax = 2
+V_vert_prop = 11
+numberengines_vertical = 4
+numberengines_horizontal = 1
+propeller_wake_efficiency = 0.7
+L_blade = 0.7366
+w_blade = 0.075
+L_stab= 0.6
+w_stab= 0.5
+L_poles= 3.6*L_blade/2 + 0.5
+w_poles= 0.34
+L_motor = 0.3
+L_gimbal = 0.12
+L_speaker = 0.1
+
+L_n = 0.2
+L_c = 0.6
+L_fus = 2*L_n + L_c
+w_fus = S_wing / L_fus
+d = 0.25
+
+aero_df = pd.read_csv(os.path.join(os.path.dirname(__file__), 'aero.csv'))
 def flat_plate_drag_coefficient(V, rho, h, S_wing, L, w):
     if V <= 0:
         Cf_i = 0
@@ -84,8 +113,7 @@ def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W,
         print(f"{T_vertical-max_thrust} Vertical thrust exceeded")
         T_vertical = max_thrust
         #raise ValueError(f"T_vertical ({T_vertical:.2f} N) exceeds the maximum thrust in the CSV ({max_thrust:.2f} N).")
-    
-    else: P_vertical = np.interp(T_vertical, df_vertical['Thrust_N'], df_vertical[' Power (W) '])*numberengines_vertical
+    P_vertical = np.interp(T_vertical, df_vertical['Thrust_N'], df_vertical[' Power (W) '])*numberengines_vertical
     
     # Horizontal power
     max_thrust = df_horizontal['Thrust_N'].max()
@@ -93,8 +121,6 @@ def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W,
         #print(f"{T_horizontal-max_thrust} Horizontal thrust exceeded")
         T_horizontal = max_thrust
         #raise ValueError(f"T_horizontal ({T_horizontal:.2f} N) exceeds the maximum thrust in the CSV ({max_thrust:.2f} N).")
-    
-    else:
-        P_horizontal = np.interp(T_horizontal, df_horizontal['Thrust_N'], df_horizontal[' Power (W) ']) * numberengines_horizontal
+    P_horizontal = np.interp(T_horizontal, df_horizontal['Thrust_N'], df_horizontal[' Power (W) ']) * numberengines_horizontal
     P = P_vertical + P_horizontal
     return P

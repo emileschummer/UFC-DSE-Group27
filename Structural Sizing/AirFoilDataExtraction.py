@@ -22,9 +22,6 @@ def Rotate_for_Inertia(coordinates,name,angle):
     my_airfoil = AS.Airfoil(name=name, coordinates=coordinates)
     Rotated_airfoil = my_airfoil.rotate(angle)
 
-    # print(Rotated_airfoil)
-    # print(Rotated_airfoil.coordinates)
-
     return Rotated_airfoil.coordinates
  
 
@@ -144,10 +141,10 @@ def Airfoil_Moment_of_Inertia(points,Length):
     Iyy_c = Iyy - A * Cx**2
     Ixy_c = Ixy - A * Cx * Cy
 
-    print(f"Area A = {A:.6e}")
-    print(f"Centroid: ({Cx:.6e}, {Cy:.6e})")
-    print(f"Ixx (centroidal) = {Ixx_c:.6e}")
-    print(f"Iyy (centroidal) = {Iyy_c:.6e}")
-    print(f"Ixy (centroidal) = {Ixy_c:.6e}")
+    # print(f"Area A = {A:.6e}")
+    # print(f"Centroid: ({Cx:.6e}, {Cy:.6e})")
+    # print(f"Ixx (centroidal) = {Ixx_c:.6e}")
+    # print(f"Iyy (centroidal) = {Iyy_c:.6e}")
+    # print(f"Ixy (centroidal) = {Ixy_c:.6e}")
 
-    return Ixx_c,Iyy_c,Ixy_c
+    return Ixx_c,Iyy_c,Ixy_c, A
