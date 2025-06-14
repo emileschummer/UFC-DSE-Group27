@@ -5,7 +5,7 @@ import pandas as pd
 import os
 from Airfoil import setup_wing_and_airplane, calculate_section_properties_and_reynolds, generate_2d_stall_database, interpolate_stall_data_for_sections, run_vlm_sweep_with_stall_correction, plot_aerodynamic_coefficients
 # from Test import setup_wing_and_airplane, calculate_section_properties_and_reynolds, generate_2d_stall_database, interpolate_stall_data_for_sections, run_vlm_sweep_with_stall_correction, plot_aerodynamic_coefficients
-from Functions import load_airfoil_dat
+from Functions import load_airfoil_dat, no_quarterchord_sweep
 from AerodynamicForces import load_distribution_halfspan
 
 
@@ -19,7 +19,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     delta_alpha_3D_correction: float = 1.0,
     alpha_range2D: np.ndarray = np.linspace(-10, 25, 36),
     alpha_range3D: np.ndarray = np.linspace(-10, 30, 41),
-    r_chord: float = 0.91,
+    r_chord: float = 0.36,
     t_chord: float = 0.36,
     r_twist: float = 0.0,
     t_twist: float = 0.0,
@@ -34,7 +34,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     my_airfoil = asb.Airfoil(name, coordinates=airfoil_coordinates)
     t0 = time.perf_counter() # Initialize t0 with the current time
     # 1. Geometry
-    wing_geom, airplane_geom = setup_wing_and_airplane(my_airfoil, num_spanwise_sections, r_chord, t_chord, r_twist, t_twist, sweep)
+    wing_geom, airplane_geom = setup_wing_and_airplane(my_airfoil, num_spanwise_sections, r_chord, t_chord, r_twist, t_twist, no_quarterchord_sweep(r_chord, t_chord))
     t1 = time.perf_counter()
     print(f"1) Wing setup:        {t1 - t0:.2f} s")
 
@@ -157,6 +157,8 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
 
 if __name__ == "__main__":
     for i in [r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat", 
+              r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\FX 74-Cl5-140 MOD  (smoothed).txt",
+              r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\CH10 (smoothed).txt",
               #r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\CLARKY.dat", 
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\E423.dat", 
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\NACA4412.dat", 
