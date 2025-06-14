@@ -7,6 +7,8 @@ from Materials import *
 from AirFoilDataExtraction import *
 from scipy.integrate import quad
 
+import os
+
 #------------------------------------------------------
 #TODO ASK ALEX FOR FEEDBACK
 #TODO CHECK VON MISES FOR ALL, ITS FOR CROSS SECTION POINT, NOT ENTIRE CROSS SECTION 
@@ -35,23 +37,23 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     Yield_Stress_VTOL = Material_VTOL.Yield_Stress
     Density_VTOL = Material_VTOL.Density
 
-    Material_WingBox = Aluminum7075T6() #Materials_Input[1] #AL() 
+    Material_WingBox = Aluminum2024T4() #Materials_Input[1] #AL() 
     Yield_shear_WingBox= Material_WingBox.Yield_Shear
     Yield_Stress_WingBox = Material_WingBox.Yield_Stress
     Density_WingBox = Material_WingBox.Density
 
-    Material_Leg = Aluminum7075T6() #Materials_Input[2] #AL() 
+    Material_Leg = Aluminum2024T4() #Materials_Input[2] #AL() 
     Yield_shear_Leg = Material_Leg.Yield_Shear
     Yield_Stress_Leg = Material_Leg.Yield_Stress
     Density_Leg = Material_Leg.Density
 
-    Material_Fuselage = Aluminum7075T6() #Materials_Input[3] #AL() 
+    Material_Fuselage = NaturalFibre() #Materials_Input[3] #AL() 
     Yield_shear_Fuselage = Material_Fuselage.Yield_Shear
     Yield_Stress_Fuselage = Material_Fuselage.Yield_Stress
     Density_Fuselage = Material_Fuselage.Density
 
-    Material_Airfoil = Aluminum7075T6() #Materials_Input[4] #PLA3DPrintMaterial()
-    Density_Fuselage = Material_Airfoil.Density
+    Material_Airfoil = NaturalFibre() #Materials_Input[4] #PLA3DPrintMaterial()
+    Density_Airfoil = Material_Airfoil.Density 
 
 
     #--------------------------------------------------
@@ -373,7 +375,7 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     _, _, _, Skin_Area_out = Airfoil_Moment_of_Inertia(Airfoil_Points, ScalingFactor_out)
     _, _, _, Skin_Area_in = Airfoil_Moment_of_Inertia(Airfoil_Points, ScalingFactor_in)
     Skin_Area = Skin_Area_out-Skin_Area_in
-    Skin_mass = 2*Skin_Area*WingBox_length*Material_Airfoil.Density
+    Skin_mass = Skin_Area*WingBox_length*Density_Airfoil
     print("Wing Skin MASS:", Skin_mass)
 
     Vtol_Pole_Mass_front = Volume(A=Tube_Area(R_out=R_out_VTOL_front,R_in=R_in_VTOL_front), L=Vtol_Pole_Length_front)*Density_VTOL
@@ -404,12 +406,12 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     return Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Fuselage_Mass,Structure_mass,Total_Mass
 
 Lift_Thing = lift_distribution_test
-Dra_Thing = Drag_distribution_test
+Drag_Thing = Drag_distribution_test
 #RUN IT
 Structure_Main(Materials_Input=[AL(),AL(),AL(),AL(),AL()],#BRAM MOLEST HERE 
                VTOL_Input=[0.01,0.736,70.6,2.28],
                Tail_Input=[0.15,3,20,30],
                Legs_Input=[0.25,25],
-               Wing_Input=[105,0.65,18,Lift_Thing,Dra_Thing],
-               Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,50,10,2,5,0.8,10],
+               Wing_Input=[3,0.65,18,Lift_Thing,Drag_Thing],
+               Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,150,10,2,5,0.8,10],
                SF=1.5,BigG=1.1)

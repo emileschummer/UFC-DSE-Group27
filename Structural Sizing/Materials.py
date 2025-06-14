@@ -63,6 +63,15 @@ class PLA3DPrintMaterial(Material):
             Yield_Stress=60e6 # Tensile yield strength for PLA in Pascals (approx. 60 MPa)
         )
 
+class NaturalFibre(Material):
+    def __init__(self):
+        super().__init__(
+            E=3.5e9,     # Young's modulus for PLA in Pascals (approx. 3.5 GPa)
+            G=1.3e9,     # Shear modulus for PLA in Pascals (approx. 1.3 GPa, often E / (2*(1+nu)) with nu ~ 0.35)
+            Density=1324, # Density of PLA in kg/m³ (approx. 1240 kg/m³)
+            Yield_Shear=70e6, # Shear yield strength for PLA in Pascals (approx. 40 MPa, often estimated as 0.6 * Yield_Stress)
+            Yield_Stress=150e6 # Tensile yield strength for PLA in Pascals (approx. 60 MPa)
+        )
 
 class Aluminum2024T4(Material):
     def __init__(self):
