@@ -1,14 +1,14 @@
 import sys
 import os
 # Add the parent directory to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
 
 import matplotlib.pyplot as plt
 from math import ceil
 import os
 from datetime import datetime
-from Modelling.Propeller_and_Battery_Sizing.Model.UFC_FC_YEAH import calculate_power_FC
-from Input.RaceData import Strava_input_csv as sva
+from Final_UAV_Sizing.Modelling.Propeller_and_Battery_Sizing.Model.UFC_FC_YEAH import calculate_power_FC
+from Final_UAV_Sizing.Input.RaceData import Strava_input_csv as sva
 import numpy as np
 import pandas as pd
 
