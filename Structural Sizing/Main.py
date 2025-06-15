@@ -8,19 +8,12 @@ from AirFoilDataExtraction import *
 from scipy.integrate import quad
 
 #------------------------------------------------------
-#TODO ADD A SAFETY FACTOR 1.5
-#TODO VIBRATIONS --> FLUTTER !!!!---->no, just,no >:(
 #TODO ASK ALEX FOR FEEDBACK
-#TODO CHECK VON MISES FO ALL, ITS FOR CROSS SECTION POINT, NOT ENTIRE CROSS SECTION FFFFFFUUUUUUUUUUUCCCCCCCCCKKKKKKKKKK
+#TODO CHECK VON MISES FOR ALL, ITS FOR CROSS SECTION POINT, NOT ENTIRE CROSS SECTION 
 #------------------------------------------------------
 
-def Structures_Main():
-    #--------------------------------------------------
-    #UNPACKING MATERIALS
-    #--------------------------------------------------
-
-
-
+def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,Fuselage_Input,SF,BigG):
+# def Structures_Main():
     #--------------------------------------------------
     #FUNCTIONS
     #--------------------------------------------------
@@ -29,72 +22,74 @@ def Structures_Main():
     Big_Owie_VTOL_back = True
     Big_Owie_Fuselage_Flying = True
     Big_Owie_Leg = True
-    MAC= 0.64
-    Input_mass = 25 #kg 
-    Safety_Factor = 1.5
+    MAC= Wing_Input[1] #0.64
+    Safety_Factor = SF
+    G_factor = BigG
 
 
     #--------------------------------------------------
-    #MATERIALS
+    #MATERIALS BRAM EDIT HERE
     #--------------------------------------------------
-    Material_VTOL = PLA3DPrintMaterial()# DogshitTestMaterial() #
+    Material_VTOL = Aluminum7075T6() #Materials_Input[0] #AL()
     Yield_shear_VTOL= Material_VTOL.Yield_Shear
     Yield_Stress_VTOL = Material_VTOL.Yield_Stress
     Density_VTOL = Material_VTOL.Density
 
-    Material_WingBox = PLA3DPrintMaterial() #DogshitTestMaterial() #
+    Material_WingBox = Aluminum7075T6() #Materials_Input[1] #AL() 
     Yield_shear_WingBox= Material_WingBox.Yield_Shear
     Yield_Stress_WingBox = Material_WingBox.Yield_Stress
     Density_WingBox = Material_WingBox.Density
 
-    Material_Leg = PLA3DPrintMaterial() #DogshitTestMaterial() #
+    Material_Leg = Aluminum7075T6() #Materials_Input[2] #AL() 
     Yield_shear_Leg = Material_Leg.Yield_Shear
     Yield_Stress_Leg = Material_Leg.Yield_Stress
     Density_Leg = Material_Leg.Density
 
-    Material_Fuselage = PLA3DPrintMaterial() #DogshitTestMaterial() #
+    Material_Fuselage = Aluminum7075T6() #Materials_Input[3] #AL() 
     Yield_shear_Fuselage = Material_Fuselage.Yield_Shear
     Yield_Stress_Fuselage = Material_Fuselage.Yield_Stress
     Density_Fuselage = Material_Fuselage.Density
+
+    Material_Airfoil = Aluminum7075T6() #Materials_Input[4] #PLA3DPrintMaterial()
+    Density_Fuselage = Material_Airfoil.Density
 
 
     #--------------------------------------------------
     #VTOL POLE ARMS
     #--------------------------------------------------
-    R_in_VTOL_front = 0.17 
-    R_out_VTOL_front = 0.17+(1/1000)
-    d_prop= 0.7366
+    R_in_VTOL_front = VTOL_Input[0]
+    R_out_VTOL_front = R_in_VTOL_front+(1/1000)
+
+    d_prop= VTOL_Input[1] #0.7366
     R_prop = d_prop/2	
     Vtol_Pole_Length_front = 1.1*R_prop + 0.2*MAC
 
-    R_in_VTOL_back = 0.17
-    R_out_VTOL_back = 0.17+(1/1000)
-    d_prop= 0.7366
-    R_prop = d_prop/2	
+    R_in_VTOL_back = VTOL_Input[0]
+    R_out_VTOL_back = R_in_VTOL_back+(1/1000)
     Vtol_Pole_Length_back = 1.1*R_prop+ 0.8*MAC
 
-    F_Vtol = 70.6*Safety_Factor ##Newtons
-    T_Vtol = 2.28*Safety_Factor #Newtons/Meter
+    F_Vtol = VTOL_Input[2]*Safety_Factor ##Newtons 70.6
+    T_Vtol = VTOL_Input[3]*Safety_Factor #Newtons/Meter 2.28
 
 
     #--------------------------------------------------
     #TAIL
     #--------------------------------------------------
-    Tail_Effective_Length = 0.11 #Meters
-    Entire_Tail_Length = 1 #meters NOTE THIS IS FROM WING BOX, SO INCLUDES THE VTOL POLE LENGTH
+    Tail_Effective_Length = Tail_Input[0] #Meters
+    Entire_Tail_Length = Tail_Input[1] #meters NOTE THIS IS FROM WING BOX, SO INCLUDES THE VTOL POLE LENGTH
 
-    Tail_loading_horizontal_Distributed = 30*Safety_Factor #Newtons per meter
-    Tail_loading_Vertical_Distributed = 20*Safety_Factor #Newtons per meter
+    Tail_loading_horizontal_Distributed = Tail_Input[2]*Safety_Factor #Newtons per meter
+    Tail_loading_Vertical_Distributed = Tail_Input[3]*Safety_Factor #Newtons per meter
 
 
     #--------------------------------------------------
     #LEGS
     #--------------------------------------------------
-    Leg_Length = 0.25
+    Leg_Length = Legs_Input[0]
     R_leg = 1/1000
     # Leg_Angle = np.deg2rad(30) #deg
 
-    Leg_Force = ((Input_mass*9.81)/4) *Safety_Factor
+    Leg_Force = ((Legs_Input[1]*9.81*G_factor)/4) *Safety_Factor
     # Leg_Force_X = Leg_Force*np.sin(Leg_Angle)
     # Leg_Force_Y = Leg_Force*np.cos(Leg_Angle)
 
@@ -102,44 +97,46 @@ def Structures_Main():
     #--------------------------------------------------
     #FUSELAGE
     #--------------------------------------------------
-    R_in_fuselage = 0.2
-    R_out_fuselage = 0.2+1/1000 
+    R_in_fuselage = Fuselage_Input[0] #(0.125)
+    R_out_fuselage = R_in_fuselage+1/1000 
 
-    Fuselage_length_sec1 = 0.1
-    Fuselage_length_sec2 = 0.4
-    Fuselage_length_sec3 = 0.3
+    Fuselage_length_sec1 = Fuselage_Input[1]
+    Fuselage_length_sec2 = Fuselage_Input[2]
+    Fuselage_length_sec3 = Fuselage_Input[3]
 
-    Payload_Location = 0.3-Fuselage_length_sec1 #edit the o.6 to the location, starting from the back of the fuselage ASSUMED MID SECTION
-    Wing_Hole_location = 0.7-Fuselage_length_sec1-Fuselage_length_sec2 #edit the 0.8, again measurong from the start of the back of the plane
+    Payload_Location = Fuselage_Input[4]-Fuselage_length_sec1 #edit the o.6 to the location, starting from the back of the fuselage ASSUMED MID SECTION
+    Wing_Hole_location = Fuselage_Input[5]-Fuselage_length_sec1-Fuselage_length_sec2 #edit the 0.8, again measurong from the start of the back of the plane
 
-    Main_Engine_Thrust = 100*Safety_Factor #Newtons /Meter
-    Main_Engine_Torque = 30*Safety_Factor #Newtons /Meter
+    Main_Engine_Thrust = Fuselage_Input[6]*Safety_Factor #Newtons /Meter
+    Main_Engine_Torque = Fuselage_Input[7]*Safety_Factor #Newtons /Meter
 
-    Fuselage_Sec1_mass = 1+0.5+0.4 *Safety_Factor #kg SENSORS +C OMSS +M AIN MOTOR
-    Fuselage_Sec2_mass = 5 +0.7 *Safety_Factor #kg BATTERY+PARACHUTE
+    Fuselage_Sec1_mass = Fuselage_Input[8]#1+0.5+0.4 *Safety_Factor #kg SENSORS +C OMSS +M AIN MOTOR
+    Fuselage_Sec2_mass = Fuselage_Input[9]# 5 +0.7 *Safety_Factor #kg BATTERY+PARACHUTE
 
-    Fuselage_Sec1_Load = (Fuselage_Sec1_mass*9.81)/Fuselage_length_sec1 *Safety_Factor #N*m SENSORS +C OMSS +M AIN MOTOR (distributed load)
-    Fuselage_sec2_load = (Fuselage_Sec2_mass*9.81)/Fuselage_length_sec2 *Safety_Factor#N*m BATTERY+PARACHUTE
-    Payload_Force = 9.81*0.7 *Safety_Factor #N includes Gimbal and Camera weight
-    Payload_Drag = 10  *Safety_Factor#N includes Gimbal and Camera drag
+    Fuselage_Sec1_Load = (Fuselage_Sec1_mass*9.81*G_factor)/Fuselage_length_sec1 *Safety_Factor #N*m SENSORS +C OMSS +M AIN MOTOR (distributed load)
+    Fuselage_sec2_load = (Fuselage_Sec2_mass*9.81*G_factor)/Fuselage_length_sec2 *Safety_Factor#N*m BATTERY+PARACHUTE
+    Payload_Force = Fuselage_Input[10]*9.81*G_factor*Safety_Factor #N includes Gimbal and Camera weight
+    Payload_Drag = Fuselage_Input[11]*Safety_Factor#N includes Gimbal and Camera drag
 
 
     #--------------------------------------------------
     #WINGBOX
     #--------------------------------------------------
     Vtol_Location = 1.1*R_prop #along the wingbox
-    WingBox_length = 1.5
+    WingBox_length = Wing_Input[0]*0.5
     R_out_WingBox = 0.5*0.12*MAC
-    R_in_WingBox = 0.5*0.12*MAC-1/1000
+    R_in_WingBox = R_out_WingBox-1/1000
 
-    Wing_Torque = 18 #MAX WING TORQUE
-    Wing_Lift_Distribution = lambda x: 1000 * (1 - (x/10)**2)  # Lift from root (x=0) to tip (x=10 m) #Should be an elliptical func, we will figure it out later REMEMBER -WL^2/2
+    Wing_Torque = Wing_Input[2] #MAX WING TORQUE
+    Wing_Lift_Distribution = Wing_Input[3] #lift_distribution_test #lambda x: 1000 * (1 - (x/10)**2)  # Lift from root (x=0) to tip (x=10 m) #Should be an elliptical func, we will figure it out later REMEMBER -WL^2/2
     Wing_Total_Lift, Wing_Lift_Centroid_Location = Compute_Total_Lift_and_Centroid(Wing_Lift_Distribution,0,WingBox_length)
     Wing_Total_Lift=Wing_Total_Lift*Safety_Factor
+    Wing_Drag_Distribution = Wing_Input[4]#Drag_distribution_test #(lambda x: 1000 * (1 - (x/10)**2))
+    Wing_Total_Drag, Wing_Drag_Centroid_Location = Compute_Total_Lift_and_Centroid(Wing_Drag_Distribution,0,WingBox_length)
 
 
     #NEWLY DEFINED FROM VTOL
-    Wing_MY= Tail_Effective_Length*Tail_loading_horizontal_Distributed*(Entire_Tail_Length-0.5*Tail_Effective_Length)
+    Wing_MY= Wing_Total_Drag*Wing_Drag_Centroid_Location #Tail_Effective_Length*Tail_loading_horizontal_Distributed*(Entire_Tail_Length-0.5*Tail_Effective_Length) + Wing_Total_Drag*Wing_Drag_Centroid_Location
     Wing_MZ=( Wing_Torque -
                 (F_Vtol*Vtol_Pole_Length_back+Tail_loading_Vertical_Distributed*Tail_Effective_Length*(Entire_Tail_Length-0.5*Tail_Effective_Length))
                 + ( F_Vtol*Vtol_Pole_Length_front))
@@ -171,18 +168,19 @@ def Structures_Main():
 
 
 
+
     while Big_Owie_VTOL_back:
         VTOL_I_Back = Circle_Moment_of_Inertia(R_out_VTOL_back,R_in_VTOL_back)
         VTOL_J_Back = Circle_Polar_Moment_of_Inertia(R_out=R_out_VTOL_back,R_in=R_in_VTOL_back)
 
-        #VTOL_stress_Front = Bending_Simple(M=F_Vtol*Vtol_Pole_Length_front , Y=R_out_VTOL_front, I=VTOL_I_Front) #Bending(M_y, Iy, R_out_VTOL_front, M_z, Iz, R_out_VTOL_front)
         VTOL_Trans_Shear_Back_Y = Shear_Transverse_Circle(R_in=R_in_VTOL_back,R_out=R_out_VTOL_back,F=(F_Vtol+Tail_loading_Vertical_Distributed*Tail_Effective_Length))
         VTOL_Trans_Shear_Back_Z = Shear_Transverse_Circle(R_in=R_in_VTOL_back,R_out=R_out_VTOL_back,F=Tail_Effective_Length*Tail_loading_horizontal_Distributed)
         VTOL_stress_Back = Bending(Mx=(T_Vtol+Tail_loading_horizontal_Distributed*Tail_Effective_Length*(Entire_Tail_Length-0.5*Tail_Effective_Length))
                                     ,Ix=VTOL_I_Back,X=R_out_VTOL_back, Iy=VTOL_I_Back,Y=R_out_VTOL_back,
                                     My=(F_Vtol*Vtol_Pole_Length_back+Tail_loading_Vertical_Distributed*Tail_Effective_Length*(Entire_Tail_Length-0.5*Tail_Effective_Length)))
 
-        VTOL_VonMises_Back_Stress,VTOL_VonMises_Back_Shear = Von_Mises(Stress_X=0,Stress_Y=0,Stress_Z=VTOL_stress_Back,Shear_XY=VTOL_Trans_Shear_Back_Y,Shear_YZ=VTOL_Trans_Shear_Back_Z,Shear_ZX=0)
+        VTOL_VonMises_Back_Stress,VTOL_VonMises_Back_Shear = Von_Mises(Stress_X=0,Stress_Y=0,Stress_Z=VTOL_stress_Back,
+                                                                       Shear_XY=VTOL_Trans_Shear_Back_Y,Shear_YZ=VTOL_Trans_Shear_Back_Z,Shear_ZX=0)
 
         print("----------------------------------------------------")
         print("The Max Shear BACK VTOL:",VTOL_VonMises_Back_Stress, "The Yield Shear:", Yield_shear_VTOL)
@@ -207,12 +205,13 @@ def Structures_Main():
         #Bending
         WingBox_Bending_X = Bending_Simple(M=Wing_MX,Y=R_out_WingBox,I=WingBox_I)
         WingBox_Bending_Y = Bending_Simple(M=Wing_MY,Y=R_out_WingBox,I=WingBox_I)
-        WingBox_Bending_Z = Bending_Simple(M=Wing_MZ,Y=R_out_WingBox,I=WingBox_I)
+        #WingBox_Bending_Z = Bending_Simple(M=Wing_MZ,Y=R_out_WingBox,I=WingBox_I)#TODO FIX THIS 
         WingBox_Axial_Stress = (Tail_Effective_Length*Tail_loading_horizontal_Distributed)/WingBox_A
 
         WingBox_Torsion_Shear_Z = Shear_Circle_Torsion(T=(Wing_MZ),r=R_out_WingBox,J=WingBox_J)
-        WingBox_Transverse_Shear = Shear_Transverse_Circle(R_in=R_in_WingBox,R_out=R_out_WingBox,
-                                                        F=(2*F_Vtol-Tail_Effective_Length*Tail_loading_Vertical_Distributed + Wing_Total_Lift))                                                    
+        WingBox_Transverse_Shear_Y = Shear_Transverse_Circle(R_in=R_in_WingBox,R_out=R_out_WingBox,
+                                                        F=(2*F_Vtol-Tail_Effective_Length*Tail_loading_Vertical_Distributed + Wing_Total_Lift))  
+        WingBox_Transverse_Shear_X  = Shear_Transverse_Circle(R_in=R_in_WingBox,R_out=R_out_WingBox,F=Wing_Total_Drag)                                                
 
         WingBox_Deflection_angle1 = Tip_Deflection_angle(F=(2*F_Vtol-Tail_Effective_Length*Tail_loading_Vertical_Distributed + Wing_Total_Lift),L=Wing_Lift_Centroid_Location,E=Material_WingBox.E,I=WingBox_I)
         WingBox_Deflection_angle2 = Tip_Deflection_angle(F=(2*F_Vtol-Tail_Effective_Length*Tail_loading_Vertical_Distributed),L=Vtol_Location,E=Material_WingBox.E,I=WingBox_I)
@@ -228,8 +227,8 @@ def Structures_Main():
 
         WingBox_Buckle = Buckling_Stress(E=Material_WingBox.E,L=WingBox_length, A=WingBox_A,I=WingBox_I,K=2)
 
-        Von_Mises_Wingbox_Stress, Von_Mises_Wingbox_Shear = Von_Mises(Stress_X=(WingBox_Bending_X+WingBox_Axial_Stress),Stress_Y=WingBox_Bending_Y,Stress_Z=WingBox_Bending_Z,
-                                                                    Shear_XY=(WingBox_Torsion_Shear_Z+WingBox_Transverse_Shear), Shear_YZ=0,Shear_ZX=0)
+        Von_Mises_Wingbox_Stress, Von_Mises_Wingbox_Shear = Von_Mises(Stress_X=(WingBox_Bending_X+WingBox_Axial_Stress),Stress_Y=WingBox_Bending_Y,Stress_Z=0,
+                                                                    Shear_XY=(WingBox_Torsion_Shear_Z+WingBox_Transverse_Shear_X+WingBox_Transverse_Shear_Y), Shear_YZ=0,Shear_ZX=0)
         
 
         print("----------------------------------------------------")
@@ -272,6 +271,7 @@ def Structures_Main():
         else:
             R_leg +=(1/1000)
 
+    
 
     while Big_Owie_Fuselage_Flying:
         #SECTION 1:
@@ -292,7 +292,8 @@ def Structures_Main():
 
         #SECTION 2:
         Fuselage_Sec1_Load_Total = Fuselage_Sec1_Load*Fuselage_length_sec1
-        Fuselage_I_sec2 = Semi_Circle_Moment_of_Inertia(R_out=(R_out_fuselage-0.5*Fuselage_t), t=Fuselage_t)
+        Fuselage_I_sec2 = Semi_Circle_Moment_of_Inertia(R_out=R_out_fuselage,R_in=R_in_fuselage)
+        #Fuselage_I_sec2 = Semi_Circle_Moment_of_Inertia_Fuselage(R_out=R_out_fuselage,R_in=R_in_fuselage,t_Ibeam=Fuselage_t,B=0.02,H=0.02)
 
         Fuselage_Torsion_Sec2 = Torsion_Open(T=Main_Engine_Torque, l= Fuselage_length_sec2, t=Fuselage_t)
         Fuselage_Buckle_sec2 = Buckling_Stress(E=Material_Fuselage.E, L=Fuselage_length_sec2, I=Fuselage_I_sec2, A=0.5*Tube_Area(R_out=R_out_fuselage,R_in=R_in_fuselage), K=0.5)
@@ -364,13 +365,17 @@ def Structures_Main():
 
 
 
-    #Calculate Mass
-    # R_out_VTOL_back = R_in_VTOL_back+0.001
-    # R_out_VTOL_front = R_in_VTOL_front +0.001
-    # R_in_WingBox = R_out_WingBox - 0.001
-    # R_out_fuselage = R_in_fuselage +0.001
-
     print("-------------------------------------------")
+    ScalingFactor_out = MAC/1
+    ScalingFactor_in =ScalingFactor_out*0.995
+    Airfoil_Points = load_airfoil_dat("Structural Sizing\AirfoilData\Airfoil.dat")
+   
+    _, _, _, Skin_Area_out = Airfoil_Moment_of_Inertia(Airfoil_Points, ScalingFactor_out)
+    _, _, _, Skin_Area_in = Airfoil_Moment_of_Inertia(Airfoil_Points, ScalingFactor_in)
+    Skin_Area = Skin_Area_out-Skin_Area_in
+    Skin_mass = 2*Skin_Area*WingBox_length*Material_Airfoil.Density
+    print("Wing Skin MASS:", Skin_mass)
+
     Vtol_Pole_Mass_front = Volume(A=Tube_Area(R_out=R_out_VTOL_front,R_in=R_in_VTOL_front), L=Vtol_Pole_Length_front)*Density_VTOL
     Vtol_Pole_Mass_back = Volume(A=Tube_Area(R_out=R_out_VTOL_back,R_in=R_in_VTOL_back), L=Entire_Tail_Length)*Density_VTOL
     Vtol_Pole_Mass = 2*(Vtol_Pole_Mass_front + Vtol_Pole_Mass_back)
@@ -387,16 +392,24 @@ def Structures_Main():
 
 
     Structure_mass = Leg_Mass+Vtol_Pole_Mass+Fuselage_Mass+WingBox_Mass
-    Total_Mass = Structure_mass+Fuselage_Sec1_mass+Fuselage_Sec2_mass
+    Total_Mass = Structure_mass+Fuselage_Sec1_mass+Fuselage_Sec2_mass + Skin_mass
     print("-------------------------------------------")
-    print("THE STRUCTURE FUCKING MASS:", Structure_mass)
+    print("THE STRUCTURE MASS:", Structure_mass)
     print("-------------------------------------------")
     print("-------------------------------------------")
-    print("THE FINAL FUCKING MASS:", Total_Mass)
+    print("THE FINAL MASS:", Total_Mass)
     print("-------------------------------------------")
 
 
     return Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Fuselage_Mass,Structure_mass,Total_Mass
 
-
-Structures_Main()
+Lift_Thing = lift_distribution_test
+Dra_Thing = Drag_distribution_test
+#RUN IT
+Structure_Main(Materials_Input=[AL(),AL(),AL(),AL(),AL()],#BRAM MOLEST HERE 
+               VTOL_Input=[0.01,0.736,70.6,2.28],
+               Tail_Input=[0.15,3,20,30],
+               Legs_Input=[0.25,25],
+               Wing_Input=[105,0.65,18,Lift_Thing,Dra_Thing],
+               Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,50,10,2,5,0.8,10],
+               SF=1.5,BigG=1.1)

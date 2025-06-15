@@ -62,3 +62,48 @@ class PLA3DPrintMaterial(Material):
             Yield_Shear=40e6, # Shear yield strength for PLA in Pascals (approx. 40 MPa, often estimated as 0.6 * Yield_Stress)
             Yield_Stress=60e6 # Tensile yield strength for PLA in Pascals (approx. 60 MPa)
         )
+
+
+class Aluminum2024T4(Material):
+    def __init__(self):
+        super().__init__(
+            E=7.31e10,           # Young's modulus in Pascals
+            G=2.80e10,           # Shear modulus in Pascals
+            Density=2780,        # Density in kg/m³
+            Yield_Shear=2.83e8,  # Shear yield strength in Pascals
+            Yield_Stress=3.24e8  # Tensile yield strength in Pascals
+        )
+
+
+class Aluminum7075T6(Material):
+    def __init__(self):
+        super().__init__(
+            E=7.00e10,           # Young's modulus in Pascals
+            G=2.60e10,           # Shear modulus in Pascals
+            Density=3000,        # Density in kg/m³
+            Yield_Shear=3.30e8,  # Shear yield strength in Pascals
+            Yield_Stress=4.80e8  # Tensile yield strength in Pascals
+        )
+
+
+class Steel300M(Material):
+    def __init__(self):
+        super().__init__(
+            E=2.05e11,           # Young's modulus in Pascals
+            G=8.00e10,           # Shear modulus in Pascals
+            Density=7890,        # Density in kg/m³
+            Yield_Shear=1.36e9,  # Shear yield strength in Pascals
+            Yield_Stress=1.59e9  # Tensile yield strength in Pascals
+        )
+
+
+class TitaniumTi6Al4V(Material):
+    def __init__(self):
+        super().__init__(
+            E=1.14e11,           # Young's modulus in Pascals
+            G=4.40e10,           # Shear modulus in Pascals
+            Density=4430,        # Density in kg/m³
+            Yield_Shear=5.50e8,  # Shear yield strength in Pascals
+            Yield_Stress=8.80e8  # Tensile yield strength in Pascals
+        )
+

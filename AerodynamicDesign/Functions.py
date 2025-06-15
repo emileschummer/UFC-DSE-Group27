@@ -16,7 +16,7 @@ def load_airfoil_dat(path):
                 continue
     return np.array(coords)
 
-#do not taper
+#i recomend taper 0.4 to 0.6 max
 def wing_geometry_calculator(InputWeight, alpha, csv, velocity_op, altitude, taper_ratio, b):
     #from csv should take the CL assosciated to the alpha that want to analyse. it should take the old CL.
     
@@ -25,9 +25,12 @@ def wing_geometry_calculator(InputWeight, alpha, csv, velocity_op, altitude, tap
 
     S = InputWeight/(0.5*rho*velocity_op**2*CL)
     
-    cr = 4*S/(b*(1 + taper_ratio))
+    cr = 2*S/(b*(1 + taper_ratio))
 
     ct = cr*taper_ratio
 
     return S, cr, ct
 
+#returns the offset to apply to have no quarter chord sweep
+def no_quarterchord_sweep(cr,ct):
+    return cr*0.25-ct*0.25

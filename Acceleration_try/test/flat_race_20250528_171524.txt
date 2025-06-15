@@ -1,2 +1,0 @@
----------7h Flat Race at 50km/h---------
-Fixed, defined design inputs

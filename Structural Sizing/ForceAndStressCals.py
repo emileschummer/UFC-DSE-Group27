@@ -112,3 +112,8 @@ def Compute_Total_Lift_and_Centroid(Y_func, a, b):
     return total_lift, x_centroid
 
 
+def lift_distribution_test(z):
+    return 111.11 * z**2
+def Drag_distribution_test(z):
+    return 0.1*(111.11 * z**2)
+

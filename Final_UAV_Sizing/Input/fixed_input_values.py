@@ -40,7 +40,7 @@ numberengines_horizontal = 1
 propeller_wake_efficiency = 0.7
 
 ##3. Battery Sizing
-input_folder = "Final_UAV_Sizing/Input/Prop_Engine_Data" 
+engine_input_folder = "Final_UAV_Sizing/Input/Prop_Engine_Data" 
 output_folder = "Final_UAV_Sizing/Output/Battery" # [str] folder to save battery data
 UAV_off_for_recharge_time_min = 15 # [min] time UAV is not filming to recharge
 battery_recharge_time_min = 5 # [min] time to change/recharge battery
