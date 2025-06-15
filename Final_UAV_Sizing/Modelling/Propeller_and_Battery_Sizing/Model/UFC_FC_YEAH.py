@@ -4,8 +4,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')
 
 import numpy as np
 import matplotlib.pyplot as plt
-from Final_UAV_Sizing.Input.fixed_input_values import g
 import Input.RaceData.Strava_input_csv as sva
+
+g=9.81
 
 def flat_plate_drag_coefficient(V, rho, h, S_wing, L, w):
     if V <= 0:
