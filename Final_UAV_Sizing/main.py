@@ -4,6 +4,7 @@ import numpy as np
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 #import functions
 from Input import fixed_input_values as input
 from Modelling.Wing_Sizing.Functions import wing_geometry_calculator
@@ -11,6 +12,9 @@ from Modelling.Wing_Sizing.AeroMain import run_full_aero
 from Modelling.Wing_Sizing.AerodynamicForces import load_distribution_halfspan
 from Modelling.Propeller_and_Battery_Sizing.Model.Battery_modelling import Battery_Model, Battery_Size
 from Modelling.Tail_Sizing.Tail_sizing_final import get_tail_size
+#Structures imports
+from Modelling.Structural_Sizing.Main import Structure_Main
+from Modelling.Structural_Sizing.Materials import Aluminum7075T6, Aluminum2024T4, NaturalFibre
 
 def main_iteration(outputs,number_relay_stations, M_list):
     M_init = M_list[-1]  # Initial mass for the iteration
@@ -85,7 +89,7 @@ def main_iteration(outputs,number_relay_stations, M_list):
 T_props, Position of Props, No.Props	M_props, M_engines, CD0_total
 
 We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller mass estimated below roughly (pls change)"""
-        M_prop = 2 #Placeholder for propeller mass
+        M_prop =  3.75 #Final value for propeller mass
 
 #3. Battery Sizing
         print("--------------------------------------------------")
@@ -164,16 +168,92 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         c = S_mw/input.b
         plot = input.show_plots
         """adjust tail_span to necessary value from structure or propellers idk"""
-        tail_span = 1#from propellers
+        tail_span = 1.55#from propellers
         Clhmax = input.Clhmax
         Cd0_wing = aero_df.loc[(aero_df["CL_corrected"] - 0).abs().idxmin(), "CD_vlm"]
         output_folder = outputs
         ##Run
-        Sh, Clh0, span, cord,lh,max_tail_force = get_tail_size(W, piAe, Clalpha,Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing,output_folder)
+        Sh, Clh0, tail_span_loop, tail_chord_loop,lh,max_tail_force = get_tail_size(W, piAe, Clalpha,Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing,output_folder)
 #5. Structure Sizing
         print("\n--------------------------------------------------")
         print("Structure Sizing")
-        M_struc = 5
+
+    #5.1 Prepare load distributions TODO
+
+        cl_values_at_15 = np.array([0.06434802, 0.13850818, 0.21262615, 0.28667936, 0.36064524, 0.43450126,
+        0.50822493, 0.58179379, 0.65518543, 0.7283775,  0.80134769, 0.87407379,
+        0.94653363, 1.01870515, 1.09056636, 1.16209538, 1.23327041, 1.30406977,
+        1.37447191, 1.44445536, 1.51399882, 1.5830811,  1.65168116, 1.7197781,
+        1.78735118, 1.85437982, 1.92084359, 1.98672226, 1.99888533, 1.92394663,
+        1.84900793, 1.77406923, 1.69913053, 1.62419183, 1.54925313, 1.47431442,
+        1.39937572, 1.32443702, 1.24949832, 1.17455962, 1.09962092])
+
+        # Assume these are at equally spaced spanwise stations from 0 to b/2
+        n = len(cl_values_at_15)
+        span = 3  # Example: total span = 3 m (adjust as needed)
+        y = np.linspace(0, span/2, n)  # y = 0 at root, y = b/2 at tip
+
+        # Fit cl_max to best match the data
+
+        def elliptical(y, cl_max):
+            return cl_max * np.sqrt(1 - (y/(span/2))**2)
+
+        cl_max_fit, _ = curve_fit(elliptical, y, cl_values_at_15, p0=[2.0])
+
+        # Now you can use this function as the elliptical approximation:
+        def elliptical_cl(y):
+            return cl_max_fit[0] * 1.225 * (100/3)**2 * np.sqrt(1 - (y/(span/2))**2)
+
+        def elliptical_cd(y):
+            return 0.125 * elliptical_cl(y)
+
+        lift_distrib = elliptical_cl
+        drag_distrib = elliptical_cd
+
+    #5.2 Run Structure_Main
+
+        Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Fuselage_Mass,Structure_mass,Total_Mass =  Structure_Main(
+                Materials_Input=[Aluminum7075T6(), # VTOL Pole Material
+                                Aluminum2024T4(), # Wing Box Material
+                                Aluminum2024T4(), # Legs Material
+                                NaturalFibre(),   # Fuselage Material
+                                NaturalFibre()],  # Airfoil Material
+
+               VTOL_Input=[0.01,        # VTOL Pole Inner Radius [m],
+                           0.736,       # VTOL Prop Diameter [m],
+                           InputWeight/4,        # VTOL Force [N],
+                           2.6],       # VTOL Torque [Nm/m]
+
+               Tail_Input=[tail_chord_loop,        # Tail Chord [m],
+                           tail_span_loop,           #Tail Span [m],
+                           0.2*Sh*(100/3)**2*1.225*1/2,          #Horizontal Distributed Load [N/m], # TODO
+                           25],         #Vertical Distributed Load [N/m] # TODO
+
+               Legs_Input=[0.30,        # Leg Length [m],
+                           InputWeight/input.g],         #UAV Total mass [kg]
+
+               Wing_Input=[3,         # Wing Box Length [m], TODO
+                           0.65,        #MAC, TODO
+                           18,          #Max Wing Torque [Nm],
+                           lift_distrib,  #Lift Distribution [N/m], # TODO
+                           drag_distrib],  #Drag Distribution [N/m] # TODO
+
+               Fuselage_Input=[0.125,   #Fuselage Inner Radius [m],
+                               0.1,     #Fuselage Section 1 Length [m], TODO
+                               0.3,     #Fuselage Section 2 Length [m], TODO
+                               0.4,     #Fuselage Section 3 Length [m], TODO
+                               0.4,     #Payload Location [m], TODO
+                               0.6,     #Wing Hole Location [m], TODO
+                               140,      #Main Engine Thrust [N], TODO depends on total mass
+                               3,      #Main Engine Torque [Nm/m],
+                               1.85,       #Fuselage Section 1 Mass [kg],
+                               M_battery,       #Fuselage Section 2 Mass [kg],
+                               0.65,     #Filming equipment mass [kg],
+                               10],     #Payload Drag [N] TODO
+
+               SF=1.5,BigG=1.1) # Safety Factor, G load factor	
+
+        M_struc = Structure_mass # Total Structure Mass
 #6. Final Mass Calculation
         M_final = input.M_PL + M_prop +M_battery + M_struc
         M_list.append(M_final)

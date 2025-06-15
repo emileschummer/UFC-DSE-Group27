@@ -1,14 +1,13 @@
 import numpy as np
 import matplotlib as plt
 import pandas as pd
-from InertiaCalcs import *
-from ForceAndStressCals import *
-from Materials import *
-from AirFoilDataExtraction import *
+from Modelling.Structural_Sizing.InertiaCalcs import *
+from Modelling.Structural_Sizing.ForceAndStressCals import *
+from Modelling.Structural_Sizing.Materials import *
+from Modelling.Structural_Sizing.AirFoilDataExtraction import *
 from scipy.integrate import quad
 
 import os
-from scipy.optimize import curve_fit
 
 #------------------------------------------------------
 #TODO ASK ALEX FOR FEEDBACK
@@ -408,55 +407,19 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     print("THE FINAL MASS:", Total_Mass)
     print("-------------------------------------------")
 
+
     return Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Fuselage_Mass,Structure_mass,Total_Mass
 
-Lift_Thing = lift_distribution_test
-Drag_Thing = Drag_distribution_test
+# Lift_Thing = lift_distribution_test
+# Drag_Thing = Drag_distribution_test
+# #RUN IT
+# Structure_Main(Materials_Input=[AL(),AL(),AL(),AL(),AL()],#BRAM MOLEST HERE 
+#                VTOL_Input=[0.01,0.736,70.6,2.28],
+#                Tail_Input=[0.15,3,20,30],
+#                Legs_Input=[0.25,25],
+#                Wing_Input=[3,0.65,18,Lift_Thing,Drag_Thing],
+#                Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,150,10,2,5,0.8,10],
+#                SF=1.5,BigG=1.1)
 
-# Elliptical lift distribution: cl(x) = cl_max * sqrt(1 - (x/b)^2)
-# where x runs from -b/2 to b/2 (spanwise), or from 0 to b if only half-span
-
-cl_values_at_15 = np.array([0.06434802, 0.13850818, 0.21262615, 0.28667936, 0.36064524, 0.43450126,
- 0.50822493, 0.58179379, 0.65518543, 0.7283775,  0.80134769, 0.87407379,
- 0.94653363, 1.01870515, 1.09056636, 1.16209538, 1.23327041, 1.30406977,
- 1.37447191, 1.44445536, 1.51399882, 1.5830811,  1.65168116, 1.7197781,
- 1.78735118, 1.85437982, 1.92084359, 1.98672226, 1.99888533, 1.92394663,
- 1.84900793, 1.77406923, 1.69913053, 1.62419183, 1.54925313, 1.47431442,
- 1.39937572, 1.32443702, 1.24949832, 1.17455962, 1.09962092])
-
-# Assume these are at equally spaced spanwise stations from 0 to b/2
-n = len(cl_values_at_15)
-span = 3  # Example: total span = 3 m (adjust as needed)
-y = np.linspace(0, span/2, n)  # y = 0 at root, y = b/2 at tip
-
-# Fit cl_max to best match the data
-
-def elliptical(y, cl_max):
-    return cl_max * np.sqrt(1 - (y/(span/2))**2)
-
-cl_max_fit, _ = curve_fit(elliptical, y, cl_values_at_15, p0=[2.0])
-
-# Now you can use this function as the elliptical approximation:
-def elliptical_cl(y):
-    return cl_max_fit[0] * 1.225 * (100/3)**2 * np.sqrt(1 - (y/(span/2))**2)
-
-def elliptical_cd(y):
-    return 0.125 * elliptical_cl(y)
-
-lift_distrib = elliptical_cl
-drag_distrib = elliptical_cd
-
-# Example usage: elliptical_cl(y) for y in [0, span/2]
-#RUN IT
-Structure_Main(Materials_Input=[AL(),AL(),AL(),AL(),AL()],#BRAM MOLEST HERE 
-               VTOL_Input=[0.01,0.736,70.6,2.28],
-               Tail_Input=[0.15,3,20,30],
-               Legs_Input=[0.25,25],
-               Wing_Input=[3,0.65,18,Lift_Thing,Drag_Thing],
-               Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,150,10,2,5,0.8,10],
-               SF=1.5,BigG=1.1)
-
-print(Lift_Thing)
-print(Drag_Thing)
-
-
+# print(Lift_Thing)
+# print(Drag_Thing)
