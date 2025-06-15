@@ -49,12 +49,16 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span
     progress = 0
     iteration = 20
     V = 30
-    Cf_fus = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), input.L_fus)
-    CD_fus = fuselage_drag_coefficient(input.L_n, input.L_c, Cf_fus, input.d, S)
-    CD_cube = cube_drag_coefficient(V, rho, sva.altitude_from_density(rho), S)
-    Cf_blade = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), input.L_blade)
-    Cf_stab = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), input.L_stab)
-    CD0= CD_fus + CD_cube + Cd0_wing + 4 * Cf_blade + 3 * Cf_stab
+    altitude = sva.altitude_from_density(rho)
+    Cf_blade= flat_plate_drag_coefficient(V, rho, altitude, S, input.L_blade, input.w_blade)
+    Cf_stab = flat_plate_drag_coefficient(V, rho, altitude,S,input.L_stab, input.w_stab)
+    Cf_poles = flat_plate_drag_coefficient(V, rho, altitude, S, input.L_poles, input.w_poles)
+    Cf_fus = flat_plate_drag_coefficient(V, rho, altitude, S, input.L_fus, S/input.L_fus)
+    CD_speaker = cube_drag_coefficient(V, rho, altitude, S, input.L_speaker)
+    CD_gimbal = cube_drag_coefficient(V, rho, altitude, S, input.L_gimbal)
+    CD_motor = cube_drag_coefficient(V, rho, altitude, S, input.L_motor)
+    CD_fus = fuselage_drag_coefficient(input.L_n, input.L_c, Cf_fus, input.d_fus, S)
+    CD0= CD= CD_fus + CD_gimbal + CD_speaker + 4 * CD_motor + 2 * Cf_poles+ 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
     for Clh0 in np.linspace(-0.4,0.4,iteration):
         progress = progress + 1
         for Sh in np.linspace(0,1,iteration):
