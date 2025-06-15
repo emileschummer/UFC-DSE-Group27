@@ -1,10 +1,11 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
 
 import numpy as np
 import matplotlib.pyplot as plt
-import Input.RaceData.Strava_input_csv as sva
+from Final_UAV_Sizing.Input.fixed_input_values import g
+import Final_UAV_Sizing.Input.RaceData.Strava_input_csv as sva
 
 g=9.81
 
@@ -48,16 +49,16 @@ def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, 
         CL = 2*L_req/(rho*S_wing*V**2)
         CD_wing = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
         CD= CD_fus + CD_gimbal + CD_speaker + CD_wing + 4 * CD_motor + 2 * Cf_poles+ 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
-        D_wing = 0.5*rho*CD*S_wing*V**2
-        T_horizontal = ((D_wing + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
+        D = 0.5*rho*CD*S_wing*V**2
+        T_horizontal = ((D + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         T_vertical = 0
         
     else:
         CL = CLmax
         CD_wing = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
         CD= CD_fus + CD_gimbal + CD_speaker + CD_wing + 4 * CD_motor + 2 * Cf_poles+ 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
-        D_wing = 0.5*rho*CD*S_wing*V**2
-        T_horizontal = ((D_wing + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
+        D = 0.5*rho*CD*S_wing*V**2
+        T_horizontal = ((D + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         L_wing = 0.5*rho*CL*S_wing*V**2 * propeller_wake_efficiency  #Lifting force of the wing, parameter for wake of propellers
         L_prop = L_req - L_wing
         T_vertical = L_prop/numberengines_vertical #Thrust per vertical propeller
