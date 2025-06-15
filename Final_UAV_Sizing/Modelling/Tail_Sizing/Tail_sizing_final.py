@@ -4,6 +4,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from Modelling.Propeller_and_Battery_Sizing.Model.UFC_FC_YEAH import flat_plate_drag_coefficient, fuselage_drag_coefficient, cube_drag_coefficient
 from Input.RaceData import Strava_input_csv as sva
 import Input.fixed_input_values as input
+import os
 #initial conditions
 
 
@@ -39,7 +40,9 @@ def get_Cmy(alpha, V, Vz, q, Clh0, Sh,Clalpha,Cl0,Cd0,piAe,Clhalpha,lh,l,c,Cmac,
     Cmy =  Cm + Cmh
     return Cmy
 
-def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing):
+def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing, output_folder):
+    output_folder_tail = os.path.join(output_folder, "Tail_Sizing")
+    os.makedirs(output_folder, exist_ok=True)
     rho = 1.2
     m = W/9.81
     Sh_results = []
@@ -58,7 +61,7 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span
     CD_gimbal = cube_drag_coefficient(V, rho, altitude, S, input.L_gimbal)
     CD_motor = cube_drag_coefficient(V, rho, altitude, S, input.L_motor)
     CD_fus = fuselage_drag_coefficient(input.L_n, input.L_c, Cf_fus, input.d_fus, S)
-    CD0= CD= CD_fus + CD_gimbal + CD_speaker + 4 * CD_motor + 2 * Cf_poles+ 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
+    CD0= Cd0_wing+CD_fus + CD_gimbal + CD_speaker + 4 * CD_motor + 2 * Cf_poles+ 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
     for Clh0 in np.linspace(-0.4,0.4,iteration):
         progress = progress + 1
         for Sh in np.linspace(0,1,iteration):
@@ -96,10 +99,12 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span
                 Clh0_results.append(Clh0)
                 alpha_results.append(alpha)
                 pitch_results.append(pitch)
-                if plot: plt.plot(time,pitchangle)
+                plt.plot(time,pitchangle)
+                plt.savefig(f"{output_folder_tail}/tail_sizing_plot_{progress}_{int(Sh*1000)}_{int(Clh0*1000)}.png")
         print('\r{:.2f}%'.format(100*progress/iteration), end='', flush=True)
     if plot:
         plt.show()
+    plt.close()
     Sh = min(Sh_results)
     min_index = Sh_results.index(Sh)
     Clh0 = Clh0_results[min_index]

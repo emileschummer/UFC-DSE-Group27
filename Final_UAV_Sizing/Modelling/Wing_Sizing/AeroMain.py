@@ -27,7 +27,8 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     operational_altitude: float = 0.0,
     Re_numbers: int = 8,
     Plot = True,
-    csv_path: str = "C:\\Users\\marco\\Documents\\GitHub\\UFC-DSE-Group27\\AerodynamicDesign\\aero.csv") -> dict:
+    csv_path: str = "C:\\Users\\marco\\Documents\\GitHub\\UFC-DSE-Group27\\AerodynamicDesign\\aero.csv",
+    output_folder: str = "Final_UAV_Sizing/Output") -> dict:
 
     # Load and build Airfoil
     airfoil_coordinates = load_airfoil_dat(airfoil_dat_path)
@@ -59,7 +60,10 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     print(f"5) VLM sweep:         {t5 - t4:.2f} s")
 
     # 6. Plot
-    plot_aerodynamic_coefficients(alpha_range3D, CLs_vlm_original, CLs_corrected, CDs_vlm_original, Plot)
+    output_folder = os.path.join(output_folder, "Wing_Sizing")
+    os.makedirs(output_folder, exist_ok=True)
+
+    plot_aerodynamic_coefficients(alpha_range3D, CLs_vlm_original, CLs_corrected, CDs_vlm_original, Plot,output_folder)
     t6 = time.perf_counter()
     print(f"6) Plotting:          {t6 - t5:.2f} s")
     print(f"Total runtime:        {t6 - t0:.2f} s")

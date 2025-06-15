@@ -12,7 +12,7 @@ from Modelling.Wing_Sizing.AerodynamicForces import load_distribution_halfspan
 from Modelling.Propeller_and_Battery_Sizing.Model.Battery_modelling import Battery_Model, Battery_Size
 from Modelling.Tail_Sizing.Tail_sizing_final import get_tail_size
 
-def main_iteration(number_relay_stations, M_list):
+def main_iteration(outputs,number_relay_stations, M_list):
     M_init = M_list[-1]  # Initial mass for the iteration
     i=0
     #0. Open General Files
@@ -57,6 +57,7 @@ def main_iteration(number_relay_stations, M_list):
         Re_numbers = input.Re_numbers
         Plot = input.show_plots
         csv_path = input.aero_csv
+        output_folder = outputs
         ##Run
         """aero_values_dic={
         "wing_geom": wing_geom,
@@ -65,7 +66,7 @@ def main_iteration(number_relay_stations, M_list):
         "CLs_corrected": CLs_corrected,
         "lift_distribution": lift_distribution,
         "alphas" : alpha_range3D"""
-        aero_values_dic = run_full_aero(num_spanwise_sections=num_spanwise_sections,airfoil_dat_path = airfoil_dat_path, name = name, xfoil_path=xfoil_path,operational_velocity=operational_velocity,vlm_chordwise_resolution = vlm_chordwise_resolution,delta_alpha_3D_correction = delta_alpha_3D_correction,alpha_range2D = alpha_range2D,alpha_range3D = alpha_range3D,operational_altitude = operational_altitude,Re_numbers = Re_numbers,Plot = Plot,csv_path = csv_path, r_chord = r_chord,t_chord = t_chord,r_twist = r_twist,t_twist = t_twist,sweep = sweep)
+        aero_values_dic = run_full_aero(num_spanwise_sections=num_spanwise_sections,airfoil_dat_path = airfoil_dat_path, name = name, xfoil_path=xfoil_path,operational_velocity=operational_velocity,vlm_chordwise_resolution = vlm_chordwise_resolution,delta_alpha_3D_correction = delta_alpha_3D_correction,alpha_range2D = alpha_range2D,alpha_range3D = alpha_range3D,operational_altitude = operational_altitude,Re_numbers = Re_numbers,Plot = Plot,csv_path = csv_path, r_chord = r_chord,t_chord = t_chord,r_twist = r_twist,t_twist = t_twist,sweep = sweep,output_folder = output_folder)
         aero_df = pd.read_csv(input.aero_csv)
     #1.3 Load Distribution
         ##Prepare input values
@@ -74,8 +75,9 @@ def main_iteration(number_relay_stations, M_list):
         alpha = aero_values_dic["alphas"][np.argmax(aero_values_dic["CLs_corrected"])]
         half_span = input.b/2
         plot = input.show_plots
+        output_folder = outputs
         ##Run
-        load_distribution_halfspan(wing_geom,lift_distribution,alpha,half_span,plot)
+        lift_distribution = load_distribution_halfspan(wing_geom,lift_distribution,alpha,half_span,plot,output_folder)
 #2. Propeller Sizing 
         print("--------------------------------------------------")
         print("Propeller Sizing")  
@@ -91,7 +93,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
     #3.1 Battery Consumption Model
         ##Prepare Inputs
         input_folder = input.engine_input_folder
-        output_folder = input.output_folder
+        output_folder = outputs
         aero_df = aero_df
         data_folder="Final_UAV_Sizing/Input/RaceData"
         V_vert_prop = input.V_stall*input.V_stall_safety_margin
@@ -107,6 +109,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         battery_recharge_time_min = input.battery_recharge_time_min
         PL_power = input.PL_power
         show = input.show_plots
+        show_all = False #Set to True to show all race plots
         L_n = input.L_n
         L_c = input.L_c
         L_fus = L_n+L_c
@@ -122,7 +125,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         L_gimbal =  input.L_gimbal
         L_speaker = input.L_speaker
         ##Run
-        max_battery_energy = Battery_Model(input_folder,output_folder,aero_df,data_folder,V_vert_prop,W,CLmax,S_wing,numberengines_vertical,numberengines_horizontal,propeller_wake_efficiency,number_relay_stations,UAV_off_for_recharge_time_min,battery_recharge_time_min,PL_power,show,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
+        max_battery_energy = Battery_Model(input_folder,output_folder,aero_df,data_folder,V_vert_prop,W,CLmax,S_wing,numberengines_vertical,numberengines_horizontal,propeller_wake_efficiency,number_relay_stations,UAV_off_for_recharge_time_min,battery_recharge_time_min,PL_power,show,show_all,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
     #3.2 Battery Sizing
         ##Prepare Inputs
         max_battery_energy = max_battery_energy
@@ -164,8 +167,9 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         tail_span = 1#from propellers
         Clhmax = input.Clhmax
         Cd0_wing = aero_df.loc[(aero_df["CL_corrected"] - 0).abs().idxmin(), "CD_vlm"]
+        output_folder = outputs
         ##Run
-        Sh, Clh0, span, cord,lh,max_tail_force = get_tail_size(W, piAe, Clalpha,Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing)
+        Sh, Clh0, span, cord,lh,max_tail_force = get_tail_size(W, piAe, Clalpha,Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing,output_folder)
 #5. Structure Sizing
         print("\n--------------------------------------------------")
         print("Structure Sizing")
@@ -193,7 +197,10 @@ def main(plot = False):
     for number_relay_stations in range(input.min_RS,input.max_RS):
         M_list = [0]
         M_list.append(input.M_init)
-        M_list = main_iteration(number_relay_stations, M_list)
+        # Create output folder for this relay station
+        outputs = os.path.join(input.output_folder, f"RS_{number_relay_stations}")
+        os.makedirs(outputs, exist_ok=True)
+        M_list = main_iteration(outputs,number_relay_stations, M_list)
         M_dict[number_relay_stations] = M_list
     for number_relay_stations in range(M_dict.keys()):
         print(f"Final mass for {number_relay_stations} Relay Stations: {M_dict[number_relay_stations][-1]} kg")

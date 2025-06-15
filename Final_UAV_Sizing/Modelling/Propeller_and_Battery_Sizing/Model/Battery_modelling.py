@@ -12,7 +12,9 @@ from Final_UAV_Sizing.Input.RaceData import Strava_input_csv as sva
 import numpy as np
 import pandas as pd
 
-def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizing/Input/RaceData", V_vert_prop=5, W=250, CLmax=2.2, S_wing=1.5, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 189,  show=False,L_fus = 0.8,L_n = 0.2,L_c= 0.6,L_blade=0.7366,L_stab=0.6, d_fus = 0.25, w_fus = 2.5, w_blade = 0.075, w_stab = 0.5, L_poles = 1.5, w_poles = 0.34, L_motor = 0.3, L_gimbal = 0.12, L_speaker = 0.1):
+def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizing/Input/RaceData", V_vert_prop=5, W=250, CLmax=2.2, S_wing=1.5, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 189,  show=False,show_all=False,L_fus = 0.8,L_n = 0.2,L_c= 0.6,L_blade=0.7366,L_stab=0.6, d_fus = 0.25, w_fus = 2.5, w_blade = 0.075, w_stab = 0.5, L_poles = 1.5, w_poles = 0.34, L_motor = 0.3, L_gimbal = 0.12, L_speaker = 0.1):
+    output_folder = os.path.join(output_folder, "Battery_Sizing")
+    os.makedirs(output_folder, exist_ok=True)
     print("---------Plot Race Results---------")
     races = sva.make_race_dictionnary(data_folder)
     race_results = {}
@@ -176,34 +178,51 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
                 necessary_battery_capacity = new_battery_energy[-1]
         
         print(necessary_battery_capacity, "Wh")
-        race_results[race_name] = necessary_battery_capacity
+        race_results[race_name] = [necessary_battery_capacity,time_plot,power_plot,speed_plot,gradient_plot,battery_energy_plot,new_time,new_power,new_speed,new_gradient,new_battery_energy]
 
-        if show:
-            # Plot original and new (with relay stations) on the same figure
-            fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
-            # Plot original
-            plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot,
-                race_name + " (original)", V_vert_prop, battery_usable_capacity, axs=axs)
-            # Plot new (with relay stations)
-            plot(new_time, new_power, new_speed, new_gradient, new_battery_energy,
-                race_name + " (relay stations)", V_vert_prop, battery_usable_capacity, multiple_RS=True, axs=axs)
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_path = os.path.join(output_folder, f"Power_speed_gradient_energy_vs_time_{race_name.replace('.csv', '')}_{timestamp}.png")
-            os.makedirs(output_folder, exist_ok=True)
-            plt.tight_layout()
-            plt.savefig(output_path)
-            if show:
-                print("Close plot to continue")
-                plt.show()
-            plt.close()
+        # Plot original and new (with relay stations) on the same figure
+        fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
+        # Plot original
+        plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot,
+            race_name + " (original)", V_vert_prop, battery_usable_capacity, axs=axs)
+        # Plot new (with relay stations)
+        plot(new_time, new_power, new_speed, new_gradient, new_battery_energy,
+            race_name + " (relay stations)", V_vert_prop, battery_usable_capacity, multiple_RS=True, axs=axs)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_path = os.path.join(output_folder, f"Power_speed_gradient_energy_vs_time_{race_name.replace('.csv', '')}_{timestamp}.png")
+        os.makedirs(output_folder, exist_ok=True)
+        plt.tight_layout()
+        plt.savefig(output_path)
+        if show_all:
+            print("Close plot to continue")
+            plt.show()
+        plt.close()
     print("\n\n------------------------------------------------------------------------------------\n")
     print("---------Summary--------------------------------------------------------------------\n")
     if race_results:
-        max_race = max(race_results, key=race_results.get)
-        max_battery_energy = race_results[max_race]
+        max_race = max(race_results, key=lambda k: race_results[k][0])
+        max_battery_energy,time_plot,power_plot,speed_plot,gradient_plot,battery_energy_plot,new_time,new_power,new_speed,new_gradient,new_battery_energy = race_results[max_race]
         print(f"Maximum battery capacity necessary: {max_battery_energy:.2f} Wh (Race: {max_race})\n")
-        avg_battery_energy = sum(race_results.values()) / len(race_results)
+        avg_battery_energy = sum(result[0] for result in race_results.values()) / len(race_results)
         print(f"Average battery capacity necessary across all races: {avg_battery_energy:.2f} Wh\n")
+                # Plot original and new (with relay stations) on the same figure
+        fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
+        # Plot original
+        plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot,
+            race_name + " (original)", V_vert_prop, battery_usable_capacity, axs=axs)
+        # Plot new (with relay stations)
+        plot(new_time, new_power, new_speed, new_gradient, new_battery_energy,
+            race_name + " (relay stations)", V_vert_prop, battery_usable_capacity, multiple_RS=True, axs=axs)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_path = os.path.join(output_folder, f"Power_speed_gradient_energy_vs_time_{race_name.replace('.csv', '')}_{timestamp}.png")
+        os.makedirs(output_folder, exist_ok=True)
+        plt.tight_layout()
+        plt.savefig(output_path)
+        if show:
+            print("Close plot to continue")
+            plt.show()
+        plt.close()
+
     else:
         print("No race results available to determine maximum energy consumption.\n")
         max_race, max_battery_energy, avg_battery_energy = 0, 0, 0
@@ -249,7 +268,7 @@ def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, 
             battery_energy_plot.append(energy)
     return time_plot, distance_plot, power_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot
 
-def plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot, race_name, V_vert_prop, battery_usable_capacity, axs=None,multiple_RS=False):
+def plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot, race_name, V_vert_prop, battery_usable_capacity, axs=None, multiple_RS=False):
     import matplotlib.pyplot as plt
 
     fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True) if axs is None else (plt.gcf(), axs)
@@ -258,20 +277,22 @@ def plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot, 
         axs[0].plot(time_plot, power_plot, label=label)
         axs[1].plot(time_plot, speed_plot, label='UAV Speed', color='black')
         axs[2].plot(time_plot, gradient_plot, label='UAV Gradient', color='black')
-        axs[3].plot(time_plot, (1 - battery_energy_plot/battery_usable_capacity)*100, label='UAV Battery Usage', color='blue')
+        axs[3].plot(time_plot, (1 - np.array(battery_energy_plot)/battery_usable_capacity)*100, label='UAV Battery Usage', color='blue')
         # Draw stall speed line in the velocity plot (axs[1])
         axs[1].axhline(V_vert_prop, color='red', linestyle='--', label='Stall Speed')
         axs[1].legend()
+        axs[2].legend()
+        axs[0].legend()
+        axs[3].legend()
     else:
         label = 'Cyclists'
         axs[1].plot(time_plot, speed_plot, label='Cyclist Speed', color='grey')
-        axs[2].plot(time_plot, gradient_plot, label='Cyclist Gradient ', color='grey')
-
-
+        axs[2].plot(time_plot, gradient_plot, label='Cyclist Gradient', color='grey')
+        axs[1].legend()
+        axs[2].legend()
 
     axs[0].set_title(f"Power vs Time for {race_name}")
     axs[0].set_ylabel("Power [W]")
-    axs[0].legend()
     axs[0].grid()
 
     axs[1].set_title("Speed [m/s] vs Time")
@@ -280,7 +301,6 @@ def plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot, 
 
     axs[2].set_title("Gradient vs Time")
     axs[2].set_ylabel("Gradient [%]")
-    axs[2].legend()
     axs[2].grid()
 
     axs[3].set_title("Battery Usage vs Time")

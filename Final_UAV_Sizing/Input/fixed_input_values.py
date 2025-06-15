@@ -11,7 +11,7 @@ V_stall = 10 # [m/s] actual stall speed of wing
 V_stall_safety_margin = 1.1 # [-] safety margin for stall speed
 
 ##0. Iteration parameters
-show_plots = False
+show_plots = True
 M_init = 15 # [kg] initial mass of UAV for iteration
 delta_mass = 0.01 # [kg], mass convergence
 min_RS = 3 # [-] minimum number of relay stations
@@ -58,7 +58,6 @@ d_fus = 0.25
 
 ##3. Battery Sizing
 engine_input_folder = "Final_UAV_Sizing/Input/Prop_Engine_Data" 
-output_folder = "Final_UAV_Sizing/Output/Battery" # [str] folder to save battery data
 UAV_off_for_recharge_time_min = 15 # [min] time UAV is not filming to recharge
 battery_recharge_time_min = 5 # [min] time to change/recharge battery
 PL_power = 155 # [W] power consumption of payload
