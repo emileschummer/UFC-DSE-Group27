@@ -58,7 +58,6 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     CLs_vlm_original, CDs_vlm_original, CLs_corrected, lift_distribution, Cm = run_vlm_sweep_with_stall_correction(alpha_range3D, airplane_geom, operational_velocity, section_data_prepared, num_spanwise_sections, wing_geom, operational_altitude, vlm_chordwise_resolution)
     t5 = time.perf_counter()
     print(f"5) VLM sweep:         {t5 - t4:.2f} s")
-    print(lift_distribution)
 
     # 6. Plot
     output_folder = os.path.join(output_folder, "Wing_Sizing")

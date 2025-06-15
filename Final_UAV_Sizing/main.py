@@ -4,6 +4,7 @@ import numpy as np
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import time
 from scipy.optimize import curve_fit
 #import functions
 from Input import fixed_input_values as input
@@ -271,9 +272,14 @@ def plot_results(M_dict):
         axs[idx].grid(True)
 
     plt.tight_layout()
-    plt.show()
-def main(plot = False):
+    output_dir = "Final_UAV_Sizing/Output"
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(os.path.join(output_dir, "mass_through_iterations.png"))
+    if input.show_plots: plt.show()
+    plt.close()
+def main():
     M_dict = {}
+    start_time = time.time()
     for number_relay_stations in range(input.min_RS,input.max_RS):
         M_list = [0]
         M_list.append(input.M_init)
@@ -284,12 +290,16 @@ def main(plot = False):
         M_dict[number_relay_stations] = M_list
     for number_relay_stations in range(M_dict.keys()):
         print(f"Final mass for {number_relay_stations} Relay Stations: {M_dict[number_relay_stations][-1]} kg")
-    if plot:
-        plot_results(M_dict)
+    plot_results(M_dict)
+    end_time = time.time()
+    runtime = end_time - start_time
+    hours, rem = divmod(runtime, 3600)
+    minutes, seconds = divmod(rem, 60)
+    print(f"Runtime of main: {int(hours):02d}:{int(minutes):02d}:{int(seconds):02d} (h:m:s)")
 
 
 if __name__ == "__main__":
-    main(plot=True)
+    main()
 
 
 

@@ -100,7 +100,9 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span
                 alpha_results.append(alpha)
                 pitch_results.append(pitch)
                 plt.plot(time,pitchangle)
-                plt.savefig(f"{output_folder_tail}/tail_sizing_plot_{progress}_{int(Sh*1000)}_{int(Clh0*1000)}.png")
+                if not os.path.exists(output_folder_tail):
+                    os.makedirs(output_folder_tail)
+                plt.savefig(os.path.join(output_folder_tail, f"tail_sizing_plot_{progress}_{int(Sh*1000)}_{int(Clh0*1000)}.png"))
         print('\r{:.2f}%'.format(100*progress/iteration), end='', flush=True)
     if plot:
         plt.show()
