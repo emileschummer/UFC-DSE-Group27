@@ -370,7 +370,12 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     print("-------------------------------------------")
     ScalingFactor_out = MAC/1
     ScalingFactor_in =ScalingFactor_out*0.995
+
     Airfoil_Points = load_airfoil_dat("Structural Sizing\AirfoilData\Airfoil.dat")
+
+    ##Bram: I used the lines below because loading the airfoil data didnt work for me without the os package:
+    #airfoil_file = os.path.join(os.path.dirname(__file__), "AirfoilData", "Airfoil.dat")
+    #Airfoil_Points = load_airfoil_dat(airfoil_file)
    
     _, _, _, Skin_Area_out = Airfoil_Moment_of_Inertia(Airfoil_Points, ScalingFactor_out)
     _, _, _, Skin_Area_in = Airfoil_Moment_of_Inertia(Airfoil_Points, ScalingFactor_in)
