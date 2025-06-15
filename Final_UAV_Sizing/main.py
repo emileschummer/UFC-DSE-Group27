@@ -65,7 +65,7 @@ def main_iteration(number_relay_stations, M_list):
         "CLs_corrected": CLs_corrected,
         "lift_distribution": lift_distribution,
         "alphas" : alpha_range3D"""
-        aero_values_dic = run_full_aero(num_spanwise_sections=int(num_spanwise_sections),airfoil_dat_path = airfoil_dat_path, name = name, xfoil_path=xfoil_path,operational_velocity=operational_velocity,vlm_chordwise_resolution = vlm_chordwise_resolution,delta_alpha_3D_correction = delta_alpha_3D_correction,alpha_range2D = alpha_range2D,alpha_range3D = alpha_range3D,operational_altitude = operational_altitude,Re_numbers = Re_numbers,Plot = Plot,csv_path = csv_path)
+        aero_values_dic = run_full_aero(num_spanwise_sections=num_spanwise_sections,airfoil_dat_path = airfoil_dat_path, name = name, xfoil_path=xfoil_path,operational_velocity=operational_velocity,vlm_chordwise_resolution = vlm_chordwise_resolution,delta_alpha_3D_correction = delta_alpha_3D_correction,alpha_range2D = alpha_range2D,alpha_range3D = alpha_range3D,operational_altitude = operational_altitude,Re_numbers = Re_numbers,Plot = Plot,csv_path = csv_path, r_chord = r_chord,t_chord = t_chord,r_twist = r_twist,t_twist = t_twist,sweep = sweep)
         aero_df = pd.read_csv(input.aero_csv)
     #1.3 Load Distribution
         ##Prepare input values
@@ -97,7 +97,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         V_vert_prop = input.V_stall*input.V_stall_safety_margin
         W = M_init*input.g
         CLmax = aero_df["CL_corrected"].max()
-        S_wing = 2#S_mw
+        S_wing = S_mw
         aero_df = aero_df
         numberengines_vertical = input.numberengines_vertical
         numberengines_horizontal = input.numberengines_horizontal
@@ -110,11 +110,19 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         L_n = input.L_n
         L_c = input.L_c
         L_fus = L_n+L_c
-        d = input.d
         L_blade = input.L_blade
         L_stab = input.L_stab
+        d_fus = input.d_fus
+        w_fus = S_mw / input.L_fus
+        w_blade = input.w_blade
+        w_stab = input.w_stab
+        L_poles = input.L_poles
+        w_poles = input.w_poles
+        L_motor =  input.L_motor
+        L_gimbal =  input.L_gimbal
+        L_speaker = input.L_speaker
         ##Run
-        max_battery_energy = Battery_Model(input_folder,output_folder,aero_df,data_folder,V_vert_prop,W,CLmax,S_wing,numberengines_vertical,numberengines_horizontal,propeller_wake_efficiency,number_relay_stations,UAV_off_for_recharge_time_min,battery_recharge_time_min,PL_power,show,L_fus,L_n,L_c,d,L_blade,L_stab)
+        max_battery_energy = Battery_Model(input_folder,output_folder,aero_df,data_folder,V_vert_prop,W,CLmax,S_wing,numberengines_vertical,numberengines_horizontal,propeller_wake_efficiency,number_relay_stations,UAV_off_for_recharge_time_min,battery_recharge_time_min,PL_power,show,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
     #3.2 Battery Sizing
         ##Prepare Inputs
         max_battery_energy = max_battery_energy
@@ -140,17 +148,17 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         Clalpha = coeffs[0]
         ##Prepare Inputs
         W = M_init*input.g
-        piAe = np.pi * input.b**2 / 2 * input.e#S_mw * input.e
+        piAe = np.pi * input.b**2 / S_mw * input.e
         Clalpha=Clalpha
         Clhalpha = input.Clhalpha
         Cl0 = aero_df.loc[(aero_df["alpha (deg)"] - 0).abs().idxmin(), "CL_corrected"]
-        S = 2#S_mw
+        S = S_mw
         """Cmac is posing problems. a value of -0.5 is expected by Tijn, but roughly 0 is obtained"""
-        Cmac = -0.5#aero_df.loc[(aero_df["CL_corrected"] - 0).abs().idxmin(), "Cm_vlm"]
+        Cmac = aero_df.loc[(aero_df["CL_corrected"] - 0).abs().idxmin(), "Cm_vlm"]
         lh = input.lh
         l = input.l
         Iy = input.Iy
-        c = 2/input.b#S_mw/input.b
+        c = S_mw/input.b
         plot = input.show_plots
         """adjust tail_span to necessary value from structure or propellers idk"""
         tail_span = 1#from propellers

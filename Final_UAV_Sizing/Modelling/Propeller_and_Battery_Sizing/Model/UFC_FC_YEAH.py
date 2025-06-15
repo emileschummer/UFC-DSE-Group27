@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from Final_UAV_Sizing.Input.fixed_input_values import g
 import Final_UAV_Sizing.Input.RaceData.Strava_input_csv as sva
 
+g=9.81
+
 def flat_plate_drag_coefficient(V, rho, h, S_wing, L, w):
     if V <= 0:
         Cf_i = 0
