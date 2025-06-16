@@ -251,7 +251,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
 
     #5.2 Run Structure_Main
 
-        Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Fuselage_Mass,Structure_mass,Total_Mass =  Structure_Main(
+        Struc_mass_list, Thickness_list, Materials_list =  Structure_Main(
                 Materials_Input=[Aluminum7075T6(), # VTOL Pole Material
                                 Aluminum2024T4(), # Wing Box Material
                                 Aluminum2024T4(), # Legs Material
@@ -272,7 +272,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
                            InputWeight/input.g],         #UAV Total mass [kg]
 
                Wing_Input=[input.b,         # Wing Box Length [m], TODO
-                           0.65,        #MAC, TODO
+                           (cr+ct)/2,        #MAC
                            18,          #Max Wing Torque [Nm],
                            lift_distrib,  #Lift Distribution [N/m], # TODO
                            drag_distrib],  #Drag Distribution [N/m] # TODO
@@ -292,7 +292,8 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
 
                SF=1.5,BigG=1.1) # Safety Factor, G load factor	
 
-        M_struc = Structure_mass # Total Structure Mass
+        M_struc, Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Skin_mass, Fuselage_Mass = Struc_mass_list
+        Thickness_Vtol_Pole_Front, Thickness_Vtol_Pole_Back, Thickness_WingBox, Thickness_Fuselage, Thickness_Legs = Thickness_list
 #6. Final Mass Calculation
         M_final = input.M_PL + M_prop + M_battery + M_struc
         M_list.append(M_final)
@@ -305,28 +306,34 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
 
         results_dict = {
             # Wing values
-            "Wing Surface": S_mw,
-            "Root chord": cr,
-            "Tip chord": ct,
-            "MAC": (cr + ct) / 2,
+            "Wing Surface[m2]": S_mw,
+            "Root chord[m]": cr,
+            "Tip chord[m]": ct,
+            "MAC[m]": (cr + ct) / 2,
             "Sweep": sweep,
             # Propeller
-            "Propeller Mass": M_prop,
+            "Propeller Mass[kg]": M_prop,
             # Battery values
-            "Battery Mass": M_battery,
+            "Battery Mass[kg]": M_battery,
             "Battery Volume": battery_volume,
             # Tail values
-            "Horizontal Tail Area": Sh,
-            "Horizontal Tail Chord": tail_chord_loop,
-            "Horizontal Tail Span": tail_span_loop,
+            "Horizontal Tail Area[m2]": Sh,
+            "Horizontal Tail Chord[m]": tail_chord_loop,
+            "Horizontal Tail Span[m]": tail_span_loop,
             "Horizontal Tail Lift Coefficient": Clh0,
-            "Horizontal Tail Force": max_tail_force,
-            # Structure values
-            "Leg Mass": Leg_Mass,
-            "VTOL Pole Mass": Vtol_Pole_Mass,
-            "Wing Box Mass": WingBox_Mass,
-            "Fuselage Mass": Fuselage_Mass,
-            "Total Structure Mass": M_struc,
+            "Horizontal Tail Force[N]": max_tail_force,
+            # Structure masses
+            "Leg Mass[kg]": Leg_Mass,
+            "VTOL Pole Mass[kg]": Vtol_Pole_Mass,
+            "Wing Box Mass[kg]": WingBox_Mass,
+            "Fuselage Mass[kg]": Fuselage_Mass,
+            "Total Structure Mass[kg]": M_struc,
+            #Structure thicknesses
+            "Thickness VTOL Pole Front[m]": Thickness_Vtol_Pole_Front,
+            "Thickness VTOL Pole Back[m]": Thickness_Vtol_Pole_Back,
+            "Thickness Wing Box[m]": Thickness_WingBox,
+            "Thickness Fuselage[m]": Thickness_Fuselage,
+            "Thickness Legs[m]": Thickness_Legs,
             # Final mass
             "Final Mass": M_final
         }

@@ -408,8 +408,11 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     print("THE FINAL MASS:", Total_Mass)
     print("-------------------------------------------")
 
-    return Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Fuselage_Mass,Structure_mass,Total_Mass
+    Struc_mass_list = [Structure_mass,Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Skin_mass, Fuselage_Mass]
+    Thickness_list = [R_out_VTOL_front-R_in_VTOL_front, R_out_VTOL_back-R_in_VTOL_back, R_out_WingBox-R_in_WingBox, R_out_fuselage-R_in_fuselage, R_leg]
+    Materials_list = [Material_VTOL, Material_WingBox, Material_Leg, Material_Fuselage, Material_Airfoil]
 
+    return Struc_mass_list, Thickness_list, Materials_list
 # Elliptical lift distribution: cl(x) = cl_max * sqrt(1 - (x/b)^2)
 # where x runs from -b/2 to b/2 (spanwise), or from 0 to b if only half-span
 
@@ -483,7 +486,7 @@ Drag_Thing = drag_distrib
 
 # Example usage: elliptical_cl(y) for y in [0, span/2]
 #RUN IT
-Structure_Main(Materials_Input=[AL(),AL(),AL(),AL(),AL()],#BRAM MOLEST HERE 
+Struc_mass_list, Thickness_list, Materials_list = Structure_Main(Materials_Input=[AL(),AL(),AL(),AL(),AL()],#BRAM MOLEST HERE 
                VTOL_Input=[0.01,0.736,70.6,2.28],
                Tail_Input=[0.15,3,20,30],
                Legs_Input=[0.25,25],
@@ -491,7 +494,8 @@ Structure_Main(Materials_Input=[AL(),AL(),AL(),AL(),AL()],#BRAM MOLEST HERE
                Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,150,10,2,5,0.8,10],
                SF=1.5,BigG=1.1)
 
-print(Lift_Thing)
-print(Drag_Thing)
+M_struc, Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Skin_mass, Fuselage_Mass = Struc_mass_list  # Total Structure Mass
+Thickness_Vtol_Pole_Front, Thickness_Vtol_Pole_Back, Thickness_WingBox, Thickness_Fuselage, Thickness_Legs = Thickness_list
 
 
+print("Total Structure Mass:", M_struc)

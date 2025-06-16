@@ -407,8 +407,11 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     #print("THE FINAL MASS:", Total_Mass)
     #print("-------------------------------------------")
 
+    Struc_mass_list = [Structure_mass,Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Skin_mass, Fuselage_Mass]
+    Thickness_list = [R_out_VTOL_front-R_in_VTOL_front, R_out_VTOL_back-R_in_VTOL_back, R_out_WingBox-R_in_WingBox, R_out_fuselage-R_in_fuselage, R_leg]
+    Materials_list = [Material_VTOL, Material_WingBox, Material_Leg, Material_Fuselage, Material_Airfoil]
 
-    return Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Fuselage_Mass,Structure_mass,Total_Mass
+    return Struc_mass_list, Thickness_list, Materials_list
 
 # Lift_Thing = lift_distribution_test
 # Drag_Thing = Drag_distribution_test
