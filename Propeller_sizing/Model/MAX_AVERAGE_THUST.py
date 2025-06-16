@@ -82,7 +82,11 @@ for race_name, race_data in races.items():
     print(f"Maximum absolute horizontal thrust: {max(abs(np.array(Thorizontal_list))):.2f} N")
     print(f"Average vertical thrust (excluding zeros): {sum(Tvertical_list)/len(Tvertical_list):.2f} N")
     print(f"Average horizontal thrust (excluding negative): {sum(Thorizontal_list)/len(Thorizontal_list):.2f} N")
-
+    # Calculate the 75th percentile (highest quartile) for thrust values
+    vertical_q75 = np.percentile(np.abs(Tvertical_list), 75)
+    horizontal_q75 = np.percentile(np.abs(Thorizontal_list), 75)
+    print(f"75th percentile vertical thrust: {vertical_q75:.2f} N")
+    print(f"75th percentile horizontal thrust: {horizontal_q75:.2f} N")
     print(f"Average CD: {sum(CD_list)/len(CD_list):.6f}")
     
     # Create subplots

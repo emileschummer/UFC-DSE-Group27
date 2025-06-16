@@ -27,7 +27,7 @@ altitude =  0 # [m] operational altitude for wing sizing
 taper_ratio = 0.4 # [-] taper ratio for wing sizing
 """Stop here"""
 b = 3.15 # [m] wing span
-num_spanwise_sections = int(200) # [-] number of spanwise sections for VLM analysis
+num_spanwise_sections = 150 # [-] number of spanwise sections for VLM analysis
 vlm_chordwise_resolution = 8 # [-] chordwise resolution for VLM analysis
 delta_alpha_3D_correction = 1.0 # [deg] correction for 3D stall angle
 alpha_range2D= np.linspace(-10, 25, 36) # [deg] angle of attack range for 2D stall database
@@ -41,8 +41,8 @@ Re_numbers = 8 # [-] number of Reynolds numbers for stall database
 numberengines_vertical = 4
 numberengines_horizontal = 1
 propeller_wake_efficiency = 0.7
-S_wing = 2
-CLmax = 2
+#S_wing = 2
+#CLmax = 2
 V_vert_prop = V_stall * V_stall_safety_margin
 L_blade = 0.7366
 w_blade = 0.075
@@ -56,7 +56,7 @@ L_speaker = 0.1
 L_n = 0.2
 L_c = 0.6
 L_fus = 2*L_n + L_c
-w_fus = S_wing / L_fus
+#w_fus = S_wing / L_fus
 d_fus = 0.25
 
 ##3. Battery Sizing

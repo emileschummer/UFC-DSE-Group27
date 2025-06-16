@@ -18,7 +18,7 @@ def load_distribution_halfspan(wing_geom, lift_distribution, alpha, half_span=1.
     y_midpoints = np.array([(y1 + y2) / 2 for y1, y2 in zip(y_values[:-1], y_values[1:])])
     
     distribution = np.array([y_midpoints / half_span, lift_distribution["CLs"][index]])
-    print(y_midpoints/ half_span)
+    # print(y_midpoints/ half_span)
 
     if plot == True: 
         plt.figure()
