@@ -13,14 +13,14 @@ from Modelling.Wing_Sizing.AerodynamicForces import load_distribution_halfspan
 def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat",
     name = "S1223",
     xfoil_path: str = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe",
-    operational_velocity: float = 10.0,
+    operational_velocity: float = 9.16,
     num_spanwise_sections: int = 200,
-    vlm_chordwise_resolution = 6,
+    vlm_chordwise_resolution = 10,
     delta_alpha_3D_correction: float = 1.0,
     alpha_range2D: np.ndarray = np.linspace(-10, 25, 36),
     alpha_range3D: np.ndarray = np.linspace(-10, 30, 41),
-    r_chord: float = 0.35,
-    t_chord: float = 0.35,
+    r_chord: float = 0.91,
+    t_chord: float = 0.36,
     r_twist: float = 0.0,
     t_twist: float = 0.0,
     sweep: float = 0.0,
@@ -55,9 +55,12 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     print(f"4) Interpolation:     {t4 - t3:.2f} s")
 
     # 5. VLM sweep + stall correction
-    CLs_vlm_original, CDs_vlm_original, CLs_corrected, lift_distribution, Cm = run_vlm_sweep_with_stall_correction(alpha_range3D, airplane_geom, operational_velocity, section_data_prepared, num_spanwise_sections, wing_geom, operational_altitude, vlm_chordwise_resolution)
+    CLs_vlm_original, CDs_vlm_original, CLs_corrected, lift_distribution, CM_vlm = run_vlm_sweep_with_stall_correction(alpha_range3D, airplane_geom, operational_velocity, section_data_prepared, num_spanwise_sections, wing_geom, operational_altitude, vlm_chordwise_resolution)
     t5 = time.perf_counter()
     print(f"5) VLM sweep:         {t5 - t4:.2f} s")
+
+    max_idx = max(range(len(CLs_corrected)), key=lambda i: CLs_corrected[i])
+    alpha_at_max_cl = alpha_range3D[max_idx]
 
     # 6. Plot
     output_folder = os.path.join(output_folder, "Wing_Sizing")
@@ -68,6 +71,9 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     print(f"6) Plotting:          {t6 - t5:.2f} s")
     print(f"Total runtime:        {t6 - t0:.2f} s")
 
+    #returns distribution at angle of attack where CL is max
+    distribution = load_distribution_halfspan(wing_geom, lift_distribution, alpha_at_max_cl, plot = True)
+
     # distribution = load_distribution_halfspan(wing_geom, lift_distribution, 10, half_span=1.5, plot = True)
     # Always save output to Final_UAV_Sizing/Output regardless of csv_path argument
     # Always save output to Final_UAV_Sizing/Output, using the filename from csv_path
@@ -75,7 +81,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
         "alpha (deg)": alpha_range3D,
         "CL_corrected": CLs_corrected,
         "CD_vlm": CDs_vlm_original,
-        "Cm_vlm": Cm
+        "Cm_vlm": CM_vlm
     })
     try:
         df.to_csv(csv_path, index=False)
@@ -89,7 +95,9 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
         "CDs_vlm_original": CDs_vlm_original,
         "CLs_corrected": CLs_corrected,
         "lift_distribution": lift_distribution,
-        "alphas" : alpha_range3D
+        "alphas" : alpha_range3D,
+        "CM_vlm" : CM_vlm,
+        "max_distribution" : distribution,
         # "timings": {
         #     "wing_setup": t1 - t0,
         #     "section_calc": t2 - t1,
