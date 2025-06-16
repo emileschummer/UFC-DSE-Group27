@@ -74,9 +74,10 @@ def main_iteration(outputs,number_relay_stations, M_list,start_time):
         "CLs_corrected": CLs_corrected,
         "lift_distribution": lift_distribution,
         "alphas" : alpha_range3D"""
-        aero_values_dic = run_full_aero(num_spanwise_sections=num_spanwise_sections,airfoil_dat_path = airfoil_dat_path, name = name, xfoil_path=xfoil_path,operational_velocity=operational_velocity,vlm_chordwise_resolution = vlm_chordwise_resolution,delta_alpha_3D_correction = delta_alpha_3D_correction,alpha_range2D = alpha_range2D,alpha_range3D = alpha_range3D,operational_altitude = operational_altitude,Re_numbers = Re_numbers,Plot = Plot,csv_path = csv_path, r_chord = r_chord,t_chord = t_chord,r_twist = r_twist,t_twist = t_twist,sweep = sweep)
+        aero_values_dic = run_full_aero(num_spanwise_sections=num_spanwise_sections,airfoil_dat_path = airfoil_dat_path, name = name, xfoil_path=xfoil_path,operational_velocity=operational_velocity,vlm_chordwise_resolution = vlm_chordwise_resolution,delta_alpha_3D_correction = delta_alpha_3D_correction,alpha_range2D = alpha_range2D,alpha_range3D = alpha_range3D,operational_altitude = operational_altitude,Re_numbers = Re_numbers,Plot = Plot,csv_path = csv_path, r_chord = r_chord,t_chord = t_chord,r_twist = r_twist,t_twist = t_twist,sweep = sweep,output_folder=output_folder)
         max_distrib = np.array(aero_values_dic["max_distribution"])
         aero_df = pd.read_csv(input.aero_csv)
+        """
     #1.3 Load Distribution
         ##Prepare input values
         wing_geom = aero_values_dic["wing_geom"]
@@ -87,6 +88,7 @@ def main_iteration(outputs,number_relay_stations, M_list,start_time):
         output_folder = outputs
         ##Run
         lift_distribution = load_distribution_halfspan(wing_geom,lift_distribution,alpha,half_span,plot,output_folder)
+"""
 #2. Propeller Sizing 
         print("--------------------------------------------------")
         print("Propeller Sizing")  
@@ -374,7 +376,13 @@ def main():
         # Create output folder for this relay station
         outputs = os.path.join(input.output_folder, f"RS_{number_relay_stations}")
         os.makedirs(outputs, exist_ok=True)
-        M_list = main_iteration(outputs,number_relay_stations, M_list, start_time)
+        M_list,result_dict,aero_values_dict = main_iteration(outputs,number_relay_stations, M_list, start_time)
+        # Save result_dict and aero_values_dict to a txt file in outputs
+        with open(os.path.join(outputs, "final_iteration_results.txt"), "w") as f:
+            f.write("result_dict:\n")
+            f.write(str(result_dict))
+            f.write("\n\naero_values_dict:\n")
+            f.write(str(aero_values_dict))
         gc.collect()
         M_dict[number_relay_stations] = M_list
     print(M_dict)

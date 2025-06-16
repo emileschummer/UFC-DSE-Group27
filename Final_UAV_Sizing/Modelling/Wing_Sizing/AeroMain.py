@@ -64,6 +64,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
 
     # 6. Plot
     output_folder = os.path.join(output_folder, "Wing_Sizing")
+    print(f"Output folder: {output_folder}")
     os.makedirs(output_folder, exist_ok=True)
 
     plot_aerodynamic_coefficients(alpha_range3D, CLs_vlm_original, CLs_corrected, CDs_vlm_original, Plot,output_folder)
@@ -72,7 +73,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     print(f"Total runtime:        {t6 - t0:.2f} s")
 
     #returns distribution at angle of attack where CL is max
-    distribution = load_distribution_halfspan(wing_geom, lift_distribution, alpha_at_max_cl, plot = True)
+    distribution = load_distribution_halfspan(wing_geom, lift_distribution, alpha_at_max_cl, Plot)
 
     # distribution = load_distribution_halfspan(wing_geom, lift_distribution, 10, half_span=1.5, plot = True)
     # Always save output to Final_UAV_Sizing/Output regardless of csv_path argument
@@ -85,7 +86,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     })
     try:
         df.to_csv(csv_path, index=False, encoding="utf-8")
-        df.to_csv(os.path.join(output_folder, "aero.csv"), index=False, encoding="utf-8")
+        df.to_csv(os.path.join(output_folder, "aero_specific.csv"), index=False, encoding="utf-8")
         print(f"Saved α–CL–CD sweep to '{csv_path}' and '{os.path.join(output_folder, 'aero.csv')}'")
     except Exception as e:
         print(f"Failed to save CSV: {e}")
