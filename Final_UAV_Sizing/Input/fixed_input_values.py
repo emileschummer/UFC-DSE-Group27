@@ -15,17 +15,15 @@ V_stall_safety_margin = 1.1 # [-] safety margin for stall speed
 ##0. Iteration parameters
 show_plots = False
 M_init = 18.63 # [kg] initial mass of UAV for iteration
-min_delta_mass = 0.1 # [kg], mass convergence
+min_delta_mass = 0.2 # [kg], mass convergence
 max_delta_mass = 10 # [kg], mass explodes
-min_RS = 3 # [-] minimum number of relay stations
-max_RS = 6 # [-] maximum number of relay stations
+min_RS = 2 # [-] minimum number of relay stations
+max_RS = 5 # [-] maximum number of relay stations
 
 ##1. Wing Sizing Parameters
 xfoil = r"Final_UAV_Sizing\XFOIL6.99\xfoil.exe"#"Final_UAV_Sizing/Xfoil" # [str] path to xfoil executable
-"""Find adequate values for below"""
-altitude =  0 # [m] operational altitude for wing sizing
+altitude =  1000 # [m] operational altitude for wing sizing
 taper_ratio = 0.4 # [-] taper ratio for wing sizing
-"""Stop here"""
 b = 3.15 # [m] wing span
 num_spanwise_sections = 150 # [-] number of spanwise sections for VLM analysis
 vlm_chordwise_resolution = 8 # [-] chordwise resolution for VLM analysis
