@@ -31,8 +31,11 @@ d = 0.25
 aero_df = pd.read_csv('Propeller_sizing/Model/aero.csv')
 
 races = sva.make_race_dictionnary()
+df_vertical = pd.read_csv('Propeller_sizing/Input/Prop_Engine_Data/UAV_Propellers_and_Motor_Specs_Vertical.csv')
+df_vertical['Thrust_N']= df_vertical[' Thrust_g '] * g /1000
+df_horizontal = pd.read_csv('Propeller_sizing/Input/Prop_Engine_Data/UAV_Propellers_and_Motor_Specs_Horizontal.csv')
+df_horizontal['Thrust_N']= df_horizontal[' Thrust_g '] * g /1000
 
-'''
 for race_name, race_data in races.items():
     
     Tvertical_list= []
@@ -75,7 +78,6 @@ for race_name, race_data in races.items():
         Tvertical_list.append(Tvertical)
         Thorizontal_list.append(Thorizontal)
         CD_list.append(CD)
-    
     # Statistics calculations
     print(f"\nRace: {race_name}")
     print(f"Maximum absolute vertical thrust: {max(abs(np.array(Tvertical_list))):.2f} N")
@@ -89,6 +91,7 @@ for race_name, race_data in races.items():
     print(f"75th percentile horizontal thrust: {horizontal_q75:.2f} N")
     print(f"Average CD: {sum(CD_list)/len(CD_list):.6f}")
     
+    '''
     # Create subplots
     fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(12, 16), sharex=True)
     
@@ -122,6 +125,7 @@ for race_name, race_data in races.items():
     
     plt.tight_layout()
     #plt.show()
+    '''
 '''
 def CD_alpha(velocity_smooth, rho, altitude):
         Cf_blade= flat_plate_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_blade, w_blade)
@@ -161,3 +165,5 @@ for velocity in velocities:
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper right')
     plt.tight_layout()
     plt.show()
+
+'''
