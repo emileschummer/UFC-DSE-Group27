@@ -259,7 +259,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         M_final = input.M_PL + M_prop +M_battery + M_struc
         M_list.append(M_final)
         print(f"Final Mass for {number_relay_stations} Relay Stations: {M_final} kg (iteration {i})")
-        runtime = time.time - start_time
+        runtime = time.time() - start_time
         hours, rem = divmod(runtime, 3600)
         minutes, seconds = divmod(rem, 60)
         print(f"Current Runtime of main: {int(hours):02d}:{int(minutes):02d}:{int(seconds):02d} (h:m:s)")
