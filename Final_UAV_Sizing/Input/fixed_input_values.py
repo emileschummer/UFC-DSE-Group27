@@ -3,7 +3,7 @@ from datetime import datetime
 #Fixed input values for UAV sizing
 ##A. Folder paths
 timestamp = datetime.now().strftime("%m-%d_%H-%M")
-output_folder = f"Final_UAV_Sizing/Output/Run_on_{timestamp}" # [str] folder to save output data
+output_folder = f"Final_UAV_Sizing/Output/Final_Run_on_{timestamp}" # [str] folder to save output data
 OG_aero_csv = "Final_UAV_Sizing/Input/WingData/OG_aero.csv" # [str] name of the original CSV file to save aerodynamic data
 aero_csv = "Final_UAV_Sizing/Input/WingData/aero.csv" # [str] name of the CSV file to save aerodynamic data
 ##B. Constants
