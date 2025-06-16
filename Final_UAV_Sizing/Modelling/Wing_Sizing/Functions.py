@@ -34,3 +34,6 @@ def wing_geometry_calculator(InputWeight, aero_df, velocity_op, altitude, taper_
 
     return S, cr, ct
 
+def no_quarterchord_sweep(cr,ct):
+    return cr*0.25-ct*0.25
+

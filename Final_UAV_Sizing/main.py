@@ -10,6 +10,7 @@ from scipy.optimize import curve_fit
 from Input import fixed_input_values as input
 from Modelling.Wing_Sizing.Functions import wing_geometry_calculator
 from Modelling.Wing_Sizing.AeroMain import run_full_aero
+from Modelling.Wing_Sizing.Functions import no_quarterchord_sweep
 from Modelling.Wing_Sizing.AerodynamicForces import load_distribution_halfspan
 from Modelling.Propeller_and_Battery_Sizing.Model.Battery_modelling import Battery_Model, Battery_Size
 from Modelling.Tail_Sizing.Tail_sizing_final import get_tail_size
@@ -57,7 +58,7 @@ def main_iteration(outputs,number_relay_stations, M_list,start_time):
         t_chord = ct
         r_twist = input.r_twist
         t_twist = input.t_twist
-        sweep = input.sweep
+        sweep = no_quarterchord_sweep(cr,ct) # [deg] quarter-chord sweep angle
         operational_altitude = input.altitude
         Re_numbers = input.Re_numbers
         Plot = input.show_plots
@@ -71,7 +72,8 @@ def main_iteration(outputs,number_relay_stations, M_list,start_time):
         "CLs_corrected": CLs_corrected,
         "lift_distribution": lift_distribution,
         "alphas" : alpha_range3D"""
-        aero_values_dic = run_full_aero(num_spanwise_sections=num_spanwise_sections,airfoil_dat_path = airfoil_dat_path, name = name, xfoil_path=xfoil_path,operational_velocity=operational_velocity,vlm_chordwise_resolution = vlm_chordwise_resolution,delta_alpha_3D_correction = delta_alpha_3D_correction,alpha_range2D = alpha_range2D,alpha_range3D = alpha_range3D,operational_altitude = operational_altitude,Re_numbers = Re_numbers,Plot = Plot,csv_path = csv_path, r_chord = r_chord,t_chord = t_chord,r_twist = r_twist,t_twist = t_twist,sweep = sweep,output_folder = output_folder)
+        aero_values_dic = run_full_aero(num_spanwise_sections=num_spanwise_sections,airfoil_dat_path = airfoil_dat_path, name = name, xfoil_path=xfoil_path,operational_velocity=operational_velocity,vlm_chordwise_resolution = vlm_chordwise_resolution,delta_alpha_3D_correction = delta_alpha_3D_correction,alpha_range2D = alpha_range2D,alpha_range3D = alpha_range3D,operational_altitude = operational_altitude,Re_numbers = Re_numbers,Plot = Plot,csv_path = csv_path, r_chord = r_chord,t_chord = t_chord,r_twist = r_twist,t_twist = t_twist,sweep = sweep)
+        max_distrib = np.array(aero_values_dic["max_distribution"])
         aero_df = pd.read_csv(input.aero_csv)
     #1.3 Load Distribution
         ##Prepare input values
@@ -117,7 +119,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         show_all = False #Set to True to show all race plots
         L_n = input.L_n
         L_c = input.L_c
-        L_fus = L_n+L_c
+        L_fus = input.L_fus
         L_blade = input.L_blade
         L_stab = input.L_stab
         d_fus = input.d_fus
@@ -179,37 +181,37 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         print("\n--------------------------------------------------")
         print("Structure Sizing")
 
-    #5.1 Prepare load distributions TODO
+    # #5.1 Prepare load distributions TODO
 
-        cl_values_at_15 = np.array([0.06434802, 0.13850818, 0.21262615, 0.28667936, 0.36064524, 0.43450126,
-        0.50822493, 0.58179379, 0.65518543, 0.7283775,  0.80134769, 0.87407379,
-        0.94653363, 1.01870515, 1.09056636, 1.16209538, 1.23327041, 1.30406977,
-        1.37447191, 1.44445536, 1.51399882, 1.5830811,  1.65168116, 1.7197781,
-        1.78735118, 1.85437982, 1.92084359, 1.98672226, 1.99888533, 1.92394663,
-        1.84900793, 1.77406923, 1.69913053, 1.62419183, 1.54925313, 1.47431442,
-        1.39937572, 1.32443702, 1.24949832, 1.17455962, 1.09962092])
+    #     cl_values_at_15 = np.array([0.06434802, 0.13850818, 0.21262615, 0.28667936, 0.36064524, 0.43450126,
+    #     0.50822493, 0.58179379, 0.65518543, 0.7283775,  0.80134769, 0.87407379,
+    #     0.94653363, 1.01870515, 1.09056636, 1.16209538, 1.23327041, 1.30406977,
+    #     1.37447191, 1.44445536, 1.51399882, 1.5830811,  1.65168116, 1.7197781,
+    #     1.78735118, 1.85437982, 1.92084359, 1.98672226, 1.99888533, 1.92394663,
+    #     1.84900793, 1.77406923, 1.69913053, 1.62419183, 1.54925313, 1.47431442,
+    #     1.39937572, 1.32443702, 1.24949832, 1.17455962, 1.09962092])
 
-        # Assume these are at equally spaced spanwise stations from 0 to b/2
-        n = len(cl_values_at_15)
-        span = 3  # Example: total span = 3 m (adjust as needed)
-        y = np.linspace(0, span/2, n)  # y = 0 at root, y = b/2 at tip
+    #     # Assume these are at equally spaced spanwise stations from 0 to b/2
+    #     n = len(cl_values_at_15)
+    #     span = 3  # Example: total span = 3 m (adjust as needed)
+    #     y = np.linspace(0, span/2, n)  # y = 0 at root, y = b/2 at tip
 
-        # Fit cl_max to best match the data
+    #     # Fit cl_max to best match the data
 
-        def elliptical(y, cl_max):
-            return cl_max * np.sqrt(1 - (y/(span/2))**2)
+    #     def elliptical(y, cl_max):
+    #         return cl_max * np.sqrt(1 - (y/(span/2))**2)
 
-        cl_max_fit, _ = curve_fit(elliptical, y, cl_values_at_15, p0=[2.0])
+    #     cl_max_fit, _ = curve_fit(elliptical, y, cl_values_at_15, p0=[2.0])
 
-        # Now you can use this function as the elliptical approximation:
-        def elliptical_cl(y):
-            return cl_max_fit[0] * 1.225 * (100/3)**2 * np.sqrt(1 - (y/(span/2))**2)
+    #     # Now you can use this function as the elliptical approximation:
+    #     def elliptical_cl(y):
+    #         return cl_max_fit[0] * 1.225 * (100/3)**2 * np.sqrt(1 - (y/(span/2))**2)
 
-        def elliptical_cd(y):
-            return 0.125 * elliptical_cl(y)
+    #     def elliptical_cd(y):
+    #         return 0.125 * elliptical_cl(y)
 
-        lift_distrib = elliptical_cl
-        drag_distrib = elliptical_cd
+    #     lift_distrib = elliptical_cl
+    #     drag_distrib = elliptical_cd
 
     #5.2 Run Structure_Main
 
@@ -220,8 +222,8 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
                                 NaturalFibre(),   # Fuselage Material
                                 NaturalFibre()],  # Airfoil Material
 
-               VTOL_Input=[0.01,        # VTOL Pole Inner Radius [m],
-                           0.736,       # VTOL Prop Diameter [m],
+               VTOL_Input=[w_poles/2,        # VTOL Pole Inner Radius [m],
+                           L_blade,       # VTOL Prop Diameter [m],
                            InputWeight/4,        # VTOL Force [N],
                            2.6],       # VTOL Torque [Nm/m]
 
@@ -233,13 +235,13 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
                Legs_Input=[0.30,        # Leg Length [m],
                            InputWeight/input.g],         #UAV Total mass [kg]
 
-               Wing_Input=[3,         # Wing Box Length [m], TODO
+               Wing_Input=[input.b,         # Wing Box Length [m], TODO
                            0.65,        #MAC, TODO
                            18,          #Max Wing Torque [Nm],
-                           lift_distrib,  #Lift Distribution [N/m], # TODO
-                           drag_distrib],  #Drag Distribution [N/m] # TODO
+                           max_distrib,  #Lift Distribution [N/m], # TODO
+                           0.125*max_distrib],  #Drag Distribution [N/m] # TODO
 
-               Fuselage_Input=[0.125,   #Fuselage Inner Radius [m],
+               Fuselage_Input=[input.d_fus/2,   #Fuselage Inner Radius [m],
                                0.1,     #Fuselage Section 1 Length [m], TODO
                                0.3,     #Fuselage Section 2 Length [m], TODO
                                0.4,     #Fuselage Section 3 Length [m], TODO
