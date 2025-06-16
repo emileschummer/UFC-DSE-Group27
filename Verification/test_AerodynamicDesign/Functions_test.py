@@ -1,8 +1,17 @@
-import numpy as np
-import pytest
-from Functions import load_airfoil_dat, wing_geometry_calculator
+import sys
+import os
 
-@pytest.fixture
+# Add the parent directory of 'Acceleration_try' to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
+
+
+import numpy as np
+import pytest as pt
+from AerodynamicDesign.Functions import load_airfoil_dat, wing_geometry_calculator
+
+@pt.fixture
 def airfoil_dat_file(tmp_path):
     content = """\
 1.00000  0.00000
