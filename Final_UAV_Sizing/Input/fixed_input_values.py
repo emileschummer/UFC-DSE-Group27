@@ -27,7 +27,7 @@ altitude =  0 # [m] operational altitude for wing sizing
 taper_ratio = 0.4 # [-] taper ratio for wing sizing
 """Stop here"""
 b = 3.15 # [m] wing span
-num_spanwise_sections = int(200) # [-] number of spanwise sections for VLM analysis
+num_spanwise_sections = 150 # [-] number of spanwise sections for VLM analysis
 vlm_chordwise_resolution = 8 # [-] chordwise resolution for VLM analysis
 delta_alpha_3D_correction = 1.0 # [deg] correction for 3D stall angle
 alpha_range2D= np.linspace(-10, 25, 36) # [deg] angle of attack range for 2D stall database
