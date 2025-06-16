@@ -14,7 +14,7 @@ V_stall_safety_margin = 1.1 # [-] safety margin for stall speed
 
 ##0. Iteration parameters
 show_plots = False
-M_init = 15 # [kg] initial mass of UAV for iteration
+M_init = 18.63 # [kg] initial mass of UAV for iteration
 min_delta_mass = 0.1 # [kg], mass convergence
 max_delta_mass = 10 # [kg], mass explodes
 min_RS = 3 # [-] minimum number of relay stations
