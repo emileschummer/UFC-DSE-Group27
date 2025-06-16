@@ -107,14 +107,24 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span
     if plot:
         plt.show()
     plt.close()
-    Sh = min(Sh_results)
-    min_index = Sh_results.index(Sh)
-    Clh0 = Clh0_results[min_index]
-    alpha_result = alpha_results[min_index]
-    pitch_result = pitch_results[min_index]
-    span = tail_span
-    cord = Sh/span
-    max_tail_force = 0.5*rho*Sh*Clhmax*33**2
+    try:
+        Sh = min(Sh_results)
+        min_index = Sh_results.index(Sh)
+        Clh0 = Clh0_results[min_index]
+        alpha_result = alpha_results[min_index]
+        pitch_result = pitch_results[min_index]
+        span = tail_span
+        cord = Sh/span
+        max_tail_force = 0.5*rho*Sh*Clhmax*33**2
+    except (ValueError, ZeroDivisionError, Exception) as e:
+        # Handle cases where min() fails or Sh_results is empty or division by zero
+        Sh = 1
+        Clh0 = 0.4
+        alpha_result = 0
+        pitch_result = 0
+        span = tail_span if tail_span != 0 else 1
+        cord = 0
+        max_tail_force = 0.5*rho*Sh*Clhmax*33**2
     return Sh, Clh0, span, cord,lh,max_tail_force#alpha_result*180/np.pi,pitch_result*180/np.pi
 
 #print(get_tail_size(200,30,4.635,4,0.7,2,0.05,-0.5,1,0,14,0.36,True,0.7366,1.5))

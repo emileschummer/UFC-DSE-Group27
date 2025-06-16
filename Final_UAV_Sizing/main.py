@@ -17,13 +17,13 @@ from Modelling.Tail_Sizing.Tail_sizing_final import get_tail_size
 from Modelling.Structural_Sizing.Main import Structure_Main
 from Modelling.Structural_Sizing.Materials import Aluminum7075T6, Aluminum2024T4, NaturalFibre
 
-def main_iteration(outputs,number_relay_stations, M_list):
+def main_iteration(outputs,number_relay_stations, M_list,start_time):
     M_init = M_list[-1]  # Initial mass for the iteration
     i=0
     #0. Open General Files
     """Check OG_aero file is correct. It is never edited during iterations. only aero.csv is edited"""
     aero_df = pd.read_csv(input.OG_aero_csv)
-    while abs(M_list[-1] - M_list[-2]) > input.delta_mass:
+    while abs(M_list[-1] - M_list[-2]) > input.min_delta_mass and abs(M_list[-1] - M_list[-2]) < input.max_delta_mass :
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
         print(f"Iteration {i+1} for {number_relay_stations} Relay Stations with M_init ")
@@ -259,6 +259,10 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         M_final = input.M_PL + M_prop +M_battery + M_struc
         M_list.append(M_final)
         print(f"Final Mass for {number_relay_stations} Relay Stations: {M_final} kg (iteration {i})")
+        runtime = time.time - start_time
+        hours, rem = divmod(runtime, 3600)
+        minutes, seconds = divmod(rem, 60)
+        print(f"Current Runtime of main: {int(hours):02d}:{int(minutes):02d}:{int(seconds):02d} (h:m:s)")
     return M_list
 def plot_results(M_dict):
     fig, axs = plt.subplots(1, 4, figsize=(20, 5), sharey=True)
@@ -281,21 +285,22 @@ def main():
     M_dict = {}
     start_time = time.time()
     for number_relay_stations in range(input.min_RS,input.max_RS):
-        M_list = [0]
+        M_list = [input.M_init+2*input.min_delta_mass]
         M_list.append(input.M_init)
         # Create output folder for this relay station
         outputs = os.path.join(input.output_folder, f"RS_{number_relay_stations}")
         os.makedirs(outputs, exist_ok=True)
-        M_list = main_iteration(outputs,number_relay_stations, M_list)
+        M_list = main_iteration(outputs,number_relay_stations, M_list, start_time)
         M_dict[number_relay_stations] = M_list
-    for number_relay_stations in range(M_dict.keys()):
+    print(M_dict)
+    for number_relay_stations in M_dict.keys():
         print(f"Final mass for {number_relay_stations} Relay Stations: {M_dict[number_relay_stations][-1]} kg")
     plot_results(M_dict)
     end_time = time.time()
     runtime = end_time - start_time
     hours, rem = divmod(runtime, 3600)
     minutes, seconds = divmod(rem, 60)
-    print(f"Runtime of main: {int(hours):02d}:{int(minutes):02d}:{int(seconds):02d} (h:m:s)")
+    print(f"Total Runtime of main: {int(hours):02d}:{int(minutes):02d}:{int(seconds):02d} (h:m:s)")
 
 
 if __name__ == "__main__":
