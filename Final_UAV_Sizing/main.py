@@ -119,7 +119,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         show_all = False #Set to True to show all race plots
         L_n = input.L_n
         L_c = input.L_c
-        L_fus = L_n+L_c
+        L_fus = input.L_fus
         L_blade = input.L_blade
         L_stab = input.L_stab
         d_fus = input.d_fus
