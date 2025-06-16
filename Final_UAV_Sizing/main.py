@@ -294,7 +294,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
 
         M_struc = Structure_mass # Total Structure Mass
 #6. Final Mass Calculation
-        M_final = input.M_PL + M_prop +M_battery + M_struc
+        M_final = input.M_PL + M_prop + M_battery + M_struc
         M_list.append(M_final)
         print(f"Payload Mass: {input.M_PL} kg, Propeller Mass: {M_prop} kg, Battery Mass: {M_battery} kg, Structure Mass: {M_struc} kg")
         print(f"Final Mass for {number_relay_stations} Relay Stations: {M_final} kg (iteration {i})")
@@ -302,7 +302,36 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         hours, rem = divmod(runtime, 3600)
         minutes, seconds = divmod(rem, 60)
         print(f"Current Runtime of main: {int(hours):02d}:{int(minutes):02d}:{int(seconds):02d} (h:m:s)")
-    return M_list
+
+        results_dict = {
+            # Wing values
+            "Wing Surface": S_mw,
+            "Root chord": cr,
+            "Tip chord": ct,
+            "MAC": (cr + ct) / 2,
+            # Propeller
+            "Propeller Mass": M_prop,
+            # Battery values
+            "Battery Mass": M_battery,
+            "Battery Volume": battery_volume,
+            # Tail values
+            "Horizontal Tail Area": Sh,
+            "Horizontal Tail Chord": tail_chord_loop,
+            "Horizontal Tail Span": tail_span_loop,
+            "Horizontal Tail Lift Coefficient": Clh0,
+            "Horizontal Tail Force": max_tail_force,
+            # Structure values
+            "Leg Mass": Leg_Mass,
+            "VTOL Pole Mass": Vtol_Pole_Mass,
+            "Wing Box Mass": WingBox_Mass,
+            "Fuselage Mass": Fuselage_Mass,
+            "Total Structure Mass": M_struc,
+            # Final mass
+            "Final Mass": M_final
+        }
+
+    return M_list, results_dict, aero_values_dic
+
 def plot_results(M_dict):
     fig, axs = plt.subplots(1, 4, figsize=(20, 5), sharey=True)
     relay_station_counts = list(M_dict.keys())

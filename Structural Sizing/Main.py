@@ -399,7 +399,7 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     print("WingBox Mass", WingBox_Mass)
 
 
-    Structure_mass = Leg_Mass+Vtol_Pole_Mass+Fuselage_Mass+WingBox_Mass
+    Structure_mass = Leg_Mass+Vtol_Pole_Mass+Fuselage_Mass+WingBox_Mass+Skin_mass
     Total_Mass = Structure_mass+Fuselage_Sec1_mass+Fuselage_Sec2_mass + Skin_mass
     print("-------------------------------------------")
     print("THE STRUCTURE MASS:", Structure_mass)

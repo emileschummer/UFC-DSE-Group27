@@ -79,4 +79,4 @@ Iy = 14 # [kgm^2] Mass Moment of Inertia
 Clhmax = 1.5 # [-] Clmax of tail
 ##5. Structure Sizing
 ##6. Final Mass Calculation
-M_PL = 2.063 # [kg] mass of payload
+M_PL = 1.88 # [kg] mass of mission equipment
