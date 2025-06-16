@@ -383,6 +383,15 @@ def main():
             f.write(str(result_dict))
             f.write("\n\naero_values_dict:\n")
             f.write(str(aero_values_dict))
+            # Save a copy of all input values from fixed_input_values.py
+            f.write("\n\nfixed_input_values:\n")
+            try:
+                fixed_input_path = input.__file__
+                f.write("\n\n# Exact contents of fixed_input_values.py:\n")
+                with open(fixed_input_path, "r") as fin:
+                    f.write(fin.read())
+            except Exception as e:
+                f.write(f"\n\n# Could not copy fixed_input_values.py: {e}\n")
         gc.collect()
         M_dict[number_relay_stations] = M_list
     print(M_dict)
