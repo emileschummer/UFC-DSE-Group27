@@ -1,7 +1,9 @@
 import numpy as np
+from datetime import datetime
 #Fixed input values for UAV sizing
 ##A. Folder paths
-output_folder = "Final_UAV_Sizing/Output" # [str] folder to save output data
+timestamp = datetime.now().strftime("%m-%d_%H-%M")
+output_folder = f"Final_UAV_Sizing/Output/Run_on_{timestamp}" # [str] folder to save output data
 OG_aero_csv = "Final_UAV_Sizing/Input/WingData/OG_aero.csv" # [str] name of the original CSV file to save aerodynamic data
 aero_csv = "Final_UAV_Sizing/Input/WingData/aero.csv" # [str] name of the CSV file to save aerodynamic data
 ##B. Constants
@@ -13,7 +15,8 @@ V_stall_safety_margin = 1.1 # [-] safety margin for stall speed
 ##0. Iteration parameters
 show_plots = False
 M_init = 15 # [kg] initial mass of UAV for iteration
-delta_mass = 0.01 # [kg], mass convergence
+min_delta_mass = 0.1 # [kg], mass convergence
+max_delta_mass = 10 # [kg], mass explodes
 min_RS = 3 # [-] minimum number of relay stations
 max_RS = 6 # [-] maximum number of relay stations
 
@@ -58,7 +61,6 @@ d_fus = 0.25
 
 ##3. Battery Sizing
 engine_input_folder = "Final_UAV_Sizing/Input/Prop_Engine_Data" 
-output_folder = "Final_UAV_Sizing/Output/Battery" # [str] folder to save battery data
 UAV_off_for_recharge_time_min = 15 # [min] time UAV is not filming to recharge
 battery_recharge_time_min = 5 # [min] time to change/recharge battery
 PL_power = 155 # [W] power consumption of payload

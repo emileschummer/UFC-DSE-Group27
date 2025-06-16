@@ -4,6 +4,7 @@ import numpy as np
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import time
 from scipy.optimize import curve_fit
 #import functions
 from Input import fixed_input_values as input
@@ -17,13 +18,13 @@ from Modelling.Tail_Sizing.Tail_sizing_final import get_tail_size
 from Modelling.Structural_Sizing.Main import Structure_Main
 from Modelling.Structural_Sizing.Materials import Aluminum7075T6, Aluminum2024T4, NaturalFibre
 
-def main_iteration(number_relay_stations, M_list):
+def main_iteration(outputs,number_relay_stations, M_list,start_time):
     M_init = M_list[-1]  # Initial mass for the iteration
     i=0
     #0. Open General Files
     """Check OG_aero file is correct. It is never edited during iterations. only aero.csv is edited"""
     aero_df = pd.read_csv(input.OG_aero_csv)
-    while abs(M_list[-1] - M_list[-2]) > input.delta_mass:
+    while abs(M_list[-1] - M_list[-2]) > input.min_delta_mass and abs(M_list[-1] - M_list[-2]) < input.max_delta_mass :
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
         print(f"Iteration {i+1} for {number_relay_stations} Relay Stations with M_init ")
@@ -62,6 +63,7 @@ def main_iteration(number_relay_stations, M_list):
         Re_numbers = input.Re_numbers
         Plot = input.show_plots
         csv_path = input.aero_csv
+        output_folder = outputs
         ##Run
         """aero_values_dic={
         "wing_geom": wing_geom,
@@ -80,8 +82,9 @@ def main_iteration(number_relay_stations, M_list):
         alpha = aero_values_dic["alphas"][np.argmax(aero_values_dic["CLs_corrected"])]
         half_span = input.b/2
         plot = input.show_plots
+        output_folder = outputs
         ##Run
-        load_distribution_halfspan(wing_geom,lift_distribution,alpha,half_span,plot)
+        lift_distribution = load_distribution_halfspan(wing_geom,lift_distribution,alpha,half_span,plot,output_folder)
 #2. Propeller Sizing 
         print("--------------------------------------------------")
         print("Propeller Sizing")  
@@ -97,7 +100,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
     #3.1 Battery Consumption Model
         ##Prepare Inputs
         input_folder = input.engine_input_folder
-        output_folder = input.output_folder
+        output_folder = outputs
         aero_df = aero_df
         data_folder="Final_UAV_Sizing/Input/RaceData"
         V_vert_prop = input.V_stall*input.V_stall_safety_margin
@@ -113,6 +116,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         battery_recharge_time_min = input.battery_recharge_time_min
         PL_power = input.PL_power
         show = input.show_plots
+        show_all = False #Set to True to show all race plots
         L_n = input.L_n
         L_c = input.L_c
         L_fus = L_n+L_c
@@ -128,7 +132,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         L_gimbal =  input.L_gimbal
         L_speaker = input.L_speaker
         ##Run
-        max_battery_energy = Battery_Model(input_folder,output_folder,aero_df,data_folder,V_vert_prop,W,CLmax,S_wing,numberengines_vertical,numberengines_horizontal,propeller_wake_efficiency,number_relay_stations,UAV_off_for_recharge_time_min,battery_recharge_time_min,PL_power,show,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
+        max_battery_energy = Battery_Model(input_folder,output_folder,aero_df,data_folder,V_vert_prop,W,CLmax,S_wing,numberengines_vertical,numberengines_horizontal,propeller_wake_efficiency,number_relay_stations,UAV_off_for_recharge_time_min,battery_recharge_time_min,PL_power,show,show_all,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
     #3.2 Battery Sizing
         ##Prepare Inputs
         max_battery_energy = max_battery_energy
@@ -170,8 +174,9 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         tail_span = 1.55#from propellers
         Clhmax = input.Clhmax
         Cd0_wing = aero_df.loc[(aero_df["CL_corrected"] - 0).abs().idxmin(), "CD_vlm"]
+        output_folder = outputs
         ##Run
-        Sh, Clh0, tail_span_loop, tail_chord_loop,lh,max_tail_force = get_tail_size(W, piAe, Clalpha,Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing)
+        Sh, Clh0, tail_span_loop, tail_chord_loop,lh,max_tail_force = get_tail_size(W, piAe, Clalpha,Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing,output_folder)
 #5. Structure Sizing
         print("\n--------------------------------------------------")
         print("Structure Sizing")
@@ -256,6 +261,10 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         M_final = input.M_PL + M_prop +M_battery + M_struc
         M_list.append(M_final)
         print(f"Final Mass for {number_relay_stations} Relay Stations: {M_final} kg (iteration {i})")
+        runtime = time.time() - start_time
+        hours, rem = divmod(runtime, 3600)
+        minutes, seconds = divmod(rem, 60)
+        print(f"Current Runtime of main: {int(hours):02d}:{int(minutes):02d}:{int(seconds):02d} (h:m:s)")
     return M_list
 def plot_results(M_dict):
     fig, axs = plt.subplots(1, 4, figsize=(20, 5), sharey=True)
@@ -269,22 +278,35 @@ def plot_results(M_dict):
         axs[idx].grid(True)
 
     plt.tight_layout()
-    plt.show()
-def main(plot = False):
+    output_dir = input.output_folder
+    os.makedirs(output_dir, exist_ok=True)
+    plt.savefig(os.path.join(output_dir, "mass_through_iterations.png"))
+    if input.show_plots: plt.show()
+    plt.close()
+def main():
     M_dict = {}
-    for number_relay_stations in range(input.min_RS,input.max_RS):
-        M_list = [0]
+    start_time = time.time()
+    for number_relay_stations in range(input.min_RS,input.max_RS+1):
+        M_list = [input.M_init+2*input.min_delta_mass]
         M_list.append(input.M_init)
-        M_list = main_iteration(number_relay_stations, M_list)
+        # Create output folder for this relay station
+        outputs = os.path.join(input.output_folder, f"RS_{number_relay_stations}")
+        os.makedirs(outputs, exist_ok=True)
+        M_list = main_iteration(outputs,number_relay_stations, M_list, start_time)
         M_dict[number_relay_stations] = M_list
-    for number_relay_stations in range(M_dict.keys()):
+    print(M_dict)
+    for number_relay_stations in M_dict.keys():
         print(f"Final mass for {number_relay_stations} Relay Stations: {M_dict[number_relay_stations][-1]} kg")
-    if plot:
-        plot_results(M_dict)
+    plot_results(M_dict)
+    end_time = time.time()
+    runtime = end_time - start_time
+    hours, rem = divmod(runtime, 3600)
+    minutes, seconds = divmod(rem, 60)
+    print(f"Total Runtime of main: {int(hours):02d}:{int(minutes):02d}:{int(seconds):02d} (h:m:s)")
 
 
 if __name__ == "__main__":
-    main(plot=True)
+    main()
 
 
 

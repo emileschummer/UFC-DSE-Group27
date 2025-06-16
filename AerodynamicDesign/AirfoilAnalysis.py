@@ -9,13 +9,13 @@ def main():
     airfoil_data_dir = r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData"
     xfoil_path       = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe"
     
-    reynolds_numbers   = np.linspace(0.6e5, 3e5, 5)   # 2 points
+    reynolds_numbers   = np.linspace(1e5, 5e5, 10)   # 2 points
     alpha_range_polars = np.linspace(-10, 30, 41)  # -10° to +30° in 1° steps
 
     # --- 1) Load airfoils from .dat/.txt ---
     print("Loading airfoils...")
     airfoils = []
-    for fn in os.listdir(airfoil_data_dir):
+    for fn in os.listdir(airfoil_data_dir): 
         if fn.lower().endswith((".dat", ".txt")):
             path = os.path.join(airfoil_data_dir, fn)
             name = os.path.splitext(fn)[0]
@@ -75,7 +75,7 @@ def main():
             ax.grid(True)
         for idx_off in range(n, nrows * ncols):
             axs_flat[idx_off].axis('off')
-        fig.suptitle("Airfoil Shapes Comparison", fontsize=16)
+        # fig.suptitle("Airfoil Shapes Comparison", fontsize=16)
         plt.tight_layout(rect=[0, 0, 1, 0.96])
         plt.show()
 
@@ -96,7 +96,7 @@ def main():
                 ax.grid(True); ax.legend(fontsize='x-small')
             for idx_off in range(n, nrows * ncols):
                 axs_flat_c[idx_off].axis('off')
-            fig_c.suptitle(fig_title, fontsize=16)
+            # fig_c.suptitle(fig_title, fontsize=16)
             plt.tight_layout(rect=[0, 0, 1, 0.96])
             plt.show()
 
