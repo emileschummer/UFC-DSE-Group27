@@ -13,8 +13,8 @@ from AerodynamicForces import load_distribution_halfspan
 def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat",
     name = "S1223",
     xfoil_path: str = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe",
-    operational_velocity: float = 9.16,
-    num_spanwise_sections: int = 200,
+    operational_velocity: float = 10,
+    num_spanwise_sections: int = 150,
     vlm_chordwise_resolution = 10,
     delta_alpha_3D_correction: float = 1.0,
     alpha_range2D: np.ndarray = np.linspace(-10, 25, 36),
@@ -25,7 +25,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     t_twist: float = 0.0,
     sweep: float = 0.0,
     operational_altitude: float = 0.0,
-    Re_numbers: int = 8,
+    Re_numbers: int = 4,
     Plot = True,
     csv_path: str = "C:\\Users\\marco\\Documents\\GitHub\\UFC-DSE-Group27\\AerodynamicDesign\\aero.csv") -> dict:
 
@@ -68,7 +68,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
 
 
     #returns distribution at angle of attack where CL is max
-    distribution = load_distribution_halfspan(wing_geom, lift_distribution, alpha_at_max_cl, plot = True)
+    distribution = load_distribution_halfspan(wing_geom, lift_distribution, alpha_at_max_cl, plot = False)
 
     # if csv_path:
     #     df = pd.DataFrame({
@@ -92,7 +92,6 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
         "CLs_corrected": CLs_corrected,
         "lift_distribution": lift_distribution,
         "alphas" : alpha_range3D,
-        "airplane_object" : airplane_geom,
         "CM_vlm" : CM_vlm,
         "max_distribution" : distribution,
         # "timings": {
