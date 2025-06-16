@@ -62,12 +62,9 @@ engine_input_folder = "Final_UAV_Sizing/Input/Prop_Engine_Data"
 UAV_off_for_recharge_time_min = 15 # [min] time UAV is not filming to recharge
 battery_recharge_time_min = 5 # [min] time to change/recharge battery
 PL_power = 155 # [W] power consumption of payload
-"""Find propper value for safety_margin (including reserve)"""
 battery_safety_margin = 1.2 # [-] safety margin for battery capacity
 battery_energy_density = 450 # [Wh/kg] energy density of battery
 battery_volumetric_density =  1851.9 # [kg/m^3] volumetric density of battery
-"""Explain where these values come from and if linked to iteration (Roan knows)"""
-"""until here"""
 ##4. Tail Sizing
 e = 0.8 # [-] Oswald Efficiency
 Clhalpha = 4.3 # [-] Clalpha of the tail
