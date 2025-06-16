@@ -6,7 +6,7 @@ import pandas as pd
 from Functions import load_airfoil_dat, no_quarterchord_sweep
 
 # Operating parameters
-airfoil_dat_path = r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat"
+airfoil_dat_path = r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\S1223.dat"
 name = "S1223"
 xfoil_path = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe" # Kept as it might be used if XFOIL functionality is added
 num_spanwise_sections = 200 # For the main wing geometry definition

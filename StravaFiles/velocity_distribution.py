@@ -10,7 +10,7 @@ def make_race_dictionnary(data_folder = 0):
     races = {}
     current_dir = os.path.dirname(os.path.abspath(__file__))  # Location of main.py
     if data_folder == 0:
-            data_folder = "C:\\Users\\marco\\Documents\\GitHub\\UFC-DSE-Group27\\UAV_Sizing\\RaceData"
+            data_folder = r"C:\Users\marco\Desktop\RaceData"
     if not os.path.exists(data_folder):
         print(f"Data folder {data_folder} does not exist.")
         return {}
@@ -54,7 +54,8 @@ def plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms
                 grade_smooth = np.arctan(row[" grade_smooth"] / 100)
                 altitude = row[" altitude"]
                 rho = air_density_isa(altitude)
-                adjusted_velocity = velocity_smooth * np.sqrt(rho / np.cos(grade_smooth))
+                # adjusted_velocity = velocity_smooth * np.sqrt(rho / np.cos(grade_smooth))
+                adjusted_velocity = velocity_smooth
             else:
                 adjusted_velocity = velocity_smooth
             if not unit_ms:
@@ -84,7 +85,7 @@ def plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms
     bar_width = bin_width * (1 - bar_gap)
     bars = ax.bar(bins[:-1] + bar_width/2, percentages, width=bar_width, alpha=0.7, color='green', align='center')
     title_unit = "m/s" if unit_ms else "km/h"
-    ax.set_title(f"Combined {'Adjusted ' if adjust_velocity else ''}Velocity Distribution for All Races [{title_unit}]")
+    # ax.set_title(f"Combined {'Adjusted ' if adjust_velocity else ''}Velocity Distribution for All Races [{title_unit}]")
     ax.set_xlabel(f"{'Adjusted ' if adjust_velocity else ''}Velocity [{title_unit}]")
     ax.set_ylabel("Percentage of Time [%]")
     ax.set_xticks(bin_edges)
@@ -103,9 +104,9 @@ def plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms
     ax.legend()
 
     plt.tight_layout()
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-    plt.savefig(os.path.join(output_folder, "all_races_velocity_histogram.png"))
+    # if not os.path.exists(output_folder):
+    #     os.makedirs(output_folder)
+    # plt.savefig(os.path.join(output_folder, "all_races_velocity_histogram.png"))
 
 
     plt.show()
@@ -113,4 +114,4 @@ def plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms
     print("Done")
 
 if __name__ == "__main__":
-    plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms=True,percentile_value_input = 90,adjust_velocity=True)
+    plot_race_velocities(unit_ms=True,percentile_value_input = 66,adjust_velocity=True)
