@@ -7,7 +7,7 @@ aero_csv = "Final_UAV_Sizing/Input/WingData/aero.csv" # [str] name of the CSV fi
 ##B. Constants
 g = 9.81 # [m/s2] gravity acceleration
 ##C. Speed
-V_stall = 10 # [m/s] actual stall speed of wing
+V_stall = 9.16 # [m/s] actual stall speed of wing
 V_stall_safety_margin = 1.1 # [-] safety margin for stall speed
 
 ##0. Iteration parameters
@@ -23,9 +23,9 @@ xfoil = r"Final_UAV_Sizing\XFOIL6.99\xfoil.exe"#"Final_UAV_Sizing/Xfoil" # [str]
 altitude =  0 # [m] operational altitude for wing sizing
 taper_ratio = 0.4 # [-] taper ratio for wing sizing
 """Stop here"""
-b = 3 # [m] wing span
+b = 3.15 # [m] wing span
 num_spanwise_sections = int(200) # [-] number of spanwise sections for VLM analysis
-vlm_chordwise_resolution = 6 # [-] chordwise resolution for VLM analysis
+vlm_chordwise_resolution = 8 # [-] chordwise resolution for VLM analysis
 delta_alpha_3D_correction = 1.0 # [deg] correction for 3D stall angle
 alpha_range2D= np.linspace(-10, 25, 36) # [deg] angle of attack range for 2D stall database
 alpha_range3D = np.linspace(-10, 30, 41) # [deg] angle of attack range for 3D VLM analysis
@@ -46,7 +46,7 @@ w_blade = 0.075
 L_stab= 0.6
 w_stab= 0.5
 L_poles= 3.6*L_blade/2 + 0.5
-w_poles= 0.34
+w_poles= 0.04
 L_motor = 0.3
 L_gimbal = 0.12
 L_speaker = 0.1
@@ -71,8 +71,8 @@ battery_volumetric_density =  1851.9 # [kg/m^3] volumetric density of battery
 ##4. Tail Sizing
 e = 0.8 # [-] Oswald Efficiency
 Clhalpha = 4.3 # [-] Clalpha of the tail
-lh = 1 # [m] tail length from CG
-l = 0 # [m] distance between CG and AC
+lh = 1 # [m] tail length from CG, positive if AC_tail is behind CG
+l = -0.1 # [m] distance between CG and AC, negative if AC_wing is in front of CG
 Iy = 14 # [kgm^2] Mass Moment of Inertia
 Clhmax = 1.5 # [-] Clmax of tail
 ##5. Structure Sizing

@@ -31,10 +31,7 @@ def get_Cmy(alpha, V, Vz, q, Clh0, Sh,Clalpha,Cl0,Cd0,piAe,Clhalpha,lh,l,c,Cmac,
     Clh = ((Vz + lh * q) / V) * Clhalpha * (Sh / S) + Clh0 * (Sh / S) 
     Cn = np.cos(alpha) * Cl + np.sin(alpha) * Cd
     Cnh = np.cos(alpha) * Clh
-    if l > 0:
-        Cm = Cn * l / c + Cmac
-    else:
-        Cm = -Cn * l / c + Cmac
+    Cm = Cn * l / c + Cmac
     Cmh = -Cnh * lh / c
     Cmy =  Cm + Cmh
     return Cmy
