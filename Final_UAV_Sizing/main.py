@@ -276,7 +276,7 @@ def plot_results(M_dict):
         axs[idx].grid(True)
 
     plt.tight_layout()
-    output_dir = "Final_UAV_Sizing/Output"
+    output_dir = input.output_folder
     os.makedirs(output_dir, exist_ok=True)
     plt.savefig(os.path.join(output_dir, "mass_through_iterations.png"))
     if input.show_plots: plt.show()
@@ -284,7 +284,7 @@ def plot_results(M_dict):
 def main():
     M_dict = {}
     start_time = time.time()
-    for number_relay_stations in range(input.min_RS,input.max_RS):
+    for number_relay_stations in range(input.min_RS,input.max_RS+1):
         M_list = [input.M_init+2*input.min_delta_mass]
         M_list.append(input.M_init)
         # Create output folder for this relay station
