@@ -29,7 +29,7 @@ def main_iteration(outputs,number_relay_stations, M_list,start_time):
     while abs(M_list[-1] - M_list[-2]) > input.min_delta_mass and abs(M_list[-1] - M_list[-2]) < input.max_delta_mass :
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
-        print(f"Iteration {i+1} for {number_relay_stations} Relay Stations with M_init ")
+        print(f"Iteration {i+1} for {number_relay_stations} Relay Stations with M_init = {M_init:.2f} kg")
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
         i+=1
 #1. Wing Sizing
@@ -309,6 +309,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
             "Root chord": cr,
             "Tip chord": ct,
             "MAC": (cr + ct) / 2,
+            "Sweep": sweep,
             # Propeller
             "Propeller Mass": M_prop,
             # Battery values
