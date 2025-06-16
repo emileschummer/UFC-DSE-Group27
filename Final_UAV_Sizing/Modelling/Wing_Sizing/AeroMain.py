@@ -87,7 +87,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     try:
         df.to_csv(csv_path, index=False, encoding="utf-8")
         df.to_csv(os.path.join(output_folder, "aero_specific.csv"), index=False, encoding="utf-8")
-        print(f"Saved α–CL–CD sweep to '{csv_path}' and '{os.path.join(output_folder, 'aero.csv')}'")
+        print(f"Saved alpha–CL–CD sweep to '{csv_path}' and '{os.path.join(output_folder, 'aero.csv')}'")
     except Exception as e:
         print(f"Failed to save CSV: {e}")
 

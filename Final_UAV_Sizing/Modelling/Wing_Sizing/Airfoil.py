@@ -71,7 +71,7 @@ def generate_2d_stall_database(airfoil_profile, section_data, alpha_range2D, xfo
         # print(f"Generating 2D polar for Re = {Re_value:.2e}...")
         airfoil_for_polars.generate_polars(
             alphas=alpha_range2D, Res=np.array([Re_value]),
-            xfoil_kwargs={"xfoil_command": xfoil_path, "max_iter": 20, "verbose": False, "timeout": 60},
+            xfoil_kwargs={"xfoil_command": xfoil_path, "max_iter": 20, "verbose": False, "timeout": 100},
             include_compressibility_effects=False
         )
         cl_2D_array = np.array([airfoil_for_polars.CL_function(alpha, Re_value) for alpha in alpha_range2D])
