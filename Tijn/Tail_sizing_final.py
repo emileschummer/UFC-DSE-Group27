@@ -28,10 +28,7 @@ def get_Cmy(alpha, V, Vz, q, Clh0, Sh,Clalpha,Cl0,Cd0,piAe,Clhalpha,lh,l,c,Cmac,
     Clh = ((Vz + lh * q) / V) * Clhalpha * (Sh / S) + Clh0 * (Sh / S) 
     Cn = np.cos(alpha) * Cl + np.sin(alpha) * Cd
     Cnh = np.cos(alpha) * Clh
-    if l > 0:
-        Cm = Cn * l / c + Cmac
-    else:
-        Cm = -Cn * l / c + Cmac
+    Cm = Cn * l / c + Cmac
     Cmh = -Cnh * lh / c
     Cmy =  Cm + Cmh
     return Cmy
@@ -105,7 +102,22 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cd0,Cmac,lh,l,Iy,c,plot,tail_
     max_tail_force = 0.5*rho*Sh*Clhmax*33**2
     return Sh, Clh0, span, cord,lh,max_tail_force##alpha_result*180/np.pi,pitch_result*180/np.pi
 
-print(get_tail_size(200,30,4.635,4.5,0.7,2,0.05,-0.5,1,0,14,0.36,True,0.7366,1.5))
+# W, piAe, Clalpha, Clhalpha,Cl0,S,Cd0,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax
+print(get_tail_size(200, # W
+                    30, # piAe
+                    4.635, # Clalpha
+                    4.5, # Clhalpha
+                    0.7, # Cl0
+                    2, # S
+                    0.05, # Cd0
+                    -0.5, # Cmac
+                    1, # lh
+                    -0.1, # l
+                    14, # Iy
+                    0.36, # c
+                    True, # plot
+                    0.7366, # tail_span
+                    1.5)) # Clhmax
 plt.show()
 
 

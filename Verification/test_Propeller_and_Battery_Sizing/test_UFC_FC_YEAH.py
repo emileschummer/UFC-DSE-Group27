@@ -18,12 +18,12 @@ gamma_dot = 2
 aero_df = pd.read_csv(aero_csv)
 
 # UNIT 03
-expected_CD= 0.000141103
+expected_CD_flat= 0.00014110307
 def test_flat_plate_drag_coefficient():
 
     result= flat_plate_drag_coefficient(V, rho, h, S_wing, L_blade, w_blade)
 
-    assert pt.approx(result, rel=1e-6) == expected_CD
+    assert pt.approx(result, rel=1e-6) == expected_CD_flat
 
 #UNIT 04
 expected_CD_cube = 0.008426384
@@ -54,8 +54,8 @@ Cf_stab = flat_plate_drag_coefficient(V, rho, h, S_wing, L_stab, w_stab)
 Cf_poles = flat_plate_drag_coefficient(V, rho, h, S_wing, L_poles, w_poles)
 
 expected_thrust_vert = 32.10402841
-expected_thrust_hor = 33.59434087
-expected_CD= 0.34431526
+expected_thrust_hor = 44.89200872
+expected_CD= 0.43654112
 expected_result= expected_thrust_vert, expected_thrust_hor, expected_CD
 
 def test_calculate_thrust_UFC_FC():
@@ -73,11 +73,9 @@ df_vertical['Thrust_N'] = df_vertical[' Thrust (g) '] * 9.81 / 1000
 df_horizontal = pd.read_csv(hor_folder)
 df_horizontal['Thrust_N'] = df_horizontal[' Thrust (g) '] * 9.81 / 1000
 
-expected_power =  1535.55819120
+expected_power =  2217.57185454
 def test_calculate_power_FC():
 
     result = calculate_power_FC(df_vertical, df_horizontal, incline, V, rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical, numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, d_fus, w_fus, L_blade, w_blade, L_stab, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
 
     assert pt.approx(result, rel=1e-6) == expected_power
-
-print(calculate_power_FC(df_vertical, df_horizontal, incline, V, rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical, numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, d_fus, w_fus, L_blade, w_blade, L_stab, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker))

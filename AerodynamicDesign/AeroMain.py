@@ -5,7 +5,7 @@ import pandas as pd
 import os
 from Airfoil import setup_wing_and_airplane, calculate_section_properties_and_reynolds, generate_2d_stall_database, interpolate_stall_data_for_sections, run_vlm_sweep_with_stall_correction, plot_aerodynamic_coefficients
 # from Test import setup_wing_and_airplane, calculate_section_properties_and_reynolds, generate_2d_stall_database, interpolate_stall_data_for_sections, run_vlm_sweep_with_stall_correction, plot_aerodynamic_coefficients
-from Functions import load_airfoil_dat, no_quarterchord_sweep
+from Functions import load_airfoil_dat, no_quarterchord_sweep, wing_geometry_calculator
 from AerodynamicForces import load_distribution_halfspan
 
 
@@ -13,19 +13,19 @@ from AerodynamicForces import load_distribution_halfspan
 def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat",
     name = "S1223",
     xfoil_path: str = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe",
-    operational_velocity: float = 10.0,
-    num_spanwise_sections: int = 200,
-    vlm_chordwise_resolution = 6,
+    operational_velocity: float = 10,
+    num_spanwise_sections: int = 150,
+    vlm_chordwise_resolution = 10,
     delta_alpha_3D_correction: float = 1.0,
     alpha_range2D: np.ndarray = np.linspace(-10, 25, 36),
     alpha_range3D: np.ndarray = np.linspace(-10, 30, 41),
-    r_chord: float = 0.36,
+    r_chord: float = 0.91,
     t_chord: float = 0.36,
     r_twist: float = 0.0,
     t_twist: float = 0.0,
     sweep: float = 0.0,
     operational_altitude: float = 0.0,
-    Re_numbers: int = 2,
+    Re_numbers: int = 4,
     Plot = True,
     csv_path: str = "C:\\Users\\marco\\Documents\\GitHub\\UFC-DSE-Group27\\AerodynamicDesign\\aero.csv") -> dict:
 
@@ -57,14 +57,19 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     CLs_vlm_original, CDs_vlm_original, CLs_corrected, lift_distribution, CM_vlm = run_vlm_sweep_with_stall_correction(alpha_range3D, airplane_geom, operational_velocity, section_data_prepared, num_spanwise_sections, wing_geom, operational_altitude, vlm_chordwise_resolution)
     t5 = time.perf_counter()
     print(f"5) VLM sweep:         {t5 - t4:.2f} s")
-
+    
+    max_idx = max(range(len(CLs_corrected)), key=lambda i: CLs_corrected[i])
+    alpha_at_max_cl = alpha_range3D[max_idx]
     # 6. Plot
     plot_aerodynamic_coefficients(alpha_range3D, CLs_vlm_original, CLs_corrected, CDs_vlm_original, Plot)
     t6 = time.perf_counter()
     print(f"6) Plotting:          {t6 - t5:.2f} s")
     print(f"Total runtime:        {t6 - t0:.2f} s")
 
-    distribution = load_distribution_halfspan(wing_geom, lift_distribution, 15, plot = True)
+
+    #returns distribution at angle of attack where CL is max
+    distribution = load_distribution_halfspan(wing_geom, lift_distribution, alpha_at_max_cl, plot = False)
+
     # if csv_path:
     #     df = pd.DataFrame({
     #         "alpha (deg)": alpha_range3D,
@@ -87,8 +92,8 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
         "CLs_corrected": CLs_corrected,
         "lift_distribution": lift_distribution,
         "alphas" : alpha_range3D,
-        "airplane_object" : airplane_geom,
-        "CM_vlm" : CM_vlm
+        "CM_vlm" : CM_vlm,
+        "max_distribution" : distribution,
         # "timings": {
         #     "wing_setup": t1 - t0,
         #     "section_calc": t2 - t1,
@@ -156,16 +161,31 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
 
 
 if __name__ == "__main__":
-    for i in [r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat", 
-              r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\FX 74-Cl5-140 MOD  (smoothed).txt",
-              r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\CH10 (smoothed).txt",
-              #r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\CLARKY.dat", 
+    for i in [r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\S1223.dat", 
+            #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\FX 74-Cl5-140 MOD  (smoothed).txt",
+            #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\CH10 (smoothed).txt",
+            #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\CLARKY.dat", 
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\E423.dat", 
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\NACA4412.dat", 
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\NACA23012.dat"
             ]:
     # Run with all defaults (just adjust paths if needed):
-        results = run_full_aero(airfoil_dat_path = i)
+        velocity_op = 9.16
+        CL = 2
+        altitude = 0
+        taper_ratio = 0.4
+        b = 3.15
+        op_point_for_atmo = asb.OperatingPoint(velocity=velocity_op, atmosphere=asb.Atmosphere(altitude=altitude))
+        rho = op_point_for_atmo.atmosphere.density()
+
+        S = 250/(0.5*rho*velocity_op**2*CL)
+        
+    
+        cr = 2*S/(b*(1 + taper_ratio))
+
+        ct = cr*taper_ratio
+        print(S, cr,ct)
+        results = run_full_aero(airfoil_dat_path = i, operational_velocity = velocity_op, r_chord = cr, t_chord= ct)
         import matplotlib.pyplot as plt
 
         plt.figure()
