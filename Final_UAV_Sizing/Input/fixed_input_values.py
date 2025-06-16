@@ -1,7 +1,9 @@
 import numpy as np
+from datetime import datetime
 #Fixed input values for UAV sizing
 ##A. Folder paths
-output_folder = "Final_UAV_Sizing/Output" # [str] folder to save output data
+timestamp = datetime.now().strftime("%m-%d_%H-%M")
+output_folder = f"Final_UAV_Sizing/Output/Run_on_{timestamp}" # [str] folder to save output data
 OG_aero_csv = "Final_UAV_Sizing/Input/WingData/OG_aero.csv" # [str] name of the original CSV file to save aerodynamic data
 aero_csv = "Final_UAV_Sizing/Input/WingData/aero.csv" # [str] name of the CSV file to save aerodynamic data
 ##B. Constants
@@ -13,7 +15,8 @@ V_stall_safety_margin = 1.1 # [-] safety margin for stall speed
 ##0. Iteration parameters
 show_plots = False
 M_init = 15 # [kg] initial mass of UAV for iteration
-delta_mass = 0.01 # [kg], mass convergence
+min_delta_mass = 0.1 # [kg], mass convergence
+max_delta_mass = 10 # [kg], mass explodes
 min_RS = 3 # [-] minimum number of relay stations
 max_RS = 6 # [-] maximum number of relay stations
 
@@ -38,10 +41,26 @@ Re_numbers = 8 # [-] number of Reynolds numbers for stall database
 numberengines_vertical = 4
 numberengines_horizontal = 1
 propeller_wake_efficiency = 0.7
+S_wing = 2
+CLmax = 2
+V_vert_prop = V_stall * V_stall_safety_margin
+L_blade = 0.7366
+w_blade = 0.075
+L_stab= 0.6
+w_stab= 0.5
+L_poles= 3.6*L_blade/2 + 0.5
+w_poles= 0.34
+L_motor = 0.3
+L_gimbal = 0.12
+L_speaker = 0.1
+L_n = 0.2
+L_c = 0.6
+L_fus = 2*L_n + L_c
+w_fus = S_wing / L_fus
+d_fus = 0.25
 
 ##3. Battery Sizing
 engine_input_folder = "Final_UAV_Sizing/Input/Prop_Engine_Data" 
-output_folder = "Final_UAV_Sizing/Output/Battery" # [str] folder to save battery data
 UAV_off_for_recharge_time_min = 15 # [min] time UAV is not filming to recharge
 battery_recharge_time_min = 5 # [min] time to change/recharge battery
 PL_power = 155 # [W] power consumption of payload
@@ -50,12 +69,6 @@ battery_safety_margin = 1.2 # [-] safety margin for battery capacity
 battery_energy_density = 450 # [Wh/kg] energy density of battery
 battery_volumetric_density =  1851.9 # [kg/m^3] volumetric density of battery
 """Explain where these values come from and if linked to iteration (Roan knows)"""
-L_n = 0.2
-L_c = 0.6
-L_fus = L_n+L_c
-d=0.25
-L_blade = 0.7366
-L_stab = 0.6
 """until here"""
 ##4. Tail Sizing
 e = 0.8 # [-] Oswald Efficiency

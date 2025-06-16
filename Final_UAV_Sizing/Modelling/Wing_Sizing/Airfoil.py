@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import aerosandbox as asb
 import pandas as pd
+import os
 
 #put span in inputs, line 15 here
 def setup_wing_and_airplane(chosen_airfoil, num_spanwise_sections, r_chord, t_chord, r_twist, t_twist, sweep):
@@ -230,7 +231,7 @@ def run_vlm_sweep_with_stall_correction(alpha_range3D, vlm_airplane, operational
         
     return CLs_vlm, CDs_vlm, CLs_corrected_list, lift_distribution, Cm
 
-def plot_aerodynamic_coefficients(alphas, CLs_vlm, CLs_corrected, CDs_vlm, Plot = False):
+def plot_aerodynamic_coefficients(alphas, CLs_vlm, CLs_corrected, CDs_vlm, Plot = False,output_folder = "Final_UAV_Sizing/Output/Wing_Sizing"):
     """Plots the CL and CD curves."""
     # print("\nAlpha Sweep Results (Original VLM vs. Corrected CL):")
     # print("----------------------------------------------------------")
@@ -239,18 +240,27 @@ def plot_aerodynamic_coefficients(alphas, CLs_vlm, CLs_corrected, CDs_vlm, Plot 
     # for i in range(len(alphas)):
     #     print(f"{alphas[i]:11.1f} | {CLs_vlm[i]:8.4f} | {CDs_vlm[i]:8.5f} | {CLs_corrected[i]:12.4f}")
     # print("----------------------------------------------------------")
-    if Plot == True:
-        plt.figure(figsize=(10, 7))
-        plt.plot(alphas, CLs_vlm, label="CL (VLM Original)", marker='o', linestyle='--')
-        plt.plot(alphas, CLs_corrected, label="CL (Corrected with Re Effects)", marker='x')
-        plt.xlabel("Angle of Attack (deg)")
-        plt.ylabel("Lift Coefficient (CL)")
-        plt.legend(); plt.grid(True); plt.title("CL vs Alpha (VLM with Multi-Re Stall Correction)")
-        plt.show()
+    plt.figure(figsize=(10, 7))
+    plt.plot(alphas, CLs_vlm, label="CL (VLM Original)", marker='o', linestyle='--')
+    plt.plot(alphas, CLs_corrected, label="CL (Corrected with Re Effects)", marker='x')
+    plt.xlabel("Angle of Attack (deg)")
+    plt.ylabel("Lift Coefficient (CL)")
+    plt.legend()
+    plt.grid(True)
+    plt.title("CL vs Alpha (VLM with Multi-Re Stall Correction)")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_folder, "CL_vs_Alpha.png"))
+    if Plot == True:plt.show()
+    plt.close()
 
-        plt.figure(figsize=(10,7))
-        plt.plot(alphas, CDs_vlm, label="CD (VLM Original)", marker='s')
-        plt.xlabel("Angle of Attack (deg)")
-        plt.ylabel("Drag Coefficient (CD)")
-        plt.legend(); plt.grid(True); plt.title("CD vs Alpha (VLM)")
-        plt.show()
+    plt.figure(figsize=(10,7))
+    plt.plot(alphas, CDs_vlm, label="CD (VLM Original)", marker='s')
+    plt.xlabel("Angle of Attack (deg)")
+    plt.ylabel("Drag Coefficient (CD)")
+    plt.legend()
+    plt.grid(True)
+    plt.title("CD vs Alpha (VLM)")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_folder, "CD_vs_Alpha.png"))
+    if Plot == True:plt.show()
+    plt.close()

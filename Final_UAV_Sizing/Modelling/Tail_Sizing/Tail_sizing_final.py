@@ -4,6 +4,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from Modelling.Propeller_and_Battery_Sizing.Model.UFC_FC_YEAH import flat_plate_drag_coefficient, fuselage_drag_coefficient, cube_drag_coefficient
 from Input.RaceData import Strava_input_csv as sva
 import Input.fixed_input_values as input
+import os
 #initial conditions
 
 
@@ -39,7 +40,9 @@ def get_Cmy(alpha, V, Vz, q, Clh0, Sh,Clalpha,Cl0,Cd0,piAe,Clhalpha,lh,l,c,Cmac,
     Cmy =  Cm + Cmh
     return Cmy
 
-def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing):
+def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing, output_folder):
+    output_folder_tail = os.path.join(output_folder, "Tail_Sizing")
+    os.makedirs(output_folder, exist_ok=True)
     rho = 1.2
     m = W/9.81
     Sh_results = []
@@ -49,12 +52,16 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span
     progress = 0
     iteration = 20
     V = 30
-    Cf_fus = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), input.L_fus)
-    CD_fus = fuselage_drag_coefficient(input.L_n, input.L_c, Cf_fus, input.d, S)
-    CD_cube = cube_drag_coefficient(V, rho, sva.altitude_from_density(rho), S)
-    Cf_blade = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), input.L_blade)
-    Cf_stab = flat_plate_drag_coefficient(V, rho, sva.altitude_from_density(rho), input.L_stab)
-    CD0= CD_fus + CD_cube + Cd0_wing + 4 * Cf_blade + 3 * Cf_stab
+    altitude = sva.altitude_from_density(rho)
+    Cf_blade= flat_plate_drag_coefficient(V, rho, altitude, S, input.L_blade, input.w_blade)
+    Cf_stab = flat_plate_drag_coefficient(V, rho, altitude,S,input.L_stab, input.w_stab)
+    Cf_poles = flat_plate_drag_coefficient(V, rho, altitude, S, input.L_poles, input.w_poles)
+    Cf_fus = flat_plate_drag_coefficient(V, rho, altitude, S, input.L_fus, S/input.L_fus)
+    CD_speaker = cube_drag_coefficient(V, rho, altitude, S, input.L_speaker)
+    CD_gimbal = cube_drag_coefficient(V, rho, altitude, S, input.L_gimbal)
+    CD_motor = cube_drag_coefficient(V, rho, altitude, S, input.L_motor)
+    CD_fus = fuselage_drag_coefficient(input.L_n, input.L_c, Cf_fus, input.d_fus, S)
+    CD0= Cd0_wing+CD_fus + CD_gimbal + CD_speaker + 4 * CD_motor + 2 * Cf_poles+ 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
     for Clh0 in np.linspace(-0.4,0.4,iteration):
         progress = progress + 1
         for Sh in np.linspace(0,1,iteration):
@@ -92,18 +99,32 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span
                 Clh0_results.append(Clh0)
                 alpha_results.append(alpha)
                 pitch_results.append(pitch)
-                if plot: plt.plot(time,pitchangle)
+                plt.plot(time,pitchangle)
+                if not os.path.exists(output_folder_tail):
+                    os.makedirs(output_folder_tail)
+                plt.savefig(os.path.join(output_folder_tail, f"tail_sizing_plot_{progress}_{int(Sh*1000)}_{int(Clh0*1000)}.png"))
         print('\r{:.2f}%'.format(100*progress/iteration), end='', flush=True)
     if plot:
         plt.show()
-    Sh = min(Sh_results)
-    min_index = Sh_results.index(Sh)
-    Clh0 = Clh0_results[min_index]
-    alpha_result = alpha_results[min_index]
-    pitch_result = pitch_results[min_index]
-    span = tail_span
-    cord = Sh/span
-    max_tail_force = 0.5*rho*Sh*Clhmax*33**2
+    plt.close()
+    try:
+        Sh = min(Sh_results)
+        min_index = Sh_results.index(Sh)
+        Clh0 = Clh0_results[min_index]
+        alpha_result = alpha_results[min_index]
+        pitch_result = pitch_results[min_index]
+        span = tail_span
+        cord = Sh/span
+        max_tail_force = 0.5*rho*Sh*Clhmax*33**2
+    except (ValueError, ZeroDivisionError, Exception) as e:
+        # Handle cases where min() fails or Sh_results is empty or division by zero
+        Sh = 1
+        Clh0 = 0.4
+        alpha_result = 0
+        pitch_result = 0
+        span = tail_span if tail_span != 0 else 1
+        cord = 0
+        max_tail_force = 0.5*rho*Sh*Clhmax*33**2
     return Sh, Clh0, span, cord,lh,max_tail_force#alpha_result*180/np.pi,pitch_result*180/np.pi
 
 #print(get_tail_size(200,30,4.635,4,0.7,2,0.05,-0.5,1,0,14,0.36,True,0.7366,1.5))

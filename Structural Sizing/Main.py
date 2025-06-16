@@ -7,6 +7,9 @@ from Materials import *
 from AirFoilDataExtraction import *
 from scipy.integrate import quad
 
+import os
+from scipy.optimize import curve_fit
+
 #------------------------------------------------------
 #TODO ASK ALEX FOR FEEDBACK
 #TODO CHECK VON MISES FOR ALL, ITS FOR CROSS SECTION POINT, NOT ENTIRE CROSS SECTION 
@@ -35,23 +38,23 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     Yield_Stress_VTOL = Material_VTOL.Yield_Stress
     Density_VTOL = Material_VTOL.Density
 
-    Material_WingBox = Aluminum7075T6() #Materials_Input[1] #AL() 
+    Material_WingBox = Aluminum2024T4() #Materials_Input[1] #AL() 
     Yield_shear_WingBox= Material_WingBox.Yield_Shear
     Yield_Stress_WingBox = Material_WingBox.Yield_Stress
     Density_WingBox = Material_WingBox.Density
 
-    Material_Leg = Aluminum7075T6() #Materials_Input[2] #AL() 
+    Material_Leg = Aluminum2024T4() #Materials_Input[2] #AL() 
     Yield_shear_Leg = Material_Leg.Yield_Shear
     Yield_Stress_Leg = Material_Leg.Yield_Stress
     Density_Leg = Material_Leg.Density
 
-    Material_Fuselage = Aluminum7075T6() #Materials_Input[3] #AL() 
+    Material_Fuselage = NaturalFibre() #Materials_Input[3] #AL() 
     Yield_shear_Fuselage = Material_Fuselage.Yield_Shear
     Yield_Stress_Fuselage = Material_Fuselage.Yield_Stress
     Density_Fuselage = Material_Fuselage.Density
 
-    Material_Airfoil = Aluminum7075T6() #Materials_Input[4] #PLA3DPrintMaterial()
-    Density_Fuselage = Material_Airfoil.Density
+    Material_Airfoil = NaturalFibre() #Materials_Input[4] #PLA3DPrintMaterial()
+    Density_Airfoil = Material_Airfoil.Density 
 
 
     #--------------------------------------------------
@@ -368,12 +371,17 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     print("-------------------------------------------")
     ScalingFactor_out = MAC/1
     ScalingFactor_in =ScalingFactor_out*0.995
+
     Airfoil_Points = load_airfoil_dat("Structural Sizing\AirfoilData\Airfoil.dat")
+
+    ##Bram: I used the lines below because loading the airfoil data didnt work for me without the os package:
+    #airfoil_file = os.path.join(os.path.dirname(__file__), "AirfoilData", "Airfoil.dat")
+    #Airfoil_Points = load_airfoil_dat(airfoil_file)
    
     _, _, _, Skin_Area_out = Airfoil_Moment_of_Inertia(Airfoil_Points, ScalingFactor_out)
     _, _, _, Skin_Area_in = Airfoil_Moment_of_Inertia(Airfoil_Points, ScalingFactor_in)
     Skin_Area = Skin_Area_out-Skin_Area_in
-    Skin_mass = 2*Skin_Area*WingBox_length*Material_Airfoil.Density
+    Skin_mass = Skin_Area*WingBox_length*Density_Airfoil
     print("Wing Skin MASS:", Skin_mass)
 
     Vtol_Pole_Mass_front = Volume(A=Tube_Area(R_out=R_out_VTOL_front,R_in=R_in_VTOL_front), L=Vtol_Pole_Length_front)*Density_VTOL
@@ -400,16 +408,55 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     print("THE FINAL MASS:", Total_Mass)
     print("-------------------------------------------")
 
-
     return Leg_Mass,Vtol_Pole_Mass,WingBox_Mass,Fuselage_Mass,Structure_mass,Total_Mass
 
 Lift_Thing = lift_distribution_test
-Dra_Thing = Drag_distribution_test
+Drag_Thing = Drag_distribution_test
+
+# Elliptical lift distribution: cl(x) = cl_max * sqrt(1 - (x/b)^2)
+# where x runs from -b/2 to b/2 (spanwise), or from 0 to b if only half-span
+
+cl_values_at_15 = np.array([0.06434802, 0.13850818, 0.21262615, 0.28667936, 0.36064524, 0.43450126,
+ 0.50822493, 0.58179379, 0.65518543, 0.7283775,  0.80134769, 0.87407379,
+ 0.94653363, 1.01870515, 1.09056636, 1.16209538, 1.23327041, 1.30406977,
+ 1.37447191, 1.44445536, 1.51399882, 1.5830811,  1.65168116, 1.7197781,
+ 1.78735118, 1.85437982, 1.92084359, 1.98672226, 1.99888533, 1.92394663,
+ 1.84900793, 1.77406923, 1.69913053, 1.62419183, 1.54925313, 1.47431442,
+ 1.39937572, 1.32443702, 1.24949832, 1.17455962, 1.09962092])
+
+# Assume these are at equally spaced spanwise stations from 0 to b/2
+n = len(cl_values_at_15)
+span = 3  # Example: total span = 3 m (adjust as needed)
+y = np.linspace(0, span/2, n)  # y = 0 at root, y = b/2 at tip
+
+# Fit cl_max to best match the data
+
+def elliptical(y, cl_max):
+    return cl_max * np.sqrt(1 - (y/(span/2))**2)
+
+cl_max_fit, _ = curve_fit(elliptical, y, cl_values_at_15, p0=[2.0])
+
+# Now you can use this function as the elliptical approximation:
+def elliptical_cl(y):
+    return cl_max_fit[0] * 1.225 * (100/3)**2 * np.sqrt(1 - (y/(span/2))**2)
+
+def elliptical_cd(y):
+    return 0.125 * elliptical_cl(y)
+
+lift_distrib = elliptical_cl
+drag_distrib = elliptical_cd
+
+# Example usage: elliptical_cl(y) for y in [0, span/2]
 #RUN IT
 Structure_Main(Materials_Input=[AL(),AL(),AL(),AL(),AL()],#BRAM MOLEST HERE 
                VTOL_Input=[0.01,0.736,70.6,2.28],
                Tail_Input=[0.15,3,20,30],
                Legs_Input=[0.25,25],
-               Wing_Input=[105,0.65,18,Lift_Thing,Dra_Thing],
-               Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,50,10,2,5,0.8,10],
+               Wing_Input=[3,0.65,18,Lift_Thing,Drag_Thing],
+               Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,150,10,2,5,0.8,10],
                SF=1.5,BigG=1.1)
+
+print(Lift_Thing)
+print(Drag_Thing)
+
+
