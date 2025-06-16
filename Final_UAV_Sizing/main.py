@@ -2,10 +2,12 @@
 #import packages
 import numpy as np
 import os
+import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
 from scipy.optimize import curve_fit
+import gc
 #import functions
 from Input import fixed_input_values as input
 from Modelling.Wing_Sizing.Functions import wing_geometry_calculator
@@ -258,6 +260,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
 #6. Final Mass Calculation
         M_final = input.M_PL + M_prop +M_battery + M_struc
         M_list.append(M_final)
+        print(f"Payload Mass: {input.M_PL} kg, Propeller Mass: {M_prop} kg, Battery Mass: {M_battery} kg, Structure Mass: {M_struc} kg")
         print(f"Final Mass for {number_relay_stations} Relay Stations: {M_final} kg (iteration {i})")
         runtime = time.time() - start_time
         hours, rem = divmod(runtime, 3600)
@@ -281,7 +284,25 @@ def plot_results(M_dict):
     plt.savefig(os.path.join(output_dir, "mass_through_iterations.png"))
     if input.show_plots: plt.show()
     plt.close()
+class Tee(object):
+    def __init__(self, *files):
+        self.files = files
+
+    def write(self, obj):
+        for f in self.files:
+            f.write(obj)
+            f.flush()
+
+    def flush(self):
+        for f in self.files:
+            f.flush()
 def main():
+        # Only set up the Tee once, at the start of the main run
+    if not hasattr(sys, "_stdout_tee_installed"):
+        log_path = os.path.join(input.output_folder, "run_log.txt")
+        os.makedirs(input.output_folder, exist_ok=True)
+        sys.stdout = Tee(sys.__stdout__, open(log_path, "w"))
+        sys._stdout_tee_installed = True
     M_dict = {}
     start_time = time.time()
     for number_relay_stations in range(input.min_RS,input.max_RS+1):
@@ -291,6 +312,7 @@ def main():
         outputs = os.path.join(input.output_folder, f"RS_{number_relay_stations}")
         os.makedirs(outputs, exist_ok=True)
         M_list = main_iteration(outputs,number_relay_stations, M_list, start_time)
+        gc.collect()
         M_dict[number_relay_stations] = M_list
     print(M_dict)
     for number_relay_stations in M_dict.keys():
@@ -305,46 +327,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-"""#3. Battery Sizing
-print("--------------------------------------------------")
-print("Battery Sizing")
-#3.1 Battery Consumption Model
-##Prepare Inputs
-input_folder = input.engine_input_folder
-output_folder = input.output_folder
-aero_df = pd.read_csv(input.OG_aero_csv)
-data_folder="Final_UAV_Sizing/Input/RaceData"
-V_vert_prop = input.V_stall*input.V_stall_safety_margin
-W = input.M_init*input.g
-CLmax = aero_df["CL_corrected"].max()
-S_wing = 2#S_mw
-aero_df = aero_df
-numberengines_vertical = input.numberengines_vertical
-numberengines_horizontal = input.numberengines_horizontal
-propeller_wake_efficiency = input.propeller_wake_efficiency
-number_relay_stations = 3
-UAV_off_for_recharge_time_min = input.UAV_off_for_recharge_time_min
-battery_recharge_time_min = input.battery_recharge_time_min
-PL_power = input.PL_power
-show = input.show_plots
-L_n = input.L_n
-L_c = input.L_c
-L_fus = L_n+L_c
-d = input.d
-L_blade = input.L_blade
-L_stab = input.L_stab
-##Run
-max_battery_energy = Battery_Model(input_folder,output_folder,aero_df,data_folder,V_vert_prop,W,CLmax,S_wing,numberengines_vertical,numberengines_horizontal,propeller_wake_efficiency,number_relay_stations,UAV_off_for_recharge_time_min,battery_recharge_time_min,PL_power,show,L_fus,L_n,L_c,d,L_blade,L_stab)
-#3.2 Battery Sizing
-##Prepare Inputs
-max_battery_energy = max_battery_energy
-battery_safety_margin = input.battery_safety_margin
-battery_energy_density = input.battery_energy_density
-battery_volumetric_density = input.battery_volumetric_density
-##Run
-M_battery,battery_volume = Battery_Size(max_battery_energy,battery_safety_margin,battery_energy_density,battery_volumetric_density)
-print(M_battery,battery_volume)"""
