@@ -2,10 +2,10 @@ import sys
 import os
 import pytest as pt
 
-target_folder = os.path.join(os.path.dirname(__file__), "..")
+target_folder = os.path.join(os.path.dirname(__file__), "..", '..')
 sys.path.append(os.path.abspath(target_folder))
 
-from Structural_Sizing.InertiaCalcs import *
+from Structural_Sizing_unittest_version.InertiaCalcs import *
 
 #test StructSize21
 

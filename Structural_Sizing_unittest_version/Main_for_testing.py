@@ -8,10 +8,10 @@ target_folder = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(os.path.abspath(target_folder))
 
 
-from Structural_Sizing.InertiaCalcs import *
-from Structural_Sizing.ForceAndStressCals import *
-from Structural_Sizing.Materials import *
-from Structural_Sizing.AirFoilDataExtraction import *
+from Structural_Sizing_unittest_version.InertiaCalcs import *
+from Structural_Sizing_unittest_version.ForceAndStressCals import *
+from Structural_Sizing_unittest_version.Materials import *
+from Structural_Sizing_unittest_version.AirFoilDataExtraction import *
 
 from scipy.integrate import quad
 

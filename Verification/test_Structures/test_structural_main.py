@@ -3,14 +3,14 @@ import os
 import pytest as pt
 import numpy as np
 
-target_folder = os.path.join(os.path.dirname(__file__), "..")
+target_folder = os.path.join(os.path.dirname(__file__), "..", '..')
 sys.path.append(os.path.abspath(target_folder))
 
 
-from Structural_Sizing.Main import *
-from Structural_Sizing.ForceAndStressCals import *
-from Structural_Sizing.InertiaCalcs import *
-from Structural_Sizing.Main_for_testing import *
+from Structural_Sizing_unittest_version.Main import *
+from Structural_Sizing_unittest_version.ForceAndStressCals import *
+from Structural_Sizing_unittest_version.InertiaCalcs import *
+from Structural_Sizing_unittest_version.Main_for_testing import *
 
 # def test_structure_main_runs():
 
