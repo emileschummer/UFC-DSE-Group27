@@ -32,6 +32,9 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     # Load and build Airfoil
     airfoil_coordinates = load_airfoil_dat(airfoil_dat_path)
     my_airfoil = asb.Airfoil(name, coordinates=airfoil_coordinates)
+    # print(my_airfoil.max_thickness())
+    # print(my_airfoil.local_thickness())
+
     t0 = time.perf_counter() # Initialize t0 with the current time
     # 1. Geometry
     wing_geom, airplane_geom = setup_wing_and_airplane(my_airfoil, num_spanwise_sections, r_chord, t_chord, r_twist, t_twist, no_quarterchord_sweep(r_chord, t_chord))
@@ -48,31 +51,31 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     t3 = time.perf_counter()
     print(f"3) 2D stall database: {t3 - t2:.2f} s")
 
-    if Plot:
-        import matplotlib.pyplot as plt
-        plt.figure(figsize=(10, 7))
-        plt.plot(stall_database_df['Re_polar'], stall_database_df['alpha_stall_2D'], marker='o', linestyle='-')
-        plt.xlabel("Reynolds Number")
-        plt.ylabel("2D Stall Angle")
-        # plt.title("2D Stall Angle vs Reynolds Number")
-        plt.grid(True)
-        plt.show()
+    # if Plot:
+    #     import matplotlib.pyplot as plt
+    #     plt.figure(figsize=(10, 7))
+    #     plt.plot(stall_database_df['Re_polar'], stall_database_df['alpha_stall_2D'], marker='o', linestyle='-')
+    #     plt.xlabel("Reynolds Number")
+    #     plt.ylabel("2D Stall Angle")
+    #     # plt.title("2D Stall Angle vs Reynolds Number")
+    #     plt.grid(True)
+    #     plt.show()
 
-        plt.figure(figsize=(10, 7))
-        plt.plot(stall_database_df['Re_polar'], stall_database_df['Cl_max_2D'], marker='s', linestyle='-')
-        plt.xlabel("Reynolds Number")
-        plt.ylabel("Max 2D Lift Coefficient")
-        # plt.title("Max 2D Lift Coefficient vs Reynolds Number")
-        plt.grid(True)
-        plt.show()
+    #     plt.figure(figsize=(10, 7))
+    #     plt.plot(stall_database_df['Re_polar'], stall_database_df['Cl_max_2D'], marker='s', linestyle='-')
+    #     plt.xlabel("Reynolds Number")
+    #     plt.ylabel("Max 2D Lift Coefficient")
+    #     # plt.title("Max 2D Lift Coefficient vs Reynolds Number")
+    #     plt.grid(True)
+    #     plt.show()
 
-        plt.figure(figsize=(10, 7))
-        plt.plot(stall_database_df['Re_polar'], stall_database_df['K_post'], marker='^', linestyle='-')
-        plt.xlabel("Reynolds Number")
-        plt.ylabel("Post-Stall Slope")
-        # plt.title("Post-Stall Slope vs Reynolds Number")
-        plt.grid(True)
-        plt.show()
+    #     plt.figure(figsize=(10, 7))
+    #     plt.plot(stall_database_df['Re_polar'], stall_database_df['K_post'], marker='^', linestyle='-')
+    #     plt.xlabel("Reynolds Number")
+    #     plt.ylabel("Post-Stall Slope")
+    #     # plt.title("Post-Stall Slope vs Reynolds Number")
+    #     plt.grid(True)
+    #     plt.show()
 
     # 4. Interpolation
     section_data_prepared = interpolate_stall_data_for_sections(section_data_list, stall_database_df, delta_alpha_3D_correction)
