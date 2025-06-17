@@ -1,18 +1,26 @@
+import sys
+import os
+
+# Add the parent directory of 'Acceleration_try' to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
+
 import time
 import numpy as np
 import aerosandbox as asb
 import pandas as pd
 import os
-from Modelling.Wing_Sizing.Airfoil import setup_wing_and_airplane, calculate_section_properties_and_reynolds, generate_2d_stall_database, interpolate_stall_data_for_sections, run_vlm_sweep_with_stall_correction, plot_aerodynamic_coefficients
+from Final_UAV_Sizing.Modelling.Wing_Sizing.Airfoil import setup_wing_and_airplane, calculate_section_properties_and_reynolds, generate_2d_stall_database, interpolate_stall_data_for_sections, run_vlm_sweep_with_stall_correction, plot_aerodynamic_coefficients
 # from Test import setup_wing_and_airplane, calculate_section_properties_and_reynolds, generate_2d_stall_database, interpolate_stall_data_for_sections, run_vlm_sweep_with_stall_correction, plot_aerodynamic_coefficients
-from Modelling.Wing_Sizing.Functions import load_airfoil_dat
-from Modelling.Wing_Sizing.AerodynamicForces import load_distribution_halfspan
+from Final_UAV_Sizing.Modelling.Wing_Sizing.Functions import load_airfoil_dat
+from Final_UAV_Sizing.Modelling.Wing_Sizing.AerodynamicForces import load_distribution_halfspan
 
 
 
-def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat",
+def run_full_aero( airfoil_dat_path: str = r"Final_UAV_Sizing/Input/AirfoilData/"
+"Airfoil.dat",
     name = "S1223",
-    xfoil_path: str = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe",
+    xfoil_path: str = r"Final_UAV_Sizing/XFOIL6.99/xfoil.exe",
     operational_velocity: float = 9.16,
     num_spanwise_sections: int = 200,
     vlm_chordwise_resolution = 10,
@@ -83,9 +91,8 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
         "Cm_vlm": CM_vlm
     })
     try:
-        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         df.to_csv(csv_path, index=False, encoding="utf-8")
-        df.to_csv(os.path.join(output_folder, f"aero_specific_{timestamp}.csv"), index=False, encoding="utf-8")
+        df.to_csv(os.path.join(output_folder, "aero_specific.csv"), index=False, encoding="utf-8")
         print(f"Saved alpha–CL–CD sweep to '{csv_path}' and '{os.path.join(output_folder, 'aero.csv')}'")
     except Exception as e:
         print(f"Failed to save CSV: {e}")
