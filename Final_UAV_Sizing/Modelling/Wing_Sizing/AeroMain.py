@@ -83,8 +83,9 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
         "Cm_vlm": CM_vlm
     })
     try:
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         df.to_csv(csv_path, index=False, encoding="utf-8")
-        df.to_csv(os.path.join(output_folder, "aero_specific.csv"), index=False, encoding="utf-8")
+        df.to_csv(os.path.join(output_folder, f"aero_specific_{timestamp}.csv"), index=False, encoding="utf-8")
         print(f"Saved alpha–CL–CD sweep to '{csv_path}' and '{os.path.join(output_folder, 'aero.csv')}'")
     except Exception as e:
         print(f"Failed to save CSV: {e}")

@@ -34,7 +34,7 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
 
         calculate_power = calculate_power_FC
         # 1. Follow a cyclist with 1 battery, no relay station
-        time_plot, distance_plot, power_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot = simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
+        time_plot, distance_plot, power_plot,power_h_plot,power_v_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot = simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
         
         # 2. Calculate battery capacity and threshold
         total_battery_energy = battery_energy_plot[-1]
@@ -43,6 +43,7 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
         # 3. Simulate battery switches
         # We'll build new arrays as we go
         new_time, new_distance, new_power, new_speed = [], [], [], []
+        new_power_v_plot, new_power_h_plot = [],[]
         new_gradient, new_acceleration, new_pitch_rate = [], [], []
         new_rho, new_altitude, new_battery_energy = [], [], []
 
@@ -70,6 +71,8 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
             new_time.extend(time_plot[start_idx:go_charge_idx])
             new_distance.extend(distance_plot[start_idx:go_charge_idx])
             new_power.extend(power_plot[start_idx:go_charge_idx])
+            new_power_v_plot.extend(power_v_plot[start_idx:go_charge_idx])
+            new_power_h_plot.extend(power_h_plot[start_idx:go_charge_idx])
             new_speed.extend(speed_plot[start_idx:go_charge_idx])
             new_gradient.extend(gradient_plot[start_idx:go_charge_idx])
             new_acceleration.extend(acceleration_plot[start_idx:go_charge_idx])
@@ -125,7 +128,7 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
                     acceleration = 0
                     pitch_rate = (gradient - previous_pitch) / dt
                     previous_pitch = pitch_rate
-                    P = calculate_power(df_vertical,df_horizontal,gradient,velocity,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, d_fus, w_fus, L_blade, w_blade, L_stab, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
+                    P,P_horizontal,P_vertical = calculate_power(df_vertical,df_horizontal,gradient,velocity,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, d_fus, w_fus, L_blade, w_blade, L_stab, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
                     P+= PL_power  # Add power for payload
                     energy +=  P*dt/3600  # Convert J to Wh
                 else: 
@@ -144,6 +147,8 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
                 new_time.append(time_now)
                 new_distance.append(distance)
                 new_power.append(P)
+                new_power_v_plot.append(P_vertical)
+                new_power_h_plot.append(P_horizontal)
                 new_speed.append(velocity)
                 new_gradient.append(gradient_for_plot)
                 new_acceleration.append(acceleration)
@@ -167,6 +172,8 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
                 new_time.append(time_plot[i])
                 new_distance.append(distance_plot[i])
                 new_power.append(power_plot[i])
+                new_power_v_plot.append(power_v_plot[i])
+                new_power_h_plot.append(power_h_plot[i])
                 new_speed.append(speed_plot[i])
                 new_gradient.append(gradient_plot[i])
                 new_acceleration.append(acceleration_plot[i])
@@ -178,15 +185,15 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
                 necessary_battery_capacity = new_battery_energy[-1]
         
         print(necessary_battery_capacity, "Wh")
-        race_results[race_name] = [necessary_battery_capacity,time_plot,power_plot,speed_plot,gradient_plot,battery_energy_plot,new_time,new_power,new_speed,new_gradient,new_battery_energy]
+        race_results[race_name] = [necessary_battery_capacity,time_plot,power_plot,power_h_plot,power_v_plot,speed_plot,gradient_plot,battery_energy_plot,new_time,new_power,new_power_h_plot,new_power_v_plot,new_speed,new_gradient,new_battery_energy]
 
         # Plot original and new (with relay stations) on the same figure
         fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
         # Plot original
-        plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot,
+        plot(time_plot, power_plot,power_v_plot,power_h_plot, speed_plot, gradient_plot, battery_energy_plot,
             race_name + " (original)", V_vert_prop, battery_usable_capacity, axs=axs)
         # Plot new (with relay stations)
-        plot(new_time, new_power, new_speed, new_gradient, new_battery_energy,
+        plot(new_time, new_power,new_power_h_plot,new_power_v_plot, new_speed, new_gradient, new_battery_energy,
             race_name + " (relay stations)", V_vert_prop, battery_usable_capacity, multiple_RS=True, axs=axs)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_path = os.path.join(output_folder, f"Power_speed_gradient_energy_vs_time_{race_name.replace('.csv', '')}_{timestamp}.png")
@@ -201,17 +208,17 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
     print("---------Summary--------------------------------------------------------------------\n")
     if race_results:
         max_race = max(race_results, key=lambda k: race_results[k][0])
-        max_battery_energy,time_plot,power_plot,speed_plot,gradient_plot,battery_energy_plot,new_time,new_power,new_speed,new_gradient,new_battery_energy = race_results[max_race]
+        max_battery_energy,time_plot,power_plot,power_h_plot,power_v_plot,speed_plot,gradient_plot,battery_energy_plot,new_time,new_power,new_power_h_plot,new_power_v_plot,new_speed,new_gradient,new_battery_energy = race_results[max_race]
         print(f"Maximum battery capacity necessary: {max_battery_energy:.2f} Wh (Race: {max_race})\n")
         avg_battery_energy = sum(result[0] for result in race_results.values()) / len(race_results)
         print(f"Average battery capacity necessary across all races: {avg_battery_energy:.2f} Wh\n")
                 # Plot original and new (with relay stations) on the same figure
         fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
         # Plot original
-        plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot,
+        plot(time_plot, power_plot,power_h_plot,power_v_plot, speed_plot, gradient_plot, battery_energy_plot,
             race_name + " (original)", V_vert_prop, battery_usable_capacity, axs=axs)
         # Plot new (with relay stations)
-        plot(new_time, new_power, new_speed, new_gradient, new_battery_energy,
+        plot(new_time, new_power,new_power_h_plot,new_power_v_plot, new_speed, new_gradient, new_battery_energy,
             race_name + " (relay stations)", V_vert_prop, battery_usable_capacity, multiple_RS=True, axs=axs)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_path = os.path.join(output_folder, f"Power_speed_gradient_energy_vs_time_{race_name.replace('.csv', '')}_{timestamp}.png")
@@ -233,6 +240,7 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
 def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker):
     # Prepare arrays
     time_plot, distance_plot, power_plot, speed_plot = [], [], [], []
+    power_v_plot, power_h_plot = [], []
     gradient_plot, acceleration_plot, pitch_rate_plot = [], [], []
     rho_plot, battery_energy_plot, altitude_plot = [], [], []
     t, prev_velocity, prev_grade_smooth, energy = 0, 0, 0, 0
@@ -252,13 +260,15 @@ def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, 
                 pitch_rate = 0
             prev_velocity = velocity_smooth
             prev_grade_smooth = grade_smooth
-            P = calculate_power(df_vertical,df_horizontal,grade_smooth,velocity_smooth,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, d_fus, w_fus, L_blade, w_blade, L_stab, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
+            P,P_horizontal,P_vertical = calculate_power(df_vertical,df_horizontal,grade_smooth,velocity_smooth,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, d_fus, w_fus, L_blade, w_blade, L_stab, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
             P+= PL_power  # Add power for payload
             energy += time_diff * P/3600  # Convert J to Wh
             t = time
             time_plot.append(time)
             distance_plot.append(distance)
             power_plot.append(P)
+            power_v_plot.append(P_vertical)
+            power_h_plot.append(P_horizontal)
             speed_plot.append(velocity_smooth)
             gradient_plot.append(row[" grade_smooth"])
             acceleration_plot.append(acceleration)
@@ -266,15 +276,17 @@ def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, 
             rho_plot.append(rho)
             altitude_plot.append(altitude)
             battery_energy_plot.append(energy)
-    return time_plot, distance_plot, power_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot
+    return time_plot, distance_plot, power_plot,power_h_plot,power_v_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot
 
-def plot(time_plot, power_plot, speed_plot, gradient_plot, battery_energy_plot, race_name, V_vert_prop, battery_usable_capacity, axs=None, multiple_RS=False):
+def plot(time_plot, power_plot,power_h_plot,power_v_plot, speed_plot, gradient_plot, battery_energy_plot, race_name, V_vert_prop, battery_usable_capacity, axs=None, multiple_RS=False):
     import matplotlib.pyplot as plt
 
     fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True) if axs is None else (plt.gcf(), axs)
     if multiple_RS:
         label = 'Multiple Relay Stations'
         axs[0].plot(time_plot, power_plot, label=label)
+        #axs[0].plot(time_plot, power_v_plot, label=label + ' Vertical',color='orange')
+        #axs[0].plot(time_plot, power_h_plot, label=label + ' Horizontal', color='green')
         axs[1].plot(time_plot, speed_plot, label='UAV Speed', color='black')
         axs[2].plot(time_plot, gradient_plot, label='UAV Gradient', color='black')
         axs[3].plot(time_plot, (1 - np.array(battery_energy_plot)/battery_usable_capacity)*100, label='UAV Battery Usage', color='blue')

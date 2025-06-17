@@ -20,7 +20,7 @@ t_twist = input.t_twist
 sweep = no_quarterchord_sweep(r_chord,t_chord) # [deg] quarter-chord sweep angle
 operational_altitude = input.altitude
 Re_numbers = input.Re_numbers
-Plot = input.show_plots
+Plot = True
 csv_path = input.aero_csv
 output_folder = "Final_UAV_Sizing/Output"
 ##Run
