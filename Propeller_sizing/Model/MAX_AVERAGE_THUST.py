@@ -28,10 +28,13 @@ L_fus = 2*L_n + L_c
 w_fus = S_wing / L_fus
 d = 0.25
 
-aero_df = pd.read_csv(os.path.join(os.path.dirname(__file__), 'aero.csv'))
+aero_df = pd.read_csv('Propeller_sizing/Model/aero.csv')
 
 races = sva.make_race_dictionnary()
-
+df_vertical = pd.read_csv('Propeller_sizing/Input/Prop_Engine_Data/UAV_Propellers_and_Motor_Specs_Vertical.csv')
+df_vertical['Thrust_N']= df_vertical[' Thrust_g '] * g /1000
+df_horizontal = pd.read_csv('Propeller_sizing/Input/Prop_Engine_Data/UAV_Propellers_and_Motor_Specs_Horizontal.csv')
+df_horizontal['Thrust_N']= df_horizontal[' Thrust_g '] * g /1000
 
 for race_name, race_data in races.items():
     
@@ -75,7 +78,6 @@ for race_name, race_data in races.items():
         Tvertical_list.append(Tvertical)
         Thorizontal_list.append(Thorizontal)
         CD_list.append(CD)
-    
     # Statistics calculations
     print(f"\nRace: {race_name}")
     print(f"Maximum absolute vertical thrust: {max(abs(np.array(Tvertical_list))):.2f} N")
@@ -89,6 +91,7 @@ for race_name, race_data in races.items():
     print(f"75th percentile horizontal thrust: {horizontal_q75:.2f} N")
     print(f"Average CD: {sum(CD_list)/len(CD_list):.6f}")
     
+    '''
     # Create subplots
     fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(12, 16), sharex=True)
     
@@ -121,5 +124,46 @@ for race_name, race_data in races.items():
     ax4.legend()
     
     plt.tight_layout()
+    #plt.show()
+    '''
+'''
+def CD_alpha(velocity_smooth, rho, altitude):
+        Cf_blade= flat_plate_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_blade, w_blade)
+        Cf_stab = flat_plate_drag_coefficient(velocity_smooth, rho, altitude,S_wing,L_stab, w_stab)
+        Cf_poles = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_poles, w_poles)
+        Cf_fus = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_fus, w_fus)
+        CD_speaker = cube_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_speaker)
+        CD_gimbal = cube_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_gimbal)
+        CD_motor = cube_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_motor)
+        CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing)
+        alpha= aero_df["Alpha_deg"]
+        CD_wing = aero_df["CD_vlm"]
+        CD_total = CD_fus + CD_gimbal + CD_speaker + CD_wing + 4 * Cf_blade + 3 * Cf_stab + 2 * Cf_poles + 4 * CD_motor
+        if velocity_smooth == 15:
+            CD_ref= 0.24 + 0.001428 * alpha + 0.001429 * alpha**2
+        elif velocity_smooth == 11:
+            CD_ref = 0.3127 -0.002008 * alpha + 0.001483 * alpha**2
+        return alpha, CD_total, CD_ref
+
+velocities = [11, 15]
+for velocity in velocities:
+    plt.figure(figsize=(10, 6))
+    alpha, CD_UAV, CD_ref = CD_alpha(velocity, 1.225, 0)
+    alpha_mask = alpha >= -5
+    plt.plot(alpha[alpha_mask], CD_UAV[alpha_mask], label=f'UAV CD at V = {velocity} m/s')
+    plt.plot(alpha[alpha_mask], CD_ref[alpha_mask], label=f'Reference CD at V = {velocity} m/s', linestyle='--')
+    plt.xlabel('Angle of Attack (degrees)')
+    plt.ylabel('Drag Coefficient (CD)') 
+    plt.title('Drag Coefficient vs Angle of Attack')
+    plt.grid()
+    error = np.mean(np.abs(CD_UAV[alpha_mask] - CD_ref[alpha_mask]))
+    plt.text(0.02, 0.98, f'Average Error: {error:.4f}', 
+             transform=plt.gca().transAxes, 
+             verticalalignment='center')
+    plt.legend()
+    # Calculate and display average error
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper right')
+    plt.tight_layout()
     plt.show()
 
+'''

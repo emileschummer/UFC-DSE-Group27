@@ -61,7 +61,7 @@ def generate_2d_stall_database(airfoil_profile, section_data, alpha_range2D, xfo
     discrete_Re_values = np.array(sorted(list(set(
         np.round(np.geomspace(max(5e4, min_Re_section * 0.8), min(1e7, max_Re_section * 1.2), Re_numbers) / 1e4) * 1e4
     )))) #lower Re numbers more significant changes so log scale used
-    # print(f"Discrete Re for polars: {discrete_Re_values}")
+    print(f"Discrete Re for polars: {discrete_Re_values}")
 
     stall_data_dictionary = []
     airfoil_for_polars = asb.Airfoil(name=airfoil_profile.name, coordinates=airfoil_profile.coordinates)
@@ -113,7 +113,7 @@ def generate_2d_stall_database(airfoil_profile, section_data, alpha_range2D, xfo
             'Re_polar': Re_value, 'alpha_stall_2D': alpha_stall_2D,
             'Cl_max_2D': Cl_max_2D, 'K_post': K_post
         })
-        # print(f"  Re={Re_value:.2e}: alpha_stall_2D={alpha_stall_2D:.2f} deg, Cl_max_2D={Cl_max_2D:.3f}, K_post={K_post:.4f}")
+        print(f"  Re={Re_value:.2e}: alpha_stall_2D={alpha_stall_2D:.2f} deg, Cl_max_2D={Cl_max_2D:.3f}, K_post={K_post:.4f}")
 
     if not stall_data_dictionary:
         raise RuntimeError("Failed to generate any 2D polar data. Check XFoil setup and Re range.")

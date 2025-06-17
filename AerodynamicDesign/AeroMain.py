@@ -13,8 +13,8 @@ from AerodynamicForces import load_distribution_halfspan
 def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\Airfoil.dat",
     name = "S1223",
     xfoil_path: str = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe",
-    operational_velocity: float = 10,
-    num_spanwise_sections: int = 150,
+    operational_velocity: float = 9.16,
+    num_spanwise_sections: int = 200,
     vlm_chordwise_resolution = 10,
     delta_alpha_3D_correction: float = 1.0,
     alpha_range2D: np.ndarray = np.linspace(-10, 25, 36),
@@ -25,7 +25,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     t_twist: float = 0.0,
     sweep: float = 0.0,
     operational_altitude: float = 0.0,
-    Re_numbers: int = 4,
+    Re_numbers: int = 8,
     Plot = True,
     csv_path: str = "C:\\Users\\marco\\Documents\\GitHub\\UFC-DSE-Group27\\AerodynamicDesign\\aero.csv") -> dict:
 
@@ -47,6 +47,32 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     stall_database_df = generate_2d_stall_database(my_airfoil, section_data_list, alpha_range2D, xfoil_path, Re_numbers)
     t3 = time.perf_counter()
     print(f"3) 2D stall database: {t3 - t2:.2f} s")
+
+    if Plot:
+        import matplotlib.pyplot as plt
+        plt.figure(figsize=(10, 7))
+        plt.plot(stall_database_df['Re_polar'], stall_database_df['alpha_stall_2D'], marker='o', linestyle='-')
+        plt.xlabel("Reynolds Number")
+        plt.ylabel("2D Stall Angle")
+        # plt.title("2D Stall Angle vs Reynolds Number")
+        plt.grid(True)
+        plt.show()
+
+        plt.figure(figsize=(10, 7))
+        plt.plot(stall_database_df['Re_polar'], stall_database_df['Cl_max_2D'], marker='s', linestyle='-')
+        plt.xlabel("Reynolds Number")
+        plt.ylabel("Max 2D Lift Coefficient")
+        # plt.title("Max 2D Lift Coefficient vs Reynolds Number")
+        plt.grid(True)
+        plt.show()
+
+        plt.figure(figsize=(10, 7))
+        plt.plot(stall_database_df['Re_polar'], stall_database_df['K_post'], marker='^', linestyle='-')
+        plt.xlabel("Reynolds Number")
+        plt.ylabel("Post-Stall Slope")
+        # plt.title("Post-Stall Slope vs Reynolds Number")
+        plt.grid(True)
+        plt.show()
 
     # 4. Interpolation
     section_data_prepared = interpolate_stall_data_for_sections(section_data_list, stall_database_df, delta_alpha_3D_correction)
@@ -179,6 +205,7 @@ if __name__ == "__main__":
         rho = op_point_for_atmo.atmosphere.density()
 
         S = 250/(0.5*rho*velocity_op**2*CL)
+        
         
     
         cr = 2*S/(b*(1 + taper_ratio))
