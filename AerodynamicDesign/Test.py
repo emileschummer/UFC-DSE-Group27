@@ -1,14 +1,15 @@
 from AeroMain import run_full_aero
 import numpy as np
 from matplotlib import pyplot as plt
+import os
 import aerosandbox as asb
 import pandas as pd
 from Functions import load_airfoil_dat, no_quarterchord_sweep
 
 # Operating parameters
-airfoil_dat_path = r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\S1223.dat"
+airfoil_dat_path = os.path.join("AerodynamicDesign", "AirfoilData", "S1223.dat")
 name = "S1223"
-xfoil_path = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe" # Kept as it might be used if XFOIL functionality is added
+xfoil_path = r"Final_UAV_Sizing\XFOIL6.99\xfoil.exe" # Kept as it might be used if XFOIL functionality is added
 num_spanwise_sections = 200 # For the main wing geometry definition
 num_spanwise_sections_h = 50
 
@@ -19,8 +20,8 @@ my_airfoil = asb.Airfoil(name=name, coordinates=airfoil_coordinates)
 # 1. Geometry Definition
 # Define Main Wing
 main_wing_half_span = 1.575
-r_chord = 0.91 # Main wing root chord
-t_chord = 0.36 # Main wing tip chord
+r_chord = 1.659 # Main wing root chord
+t_chord = 0.8297 # Main wing tip chord
 r_twist = 0.0  # Main wing root twist
 t_twist = 0.0  # Main wing tip twist
 sweep = no_quarterchord_sweep(r_chord, t_chord)    # Main wing sweep
@@ -62,7 +63,7 @@ fuselage = asb.Fuselage(
 # Define Horizontal Stabilizer
 h_stab_airfoil = asb.Airfoil("naca0012")
 h_stab_x_le_root = 3 # Positioned aft of the main wing
-h_stab_half_span = 1
+h_stab_half_span = 1.55
 h_stab_root_chord = 0.3
 h_stab_tip_chord = 0.3
 h_stab_twist = -3 # Typical for stability
@@ -168,6 +169,7 @@ def run_full_plane_analysis( # Renamed and simplified parameters
         )
         vlm_results_plane = vlm_instance.run()
 
+        """
         # Draw VLM results if the current alpha matches the specified one
         if draw_vlm_at_alpha is not None and np.isclose(alpha_val, draw_vlm_at_alpha):
             print(f"\nDrawing VLM analysis for alpha = {alpha_val:.2f} deg...")
@@ -175,7 +177,7 @@ def run_full_plane_analysis( # Renamed and simplified parameters
                 show=True,
                 draw_streamlines=True,
             )
-            print("VLM drawing displayed. Close the window to continue analysis.")
+            print("VLM drawing displayed. Close the window to continue analysis.")"""
 
         CL_vlm_plane_total = vlm_results_plane.get("CL", np.nan)
         CD_vlm_plane_total = vlm_results_plane.get("CD", np.nan)
