@@ -9,7 +9,7 @@ from Functions import load_airfoil_dat, no_quarterchord_sweep
 airfoil_dat_path = r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\S1223.dat"
 name = "S1223"
 xfoil_path = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe" # Kept as it might be used if XFOIL functionality is added
-num_spanwise_sections = 200 # For the main wing geometry definition
+num_spanwise_sections = 20 # For the main wing geometry definition
 num_spanwise_sections_h = 50
 
 # Load and build Airfoil for the main wing
@@ -45,59 +45,59 @@ main_wing = asb.Wing(
 ).subdivide_sections(num_spanwise_sections) # Subdivide for detailed geometry for VLM
 
 # Define Fuselage
-fuselage_length = 0.6
-fuselage_max_radius = 0.1
-fuselage_x_start = 0 
-fuselage = asb.Fuselage(
-    name="Fuselage",
-    xsecs=[
-        asb.FuselageXSec(xyz_c=[fuselage_x_start, 0, 0], radius=0),
-        asb.FuselageXSec(xyz_c=[fuselage_x_start + 0.1 * fuselage_length, 0, 0], radius=fuselage_max_radius * 0.5),
-        asb.FuselageXSec(xyz_c=[fuselage_x_start + 0.4 * fuselage_length, 0, 0], radius=fuselage_max_radius),
-        asb.FuselageXSec(xyz_c=[fuselage_x_start + 0.7 * fuselage_length, 0, 0], radius=fuselage_max_radius * 0.8),
-        asb.FuselageXSec(xyz_c=[fuselage_x_start + fuselage_length, 0, 0], radius=0),
-    ]
-)
+# fuselage_length = 1
+# fuselage_max_radius = 0.25
+# fuselage_x_start = 0 
+# fuselage = asb.Fuselage(
+#     name="Fuselage",
+#     xsecs=[
+#         asb.FuselageXSec(xyz_c=[fuselage_x_start, 0, 0], radius=0),
+#         asb.FuselageXSec(xyz_c=[fuselage_x_start + 0.1 * fuselage_length, 0, 0], radius=fuselage_max_radius * 0.5),
+#         asb.FuselageXSec(xyz_c=[fuselage_x_start + 0.4 * fuselage_length, 0, 0], radius=fuselage_max_radius),
+#         asb.FuselageXSec(xyz_c=[fuselage_x_start + 0.7 * fuselage_length, 0, 0], radius=fuselage_max_radius * 0.8),
+#         asb.FuselageXSec(xyz_c=[fuselage_x_start + fuselage_length, 0, 0], radius=0),
+#     ]
+# )
 
 # Define Horizontal Stabilizer
-h_stab_airfoil = asb.Airfoil("naca0012")
-h_stab_x_le_root = 3 # Positioned aft of the main wing
-h_stab_half_span = 1
-h_stab_root_chord = 0.3
-h_stab_tip_chord = 0.3
-h_stab_twist = -3 # Typical for stability
-h_stab_sweep = 0 # Slight sweep for the H-stab
+# h_stab_airfoil = asb.Airfoil("naca0012")
+# h_stab_x_le_root = 3 # Positioned aft of the main wing
+# h_stab_half_span = 1
+# h_stab_root_chord = 0.3
+# h_stab_tip_chord = 0.3
+# h_stab_twist = -3 # Typical for stability
+# h_stab_sweep = 0 # Slight sweep for the H-stab
 
-h_stab = asb.Wing(
-    name="HorizontalStabilizer",
-    xsecs=[
-        asb.WingXSec(
-            xyz_le=[h_stab_x_le_root, 0, 0.05],  # Slightly above fuselage centerline
-            chord=h_stab_root_chord,
-            twist=h_stab_twist,
-            airfoil=h_stab_airfoil,
-            control_surfaces=[
-                asb.ControlSurface(
-                    name="elevator",
-                    symmetric=True,
-                    hinge_point=0.75,
-                    deflection=0.0
-                )
-            ]
-        ),
-        asb.WingXSec(
-            xyz_le=[
-                h_stab_x_le_root + h_stab_half_span * np.tan(np.deg2rad(h_stab_sweep)),
-                h_stab_half_span,
-                0.05
-            ],
-            chord=h_stab_tip_chord,
-            twist=h_stab_twist,
-            airfoil=h_stab_airfoil,
-        ),
-    ],
-    symmetric=True,
-).subdivide_sections(num_spanwise_sections_h)
+# h_stab = asb.Wing(
+#     name="HorizontalStabilizer",
+#     xsecs=[
+#         asb.WingXSec(
+#             xyz_le=[h_stab_x_le_root, 0, 0.05],  # Slightly above fuselage centerline
+#             chord=h_stab_root_chord,
+#             twist=h_stab_twist,
+#             airfoil=h_stab_airfoil,
+#             control_surfaces=[
+#                 asb.ControlSurface(
+#                     name="elevator",
+#                     symmetric=True,
+#                     hinge_point=0.75,
+#                     deflection=0.0
+#                 )
+#             ]
+#         ),
+#         asb.WingXSec(
+#             xyz_le=[
+#                 h_stab_x_le_root + h_stab_half_span * np.tan(np.deg2rad(h_stab_sweep)),
+#                 h_stab_half_span,
+#                 0.05
+#             ],
+#             chord=h_stab_tip_chord,
+#             twist=h_stab_twist,
+#             airfoil=h_stab_airfoil,
+#         ),
+#     ],
+#     symmetric=True,
+# ).subdivide_sections(num_spanwise_sections_h)
 
 
 cg_location = [0.33 * r_chord, 0, 0]
@@ -106,8 +106,8 @@ cg_location = [0.33 * r_chord, 0, 0]
 airplane_geom = asb.Airplane(
     name="CompleteAircraft",
     xyz_ref=cg_location,
-    wings=[main_wing, h_stab],
-    fuselages=[fuselage],
+    wings=[main_wing], #h_stab],
+    # fuselages=[fuselage],
     s_ref=main_wing.area(), # Explicitly set reference values
     c_ref=main_wing.mean_aerodynamic_chord(),
     b_ref=main_wing.span()
@@ -128,7 +128,7 @@ def run_full_plane_analysis( # Renamed and simplified parameters
     operational_velocity: float = 10.0,
     operational_altitude: float = 0.0,
     vlm_spanwise_resolution: int = 1, # Added for clarity, was hardcoded
-    vlm_chordwise_resolution: int = 8,
+    vlm_chordwise_resolution: int = 1,
     draw_vlm_at_alpha: float = None
 ):
     """
@@ -217,7 +217,7 @@ if __name__ == "__main__":
     analysis_velocity = 10.0
     analysis_altitude = 0.0
     analysis_vlm_span_res = 1 # Spanwise panels per pre-defined wing section
-    analysis_vlm_chord_res = 6
+    analysis_vlm_chord_res = 1
     analysis_draw_vlm_at_alpha = 10.0 # Example: Draw VLM when alpha is 5.0 degrees
 
     # 3. Run the full analysis
