@@ -57,7 +57,7 @@ def dummy_distribution(x):
 
 @pt.fixture
 def model():
-    Materials_Input = [PLA3DPrintMaterial(),PLA3DPrintMaterial(),PLA3DPrintMaterial(),PLA3DPrintMaterial(),PLA3DPrintMaterial()]
+    Materials_Input = [DogshitTestMaterial(),Aluminum2024T4(),DogshitTestMaterial(),DogshitTestMaterial(),DogshitTestMaterial()]
     VTOL_Input = [0.01, 0.736, 70.6, 2.28]
     Tail_Input = [0.15, 3, 20, 30]
     Legs_Input = [0.25, 25]
@@ -72,10 +72,9 @@ def test_model_output(model):
     assert isinstance(result, tuple)
     assert len(result) == 7
     result = np.array(result)
-    expected_results = np.array([ 0.508806,  0.140241 ,  3.93376,  0.899878 ,  2.36539,
-        7.33927, 14.8481])
+    expected_results = np.array([0.410328, 3.42119, 665.730, 2.01747, 96.0046, 767.173, 774.584])
     assert np.allclose(result, expected_results, rtol=1e-5, atol=1e-8)
-    print(result)
+    # print(result)
 
 def test_init_sets_attributes(model):
     assert hasattr(model, "Materials_Input")
@@ -110,6 +109,15 @@ def test_init_loads_sets_loads(model):
     assert hasattr(model, "T_Vtol")
     assert hasattr(model, "Main_Engine_Thrust")
 
+def test_wing_moments(model):
+    model.init_geometry()
+    model.init_materials()
+    model.init_loads()
+    Mz, My, Mx = -43.0448,1.125,-84.6917
+    assert My == pt.approx(model.Wing_MY, rel=1e-5)
+    assert Mz == pt.approx(model.Wing_MZ, rel=1e-5)
+    assert Mx == pt.approx(model.Wing_MX, rel=1e-5)
+
 def test_optimize_vtol_front_runs(model):
     # Should update R_out_VTOL_front and not raise
     before = model.R_out_VTOL_front
@@ -137,9 +145,6 @@ def test_optimize_fuselage_runs(model):
     assert model.R_out_fuselage >= before
 
 def test_calculate_skin_mass_returns_positive(model, monkeypatch: pt.MonkeyPatch):
-    # Patch AirfoilDataExtraction functions to avoid file IO
-    monkeypatch.setattr("Structural_Sizing.Main_for_testing.load_airfoil_dat", lambda x: [(0,0),(1,0),(1,1),(0,1)])
-    monkeypatch.setattr("Structural_Sizing.Main_for_testing.Airfoil_Moment_of_Inertia", lambda pts, scale: (0,0,0,1.0*scale))
     mass = model.calculate_skin_mass()
     assert isinstance(mass, float)
     assert mass > 0

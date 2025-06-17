@@ -7,6 +7,7 @@ from scipy.integrate import quad
 def Max_Force(l, F1_eq, F2_eq):
     steps = l/0.001
     Max = 0
+    steps = int(steps)  # Ensure steps is an integer
     for i in range(steps):
         F1 = F1_eq*(i*0.001)
         F2 = F2_eq*(i*0.001)
