@@ -17,13 +17,11 @@ def load_distribution_halfspan(wing_geom, lift_distribution, alpha, half_span=1.
 
     # Calculate midpoints between consecutive y-values
     y_midpoints = np.array([(y1 + y2) / 2 for y1, y2 in zip(y_values[:-1], y_values[1:])])
-    
-    distribution = [y_midpoints / half_span, lift_distribution["CLs"][index]]
+    div = y_midpoints / float(half_span)
+    distribution = [div, lift_distribution["CLs"][index]]
 
-    output_folder = os.path.join(output_folder, "Wing_Sizing")
-    os.makedirs(output_folder, exist_ok=True)
     plt.figure()
-    plt.plot(y_midpoints / half_span, lift_distribution["CLs"][index], label=f'alpha {lift_distribution["alpha"][index]}')
+    plt.plot(div, lift_distribution["CLs"][index], label=f'alpha {lift_distribution["alpha"][index]}')
     plt.xlabel("x/b/2")
     plt.ylabel("Lift")
     plt.legend()

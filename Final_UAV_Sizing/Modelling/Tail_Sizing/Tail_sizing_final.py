@@ -115,6 +115,7 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span
         max_tail_force = 0.5*rho*Sh*Clhmax*33**2
     except (ValueError, ZeroDivisionError, Exception) as e:
         # Handle cases where min() fails or Sh_results is empty or division by zero
+        print("There was an issue, reverted to default values")
         Sh = 1
         Clh0 = 0.4
         alpha_result = 0
