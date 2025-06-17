@@ -1,4 +1,9 @@
+import sys
 import os
+
+# Add the parent directory of 'Acceleration_try' to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 import numpy as np
 import pandas as pd
 import pytest
