@@ -426,7 +426,7 @@ if __name__ == "__main__":
 
     
     #RUN IT
-    result = Structure_Main(Materials_Input=[Aluminum7075T6(),Aluminum2024T4(),Aluminum2024T4(),NaturalFibre(),NaturalFibre()],#BRAM MOLEST HERE 
+    result = Structure_Main(Materials_Input=[DogshitTestMaterial(),Aluminum2024T4(),DogshitTestMaterial(),DogshitTestMaterial(),DogshitTestMaterial()],#BRAM MOLEST HERE 
                 VTOL_Input=[0.01,0.736,70.6,2.28],
                 Tail_Input=[0.15,3,20,30],
                 Legs_Input=[0.25,25],

@@ -225,14 +225,14 @@ class StructureModel:
                     if (Fuselage_VonMises_Sec3_Stress < self.Material_Fuselage.Yield_Stress and
                         Fuselage_Axial_Stress_sec3 < Fuselage_Buckle_sec3 and
                         Fuselage_VonMises_Sec3_Shear < self.Material_Fuselage.Yield_Shear):
-                        print("Passes Section 1,2,3")
+                        # print("Passes Section 1,2,3")
                         break
                     else:
                         self.R_out_fuselage += 1 / 1000
-                        print("Passes Section 1,2")
+                        # print("Passes Section 1,2")
                 else:
                     self.R_out_fuselage += 1 / 1000
-                    print("Passes Section 1")
+                    # print("Passes Section 1")
             else:
                 self.R_out_fuselage += 1 / 1000
 
@@ -280,29 +280,25 @@ class StructureModel:
         Total_Mass = Structure_mass + self.Fuselage_Sec1_mass + self.Fuselage_Sec2_mass + Skin_mass
         return Skin_mass, Leg_Mass, Vtol_Pole_Mass, WingBox_Mass, Fuselage_Mass, Structure_mass, Total_Mass
 
-# Usage:
-# model = StructureModel(Materials_Input, VTOL_Input, Tail_Input, Legs_Input, Wing_Input, Fuselage_Input, SF, BigG)
-# result = model.run()
+# if __name__ == "__main__":
 
-if __name__ == "__main__":
+#     Lift_Thing = lift_distribution_test
+#     Drag_Thing = Drag_distribution_test
+#     #RUN IT
+#     model = StructureModel(Materials_Input=[DogshitTestMaterial(),Aluminum2024T4(),DogshitTestMaterial(),DogshitTestMaterial(),DogshitTestMaterial()],#BRAM MOLEST HERE 
+#                 VTOL_Input=[0.01,0.736,70.6,2.28],
+#                 Tail_Input=[0.15,3,20,30],
+#                 Legs_Input=[0.25,25],
+#                 Wing_Input=[3,0.65,18,Lift_Thing,Drag_Thing],
+#                 Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,150,10,2,5,0.8,10],
+#                 SF=1.5,BigG=1.1)
 
-    Lift_Thing = lift_distribution_test
-    Drag_Thing = Drag_distribution_test
-    #RUN IT
-    model = StructureModel(Materials_Input=[Aluminum7075T6(),Aluminum2024T4(),Aluminum2024T4(),NaturalFibre(),NaturalFibre()],#BRAM MOLEST HERE 
-                VTOL_Input=[0.01,0.736,70.6,2.28],
-                Tail_Input=[0.15,3,20,30],
-                Legs_Input=[0.25,25],
-                Wing_Input=[3,0.65,18,Lift_Thing,Drag_Thing],
-                Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,150,10,2,5,0.8,10],
-                SF=1.5,BigG=1.1)
-
-    result = model.run()
-    print("Skin Mass:", result[0])
-    print("Leg Mass:", result[1])
-    print("VTOL Pole Mass:", result[2])
-    print("Wing Box Mass:", result[3])
-    print("Fuselage Mass:", result[4])
-    print("Structure Mass:", result[5])
-    print("Total Mass:", result[6])
+#     result = model.run()
+#     print("Skin Mass:", result[0])
+#     print("Leg Mass:", result[1])
+#     print("VTOL Pole Mass:", result[2])
+#     print("Wing Box Mass:", result[3])
+#     print("Fuselage Mass:", result[4])
+#     print("Structure Mass:", result[5])
+#     print("Total Mass:", result[6])
 
