@@ -2,7 +2,7 @@ import sys
 import os
 
 # Add the parent directory of 'Acceleration_try' to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 import pytest as pt
 import pandas as pd
@@ -17,7 +17,11 @@ a= 5
 gamma_dot = 2
 aero_df = pd.read_csv(aero_csv)
 
-# UNIT 03
+S_wing = 2
+CLmax = 2
+w_fus = S_wing / L_fus
+
+# UFC 1
 expected_CD_flat= 0.00014110307
 def test_flat_plate_drag_coefficient():
 
@@ -25,7 +29,7 @@ def test_flat_plate_drag_coefficient():
 
     assert pt.approx(result, rel=1e-6) == expected_CD_flat
 
-#UNIT 04
+#UFC 2
 expected_CD_cube = 0.008426384
 def test_cube_drag_coefficient():
 
@@ -34,7 +38,7 @@ def test_cube_drag_coefficient():
     assert pt.approx(result, rel=1e-6) == expected_CD_cube
 
 
-# UNIT 05
+# UFC 3
 expected_CD_fus = 0.004261856
 def test_fuselage_drag_coefficient():
 
@@ -43,7 +47,7 @@ def test_fuselage_drag_coefficient():
     
     assert pt.approx(result, rel=1e-6) == expected_CD_fus
 
-# SUBSYSTEM 01
+# UFC 4
 CF_fus = flat_plate_drag_coefficient(V, rho, h, S_wing, L_fus, w_fus)
 CD_fus = fuselage_drag_coefficient(L_n, L_c, CF_fus, d_fus, S_wing)
 CD_gimbal = cube_drag_coefficient(V, rho, h, S_wing, L_gimbal)
@@ -64,7 +68,7 @@ def test_calculate_thrust_UFC_FC():
 
     assert pt.approx(result, rel=1e-6) == expected_result
 
-#SUBSYSTEM 02
+#UFC 5
 vert_folder = "Final_UAV_Sizing/Input/Prop_Engine_Data/UAV_Propellers_and_Motor_Specs_Vertical.csv"
 hor_folder = "Final_UAV_Sizing/Input/Prop_Engine_Data/UAV_Propellers_and_Motor_Specs_Horizontal.csv"
 

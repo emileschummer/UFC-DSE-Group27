@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pytest as pt
 from Final_UAV_Sizing.Input.RaceData.Strava_input_csv import *
 
-#Unit 1
+#SI 1
 h=1200
 rho_hand= 1.089952589
 
@@ -24,7 +24,7 @@ def test_air_density_isa():
     # Assert that the result is close to the expected value
     assert pt.approx(result, rel=1e-6) == expected_rho
 
-#Unit 2
+#SI 2
 rho= 1.01
 h_hand= 1965.22482011
 def test_altitude_from_density():
