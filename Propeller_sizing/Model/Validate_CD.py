@@ -66,6 +66,14 @@ def CD_alpha():
         0.06455, 0.07028, 0.07643, 0.08295, 0.08986, 0.09706, 0.10460, 0.11243,
         0.12059, 0.12894, 0.13747, 0.14618, 0.15513, 0.16430, 0.17371
         ])
+        CL = np.array([
+        0.0382, 0.0959, 0.1509, 0.2039, 0.2585,
+        0.5050, 0.5469, 0.5905, 0.6344, 0.6782, 0.7215, 0.7637, 0.8042,
+        0.8419, 0.8787, 0.9147, 0.9494, 0.9828, 1.0097, 1.0370, 1.0627,
+        1.0864, 1.1079, 1.1269, 1.1436, 1.1580, 1.1698, 1.1796, 1.1877,
+        1.1936, 1.1975, 1.1998, 1.2009, 1.2002, 1.1981, 1.1951, 1.1914,
+        1.1868, 1.1820, 1.1769, 1.1717, 1.1668, 1.1619, 1.1572
+        ])
         ai=5
 
         alpha = alpha_w-ai
@@ -80,8 +88,8 @@ def CD_alpha():
             CD_ref = 0.3127 - 0.002008 * alpha + 0.001483 * alpha**2
         else:
             CD_ref = np.full_like(alpha, np.nan)
-        
-        mask = alpha >= 0
+        d_CD= CD_ref-CD_UAV
+        mask = (alpha >= 0) & (alpha <= 10)
         alpha_filtered = alpha[mask]
         CD_UAV_filtered = CD_UAV[mask]
         CD_ref_filtered = CD_ref[mask]
@@ -94,10 +102,13 @@ def CD_alpha():
         plt.title('Drag Coefficient vs Angle of Attack')
         plt.grid(True)
 
-        error = np.mean(np.abs(CD_UAV - CD_ref))
+        error = np.mean(np.abs(CD_UAV_filtered - CD_ref_filtered))
         plt.text(0.02, 0.98, f'Average Error: {error:.4f}', transform=plt.gca().transAxes, verticalalignment='top')
         plt.legend(bbox_to_anchor=(1.05, 1), loc='upper right')
         plt.tight_layout()
         plt.show()
 
 print(CD_alpha())
+
+#alpha at 15m/s = -2.500
+#alpha at 11m/s = 9

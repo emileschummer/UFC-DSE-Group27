@@ -103,4 +103,11 @@ def test_Battery_Model(tmp_path):
     assert isinstance(max_energy, float)
     assert max_energy > 0
 
-    
+#BM 4
+def test_Battery_Size():
+    max_battery_energy= 0
+    expected_mass= 0
+    expected_volume= 0
+    battery_mass,battery_volume= Battery_Size(max_battery_energy, battery_safety_margin = 1.2, battery_energy_density = 450, battery_volumetric_density= 200)
+    assert pt.approx(expected_mass, rel=1e-6) == battery_mass
+    assert pt.approx(expected_volume, rel=1e-6) == battery_volume
