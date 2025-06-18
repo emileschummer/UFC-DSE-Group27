@@ -14,7 +14,7 @@ from scipy.optimize import curve_fit
 #TODO ASK ALEX FOR FEEDBACK
 #TODO CHECK VON MISES FOR ALL, ITS FOR CROSS SECTION POINT, NOT ENTIRE CROSS SECTION 
 #------------------------------------------------------
-SummonTheCouncil()
+
 def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,Fuselage_Input,SF,BigG):
 # def Structures_Main():
     #--------------------------------------------------
