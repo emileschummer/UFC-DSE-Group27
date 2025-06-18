@@ -16,7 +16,7 @@ from Modelling.Wing_Sizing.AeroMain import run_full_aero
 from Modelling.Wing_Sizing.Functions import no_quarterchord_sweep
 from Modelling.Wing_Sizing.AerodynamicForces import load_distribution_halfspan
 from Modelling.Propeller_and_Battery_Sizing.Model.Battery_modelling import Battery_Model, Battery_Size
-from Modelling.Tail_Sizing.Tail_sizing_final import get_tail_size
+from Modelling.Tail_Sizing.Tail_sizing_final import get_tail
 #Structures imports
 from Modelling.Structural_Sizing.Main import Structure_Main
 from Modelling.Structural_Sizing.Materials import Aluminum7075T6, Aluminum2024T4, NaturalFibre
@@ -50,7 +50,7 @@ def main_iteration(outputs,number_relay_stations, M_list,start_time):
         S_mw, cr, ct = wing_geometry_calculator(InputWeight, aero_df, velocity_op, altitude, taper_ratio, b)
     ##1.2 Aerodynamic Values
         ##Prepare input values
-        airfoil_dat_path = os.path.join("Final_UAV_Sizing", "Input", "AirfoilData", "Airfoil.dat")
+        airfoil_dat_path = os.path.join("Final_UAV_Sizing", "Input", "AirfoilData", "S1223.dat")
         name = "S1223"
         xfoil_path = input.xfoil
         operational_velocity = input.V_stall*input.V_stall_safety_margin
@@ -182,8 +182,21 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         Clhmax = input.Clhmax
         Cd0_wing = aero_df.loc[(aero_df["CL_corrected"] - 0).abs().idxmin(), "CD_vlm"]
         output_folder = outputs
+
+        show = input.show_plots
+        Clalpha =Clalpha
+        Clhalpha = input.Clhalpha
+        Clmax = aero_df["CL_corrected"].max()
+        Clhmax = input.Clhmax
+        Cmac = aero_df.loc[(aero_df["CL_corrected"] - 0).abs().idxmin(), "Cm_vlm"]
+        S = S_mw
+        c = S_mw/input.b
+        lh = input.lh
+        tail_span = input.tail_span
+        stability_margin = input.stability_margin
         ##Run
-        Sh, Clh0, tail_span_loop, tail_chord_loop,lh,max_tail_force = get_tail_size(W, piAe, Clalpha,Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing,output_folder)
+        Sh, Clh0, tail_span_loop, tail_chord_loop,lh,max_tail_force = get_tail(show,Clalpha,Clhalpha,Clmax,Clhmax,Cmac,S,c,lh,tail_span,stability_margin)
+
 #5. Structure Sizing
         print("\n--------------------------------------------------")
         print("Structure Sizing")
@@ -274,7 +287,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
                            0.2*Sh*(20)**2*1.225*1/2,          #Horizontal Distributed Load [N/m], # TODO
                            25],         #Vertical Distributed Load [N/m] # TODO
 
-               Legs_Input=[0.30,        # Leg Length [m],
+               Legs_Input=[input.L_landing_leg,        # Leg Length [m],
                            InputWeight/input.g],         #UAV Total mass [kg]
 
                Wing_Input=[input.b,         # Wing Box Length [m], TODO
@@ -314,6 +327,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         results_dict = {
             # Wing values
             "Wing Surface[m2]": S_mw,
+            "Span [m]": input.b,
             "Root chord[m]": cr,
             "Tip chord[m]": ct,
             "MAC[m]": (cr + ct) / 2,

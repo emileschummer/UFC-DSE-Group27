@@ -1,0 +1,3231 @@
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 1 for 1 Relay Stations with M_init = 18.63 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 46.20 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         280.60 s
+6) Plotting:          0.26 s
+Total runtime:        327.09 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_1\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+4005.216565372027 Wh
+---------BMN-Lbel-270425.csv---------
+5034.33951994296 Wh
+---------FV-Lbel-270425.csv---------
+3949.2100652695185 Wh
+---------JE-Bita-290624.csv---------
+4650.639504184443 Wh
+---------NP-PPita-020724.csv---------
+3642.467291117644 Wh
+---------PS-Bita-290624.csv---------
+4420.869491814203 Wh
+---------PS-Cbel-230425.csv---------
+3636.0567903923243 Wh
+---------PS-Eita-300624.csv---------
+3824.788283264363 Wh
+---------PS-Lbel-270425.csv---------
+4717.398349272168 Wh
+---------PS-Pita-010724.csv---------
+4107.652636762905 Wh
+---------PS-PPita-020724.csv---------
+3141.699603217737 Wh
+---------RE-Bita-290624.csv---------
+3811.0616548483254 Wh
+---------RE-Cbel-230425.csv---------
+3512.364742725491 Wh
+---------RE-Cbel-270425.csv---------
+4669.433830729856 Wh
+---------RE-Eita-300624.csv---------
+3483.718327161179 Wh
+---------RE-Pita-010724.csv---------
+3792.172693147441 Wh
+---------RS-Cbel-230425.csv---------
+3042.524056609854 Wh
+---------RS-Lbel-270425.csv---------
+3964.868440798399 Wh
+---------TP-Bita-290624.csv---------
+3832.6473374678376 Wh
+---------TP-Cbel-230425.csv---------
+3472.6884514379412 Wh
+---------TP-Eita-300624.csv---------
+3467.612902724709 Wh
+---------TP-Lbel-270425.csv---------
+4652.2093775248 Wh
+---------TP-Pita-010724.csv---------
+3740.8833827323947 Wh
+---------WA-Bita-290624.csv---------
+4395.648285904339 Wh
+---------WA-Pita-010724.csv---------
+4091.341091366719 Wh
+---------WE-Eita-300624.csv---------
+3806.2454057424134 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 5034.34 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 3956.38 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 31193038.85303147 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 18009309.378640175 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 57358470.8976354 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 33115928.613055117 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 381.44642240287493 The yield stress 324.0
+The Von Mises Shear Wingbox: 220.22819465571956 The yield stress 283.0
+The Axial stress Wingbox: 0.006069555047152388 The Buckle stress 48.880936881839624
+The Tip Deflection is: 0.006289499614505507 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0023858503216742807 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03716455105348594 0.03616455105348594 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 198.5813785015761 The yield stress 324.0
+The Von Mises Shear Wingbox: 114.65101233393192 The yield stress 283.0
+The Axial stress Wingbox: 0.003076735427589546 The Buckle stress 47.58434654503189
+The Tip Deflection is: 0.0032751018032919103 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0011929251608371403 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03716455105348594 0.03516455105348594 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 23996944.245415125 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 5999236.061353781 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 2666327.138379458 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1499809.0153384453 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 147.3640984070703 The yield stress 150.0
+The Von Mises Shear Sec2: 85.08070188420854 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 6.3091419058509945 The yield stress 150.0
+The Von Mises Shear Sec3: 3.6425847776986204 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 37.038476804779876 The yield stress 150.0
+The Von Mises Shear Sec2: 21.384174553613374 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 3.141786672246596 The yield stress 150.0
+The Von Mises Shear Sec3: 1.8139113809579508 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.5180085857662756
+VTOL POLE MASS: 1.6067264450861491
+FUSELAGE MASS: 1.382613486067085
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.9796812769116396
+-------------------------------------------
+THE STRUCTURE MASS: 7.738558268048163
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 13.42490538651456 kg, Structure Mass: 7.738558268048163 kg
+Final Mass for 1 Relay Stations: 26.79346365456272 kg (iteration 1)
+[16.767, 18.63, 26.79346365456272]
+Current Runtime of main: 00:07:06 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 2 for 1 Relay Stations with M_init = 26.79 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 47.34 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         280.00 s
+6) Plotting:          0.16 s
+Total runtime:        327.53 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_1\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+5441.606135994498 Wh
+---------BMN-Lbel-270425.csv---------
+6777.222244978225 Wh
+---------FV-Lbel-270425.csv---------
+5372.311022535817 Wh
+---------JE-Bita-290624.csv---------
+6567.739848397943 Wh
+---------NP-PPita-020724.csv---------
+5385.666008055832 Wh
+---------PS-Bita-290624.csv---------
+6121.748455776418 Wh
+---------PS-Cbel-230425.csv---------
+4840.473711177634 Wh
+---------PS-Eita-300624.csv---------
+5046.639824388975 Wh
+---------PS-Lbel-270425.csv---------
+6304.479437301801 Wh
+---------PS-Pita-010724.csv---------
+5447.137445990353 Wh
+---------PS-PPita-020724.csv---------
+4521.336653555478 Wh
+---------RE-Bita-290624.csv---------
+5192.289975583652 Wh
+---------RE-Cbel-230425.csv---------
+4663.90573111143 Wh
+---------RE-Cbel-270425.csv---------
+6245.914874298743 Wh
+---------RE-Eita-300624.csv---------
+4501.230904439201 Wh
+---------RE-Pita-010724.csv---------
+4936.698118309875 Wh
+---------RS-Cbel-230425.csv---------
+3977.0808322173675 Wh
+---------RS-Lbel-270425.csv---------
+5371.938933073618 Wh
+---------TP-Bita-290624.csv---------
+5221.332983768821 Wh
+---------TP-Cbel-230425.csv---------
+4587.8449747461445 Wh
+---------TP-Eita-300624.csv---------
+4483.082641992685 Wh
+---------TP-Lbel-270425.csv---------
+6189.94968970884 Wh
+---------TP-Pita-010724.csv---------
+4922.308524190822 Wh
+---------WA-Bita-290624.csv---------
+6077.172749674594 Wh
+---------WA-Pita-010724.csv---------
+5352.3376838038275 Wh
+---------WE-Eita-300624.csv---------
+5014.158370823239 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 6777.22 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 5329.37 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 46468210.795734875 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 26828434.011677805 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 95123559.50701064 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 54919612.68764798 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 216.1514368823357 The yield stress 324.0
+The Von Mises Shear Wingbox: 124.79509026974092 The yield stress 283.0
+The Axial stress Wingbox: 0.011650353199542662 The Buckle stress 84.41126773968539
+The Tip Deflection is: 0.002973755493423123 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0030750732586683877 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.04868299810841188 0.04768299810841188 0.0010000000000000009
+----------------------------------------------------
+The Leg Stress: 34512144.576494806 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 8628036.144123701 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 3834682.7307216446 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 2157009.0360309253 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 109.83609266074713 The yield stress 150.0
+The Von Mises Shear Sec2: 63.41389766441903 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 6.947460853378207 The yield stress 150.0
+The Von Mises Shear Sec3: 4.011118393882295 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.8888609121734825
+VTOL POLE MASS: 1.6363991853779343
+FUSELAGE MASS: 0.7462229362727236
+LEG MASS: 0.2515284742170132
+WingBox Mass 2.6511178744334494
+-------------------------------------------
+THE STRUCTURE MASS: 6.174129382474604
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 18.072592653275265 kg, Structure Mass: 6.174129382474604 kg
+Final Mass for 1 Relay Stations: 29.876722035749868 kg (iteration 2)
+[16.767, 18.63, 26.79346365456272, 29.876722035749868]
+Current Runtime of main: 00:14:11 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 3 for 1 Relay Stations with M_init = 29.88 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 48.19 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         282.45 s
+6) Plotting:          0.17 s
+Total runtime:        330.84 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_1\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+6089.692292935645 Wh
+---------BMN-Lbel-270425.csv---------
+7571.8910050659 Wh
+---------FV-Lbel-270425.csv---------
+6015.91954740912 Wh
+---------JE-Bita-290624.csv---------
+7408.171905479973 Wh
+---------NP-PPita-020724.csv---------
+6079.689731419273 Wh
+---------PS-Bita-290624.csv---------
+6891.972836017249 Wh
+---------PS-Cbel-230425.csv---------
+5401.242268479235 Wh
+---------PS-Eita-300624.csv---------
+5583.786714744775 Wh
+---------PS-Lbel-270425.csv---------
+7030.4943753399375 Wh
+---------PS-Pita-010724.csv---------
+5993.567353492717 Wh
+---------PS-PPita-020724.csv---------
+5137.404932192364 Wh
+---------RE-Bita-290624.csv---------
+5820.287081100119 Wh
+---------RE-Cbel-230425.csv---------
+5189.951924101281 Wh
+---------RE-Cbel-270425.csv---------
+6969.756462895179 Wh
+---------RE-Eita-300624.csv---------
+4926.953716306263 Wh
+---------RE-Pita-010724.csv---------
+5429.335214320842 Wh
+---------RS-Cbel-230425.csv---------
+4411.42734244138 Wh
+---------RS-Lbel-270425.csv---------
+6011.9502008986765 Wh
+---------TP-Bita-290624.csv---------
+5854.078629597418 Wh
+---------TP-Cbel-230425.csv---------
+5116.32156755765 Wh
+---------TP-Eita-300624.csv---------
+4899.35524114664 Wh
+---------TP-Lbel-270425.csv---------
+6899.466002181807 Wh
+---------TP-Pita-010724.csv---------
+5447.211743634238 Wh
+---------WA-Bita-290624.csv---------
+6842.644823616631 Wh
+---------WA-Pita-010724.csv---------
+5899.2310821279125 Wh
+---------WE-Eita-300624.csv---------
+5551.249089014308 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 7571.89 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 5941.27 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 53345877.69838114 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 30799256.849317208 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 115956433.84166665 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 66947478.292755276 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 165.9663067557128 The yield stress 324.0
+The Von Mises Shear Wingbox: 95.8206918818188 The yield stress 283.0
+The Axial stress Wingbox: 0.01624265026020219 The Buckle stress 109.19803328685575
+The Tip Deflection is: 0.002072362298620701 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0028973942843308594 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.05530325127569234 0.05430325127569234 0.0010000000000000009
+----------------------------------------------------
+The Leg Stress: 38483630.32354563 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 9620907.580886407 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 4275958.924838403 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 2405226.8952216017 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 98.48654643902249 The yield stress 150.0
+The Von Mises Shear Sec2: 56.86123409812622 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 7.1098401830921505 The yield stress 150.0
+The Von Mises Shear Sec3: 4.104868143603472 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 1.147045128096835
+VTOL POLE MASS: 1.653453659124425
+FUSELAGE MASS: 0.7725128191347771
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.0153764758920385
+-------------------------------------------
+THE STRUCTURE MASS: 6.839916556465089
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 20.191709346842398 kg, Structure Mass: 6.839916556465089 kg
+Final Mass for 1 Relay Stations: 32.66162590330749 kg (iteration 3)
+[16.767, 18.63, 26.79346365456272, 29.876722035749868, 32.66162590330749]
+Current Runtime of main: 00:21:18 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 4 for 1 Relay Stations with M_init = 32.66 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 49.02 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         281.00 s
+6) Plotting:          0.17 s
+Total runtime:        330.22 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_1\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+6680.308848634726 Wh
+---------BMN-Lbel-270425.csv---------
+8306.787160601947 Wh
+---------FV-Lbel-270425.csv---------
+6590.8979515408755 Wh
+---------JE-Bita-290624.csv---------
+8198.852003241136 Wh
+---------NP-PPita-020724.csv---------
+6784.371070092103 Wh
+---------PS-Bita-290624.csv---------
+7615.346866846429 Wh
+---------PS-Cbel-230425.csv---------
+5917.31165526744 Wh
+---------PS-Eita-300624.csv---------
+5968.065795893648 Wh
+---------PS-Lbel-270425.csv---------
+7685.033567499136 Wh
+---------PS-Pita-010724.csv---------
+6404.818107967748 Wh
+---------PS-PPita-020724.csv---------
+5721.469342182772 Wh
+---------RE-Bita-290624.csv---------
+6408.754787057137 Wh
+---------RE-Cbel-230425.csv---------
+5694.369285472337 Wh
+---------RE-Cbel-270425.csv---------
+7651.973951948196 Wh
+---------RE-Eita-300624.csv---------
+5221.582138691258 Wh
+---------RE-Pita-010724.csv---------
+5839.545962710012 Wh
+---------RS-Cbel-230425.csv---------
+4800.472705794215 Wh
+---------RS-Lbel-270425.csv---------
+6591.115718992576 Wh
+---------TP-Bita-290624.csv---------
+6451.3295532453885 Wh
+---------TP-Cbel-230425.csv---------
+5611.404392122075 Wh
+---------TP-Eita-300624.csv---------
+5226.72863419281 Wh
+---------TP-Lbel-270425.csv---------
+7534.927620665467 Wh
+---------TP-Pita-010724.csv---------
+5864.251536607518 Wh
+---------WA-Bita-290624.csv---------
+7576.026205105929 Wh
+---------WA-Pita-010724.csv---------
+6329.575299562424 Wh
+---------WE-Eita-300624.csv---------
+5952.671748332352 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 8306.79 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 6485.69 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 59912996.06401106 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 34590784.40551378 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 136317927.43403786 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 78703192.09941363 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 133.95469352489076 The yield stress 324.0
+The Von Mises Shear Wingbox: 77.3387783658095 The yield stress 283.0
+The Axial stress Wingbox: 0.020246231776441723 The Buckle stress 134.63490288969302
+The Tip Deflection is: 0.001548804559049267 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.00269785203677182 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.06135288346157026 0.06035288346157026 0.0010000000000000009
+----------------------------------------------------
+The Leg Stress: 42070811.36694987 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 10517702.841737468 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 4674534.596327764 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 2629425.710434367 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 89.93775291022364 The yield stress 150.0
+The Von Mises Shear Sec2: 51.92558585302766 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 7.165864126058027 The yield stress 150.0
+The Von Mises Shear Sec3: 4.137213582155884 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 1.4117218391454034
+VTOL POLE MASS: 1.669038152750726
+FUSELAGE MASS: 0.7968252557312334
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.348238453173795
+-------------------------------------------
+THE STRUCTURE MASS: 7.477352175018172
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 22.151432428271857 kg, Structure Mass: 7.477352175018172 kg
+Final Mass for 1 Relay Stations: 35.258784603290025 kg (iteration 4)
+[16.767, 18.63, 26.79346365456272, 29.876722035749868, 32.66162590330749, 35.258784603290025]
+Current Runtime of main: 00:28:26 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 5 for 1 Relay Stations with M_init = 35.26 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 48.24 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         282.88 s
+6) Plotting:          0.16 s
+Total runtime:        331.32 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_1\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+7324.060850738495 Wh
+---------BMN-Lbel-270425.csv---------
+9096.557551115553 Wh
+---------FV-Lbel-270425.csv---------
+7218.920075263294 Wh
+---------JE-Bita-290624.csv---------
+9056.060684605449 Wh
+---------NP-PPita-020724.csv---------
+7535.185857586688 Wh
+---------PS-Bita-290624.csv---------
+8390.608339108616 Wh
+---------PS-Cbel-230425.csv---------
+6479.148290163055 Wh
+---------PS-Eita-300624.csv---------
+6433.881068395439 Wh
+---------PS-Lbel-270425.csv---------
+8408.874182660535 Wh
+---------PS-Pita-010724.csv---------
+6947.068994530861 Wh
+---------PS-PPita-020724.csv---------
+6353.378488405663 Wh
+---------RE-Bita-290624.csv---------
+7049.138427628075 Wh
+---------RE-Cbel-230425.csv---------
+6226.485803604271 Wh
+---------RE-Cbel-270425.csv---------
+8396.745251286016 Wh
+---------RE-Eita-300624.csv---------
+5624.048526424292 Wh
+---------RE-Pita-010724.csv---------
+6323.508628993561 Wh
+---------RS-Cbel-230425.csv---------
+5242.32445467806 Wh
+---------RS-Lbel-270425.csv---------
+7231.465854120626 Wh
+---------TP-Bita-290624.csv---------
+7096.980459786743 Wh
+---------TP-Cbel-230425.csv---------
+6125.044209751312 Wh
+---------TP-Eita-300624.csv---------
+5610.504837515539 Wh
+---------TP-Lbel-270425.csv---------
+8246.222309659717 Wh
+---------TP-Pita-010724.csv---------
+6364.858290624712 Wh
+---------WA-Bita-290624.csv---------
+8335.872087062879 Wh
+---------WA-Pita-010724.csv---------
+6881.705366963108 Wh
+---------WE-Eita-300624.csv---------
+6457.641439264836 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 9096.56 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 7094.47 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 66292123.68271426 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 38273775.45336705 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 157547093.44359127 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 90959856.80970055 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 111.29381226033472 The yield stress 324.0
+The Von Mises Shear Wingbox: 64.25551246764392 The yield stress 283.0
+The Axial stress Wingbox: 0.025619577494760157 The Buckle stress 160.26877607398862
+The Tip Deflection is: 0.001211871370591744 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.002536490055423102 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.06689404614066931 0.06589404614066931 0.0010000000000000009
+----------------------------------------------------
+The Leg Stress: 45416161.47537584 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 11354040.36884396 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 5046240.163930649 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 2838510.09221099 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 82.30523654451308 The yield stress 150.0
+The Von Mises Shear Sec2: 47.51895047469045 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 7.102586980753483 The yield stress 150.0
+The Von Mises Shear Sec3: 4.100680505280755 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 1.6782401505737417
+VTOL POLE MASS: 1.6833127750420291
+FUSELAGE MASS: 0.8229530867186126
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.653123495624871
+-------------------------------------------
+THE STRUCTURE MASS: 8.089157982176268
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 24.257486802974807 kg, Structure Mass: 8.089157982176268 kg
+Final Mass for 1 Relay Stations: 37.97664478515107 kg (iteration 5)
+[16.767, 18.63, 26.79346365456272, 29.876722035749868, 32.66162590330749, 35.258784603290025, 37.97664478515107]
+Current Runtime of main: 00:35:34 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 6 for 1 Relay Stations with M_init = 37.98 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 52.98 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         277.43 s
+6) Plotting:          0.21 s
+Total runtime:        330.65 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_1\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+8131.003472864912 Wh
+---------BMN-Lbel-270425.csv---------
+10100.037101913053 Wh
+---------FV-Lbel-270425.csv---------
+8029.303491839457 Wh
+---------JE-Bita-290624.csv---------
+10107.60966872562 Wh
+---------NP-PPita-020724.csv---------
+8422.122789031782 Wh
+---------PS-Bita-290624.csv---------
+9345.403840753652 Wh
+---------PS-Cbel-230425.csv---------
+7187.2966222611685 Wh
+---------PS-Eita-300624.csv---------
+7081.87521157467 Wh
+---------PS-Lbel-270425.csv---------
+9343.553520715008 Wh
+---------PS-Pita-010724.csv---------
+7711.149193684301 Wh
+---------PS-PPita-020724.csv---------
+7101.215961413376 Wh
+---------RE-Bita-290624.csv---------
+7842.197789653705 Wh
+---------RE-Cbel-230425.csv---------
+6897.452978346191 Wh
+---------RE-Cbel-270425.csv---------
+9329.796843166587 Wh
+---------RE-Eita-300624.csv---------
+6191.224307298149 Wh
+---------RE-Pita-010724.csv---------
+7030.359530130723 Wh
+---------RS-Cbel-230425.csv---------
+5760.492826465424 Wh
+---------RS-Lbel-270425.csv---------
+8064.9628431239 Wh
+---------TP-Bita-290624.csv---------
+7888.406217954447 Wh
+---------TP-Cbel-230425.csv---------
+6784.0595380449995 Wh
+---------TP-Eita-300624.csv---------
+6163.12666732937 Wh
+---------TP-Lbel-270425.csv---------
+9149.198583191757 Wh
+---------TP-Pita-010724.csv---------
+7076.439207018504 Wh
+---------WA-Bita-290624.csv---------
+9281.264487382108 Wh
+---------WA-Pita-010724.csv---------
+7630.010639809562 Wh
+---------WE-Eita-300624.csv---------
+7137.552012031243 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 10107.61 Wh (Race: JE-Bita-290624.csv)
+
+Average battery capacity necessary across all races: 7876.43 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 73191707.08401728 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 42257251.78740562 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 180780043.064865 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 104373406.52761194 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 93.8924087149678 The yield stress 324.0
+The Von Mises Shear Wingbox: 54.20880744644903 The yield stress 283.0
+The Axial stress Wingbox: 0.03118519062123792 The Buckle stress 188.4846386606211
+The Tip Deflection is: 0.0009685701815232517 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0023824718119040463 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.07250199004633973 0.07150199004633973 0.0010000000000000009
+----------------------------------------------------
+The Leg Stress: 48916984.83828262 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 12229246.209570656 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 5435220.537586957 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 3057311.552392664 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 74.29638877486296 The yield stress 150.0
+The Von Mises Shear Sec2: 42.89504005898422 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 6.830764847208968 The yield stress 150.0
+The Von Mises Shear Sec3: 3.943743923307131 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 1.9714194222468637
+VTOL POLE MASS: 1.6977594328501833
+FUSELAGE MASS: 0.8564015410613594
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.9616829649565775
+-------------------------------------------
+THE STRUCTURE MASS: 8.738791835331996
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 26.95362578326832 kg, Structure Mass: 8.738791835331996 kg
+Final Mass for 1 Relay Stations: 41.32241761860031 kg (iteration 6)
+[16.767, 18.63, 26.79346365456272, 29.876722035749868, 32.66162590330749, 35.258784603290025, 37.97664478515107, 41.32241761860031]
+Current Runtime of main: 00:42:42 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 1 for 2 Relay Stations with M_init = 18.63 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 45.47 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         281.04 s
+6) Plotting:          0.16 s
+Total runtime:        326.71 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_2\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+2670.0124577567713 Wh
+---------BMN-Lbel-270425.csv---------
+3356.125849755019 Wh
+---------FV-Lbel-270425.csv---------
+2874.5271276499566 Wh
+---------JE-Bita-290624.csv---------
+3100.428161251759 Wh
+---------NP-PPita-020724.csv---------
+2411.0423595752673 Wh
+---------PS-Bita-290624.csv---------
+3000.4848678599224 Wh
+---------PS-Cbel-230425.csv---------
+2418.1014959274025 Wh
+---------PS-Eita-300624.csv---------
+2549.4717942849966 Wh
+---------PS-Lbel-270425.csv---------
+3144.4099723717854 Wh
+---------PS-Pita-010724.csv---------
+2722.8107324007788 Wh
+---------PS-PPita-020724.csv---------
+2106.3539628460994 Wh
+---------RE-Bita-290624.csv---------
+2827.9159686513044 Wh
+---------RE-Cbel-230425.csv---------
+2327.254548383524 Wh
+---------RE-Cbel-270425.csv---------
+3112.443901504017 Wh
+---------RE-Eita-300624.csv---------
+2322.3913318304085 Wh
+---------RE-Pita-010724.csv---------
+2548.6618880724454 Wh
+---------RS-Cbel-230425.csv---------
+2080.325499682156 Wh
+---------RS-Lbel-270425.csv---------
+2702.588398095621 Wh
+---------TP-Bita-290624.csv---------
+2840.5006173931633 Wh
+---------TP-Cbel-230425.csv---------
+2314.8470243037555 Wh
+---------TP-Eita-300624.csv---------
+2311.3982332462647 Wh
+---------TP-Lbel-270425.csv---------
+3101.361269214646 Wh
+---------TP-Pita-010724.csv---------
+2493.2615504744517 Wh
+---------WA-Bita-290624.csv---------
+3137.427460427986 Wh
+---------WA-Pita-010724.csv---------
+2707.7299813263735 Wh
+---------WE-Eita-300624.csv---------
+2537.410522872493 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 3356.13 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 2681.51 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 31193038.85303147 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 18009309.378640175 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 57358470.8976354 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 33115928.613055117 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 381.44642240287493 The yield stress 324.0
+The Von Mises Shear Wingbox: 220.22819465571956 The yield stress 283.0
+The Axial stress Wingbox: 0.006069555047152388 The Buckle stress 48.880936881839624
+The Tip Deflection is: 0.006289499614505507 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0023858503216742807 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03716455105348594 0.03616455105348594 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 198.5813785015761 The yield stress 324.0
+The Von Mises Shear Wingbox: 114.65101233393192 The yield stress 283.0
+The Axial stress Wingbox: 0.003076735427589546 The Buckle stress 47.58434654503189
+The Tip Deflection is: 0.0032751018032919103 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0011929251608371403 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03716455105348594 0.03516455105348594 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 23996944.245415125 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 5999236.061353781 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 2666327.138379458 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1499809.0153384453 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 220.5009691158134 The yield stress 150.0
+The Von Mises Shear Sec2: 127.30629387558824 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 5.474918396649922 The yield stress 150.0
+The Von Mises Shear Sec3: 3.160945610097067 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 55.28230045734923 The yield stress 150.0
+The Von Mises Shear Sec2: 31.917251050472352 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.726377575719835 The yield stress 150.0
+The Von Mises Shear Sec3: 1.5740748272544063 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.5180085857662756
+VTOL POLE MASS: 1.6067264450861491
+FUSELAGE MASS: 1.2711310166747871
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.9796812769116396
+-------------------------------------------
+THE STRUCTURE MASS: 7.627075798655865
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 8.94966893268005 kg, Structure Mass: 7.627075798655865 kg
+Final Mass for 2 Relay Stations: 22.206744731335917 kg (iteration 1)
+[16.767, 18.63, 22.206744731335917]
+Current Runtime of main: 00:50:02 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 2 for 2 Relay Stations with M_init = 22.21 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.04 s
+2) Section calc:      0.00 s
+3) 2D stall database: 46.61 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         280.54 s
+6) Plotting:          0.16 s
+Total runtime:        327.36 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_2\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+3226.7527012288047 Wh
+---------BMN-Lbel-270425.csv---------
+4006.8326916706637 Wh
+---------FV-Lbel-270425.csv---------
+3382.840953081427 Wh
+---------JE-Bita-290624.csv---------
+3795.40036393213 Wh
+---------NP-PPita-020724.csv---------
+2984.713004662004 Wh
+---------PS-Bita-290624.csv---------
+3699.71582494847 Wh
+---------PS-Cbel-230425.csv---------
+2919.8298686565777 Wh
+---------PS-Eita-300624.csv---------
+3267.5398519363525 Wh
+---------PS-Lbel-270425.csv---------
+3762.8923921907317 Wh
+---------PS-Pita-010724.csv---------
+3468.5797253341616 Wh
+---------PS-PPita-020724.csv---------
+2579.490026175975 Wh
+---------RE-Bita-290624.csv---------
+3281.773979492168 Wh
+---------RE-Cbel-230425.csv---------
+2799.1202712938584 Wh
+---------RE-Cbel-270425.csv---------
+3709.317563593392 Wh
+---------RE-Eita-300624.csv---------
+2960.8937717503013 Wh
+---------RE-Pita-010724.csv---------
+3244.202375991884 Wh
+---------RS-Cbel-230425.csv---------
+2509.0463710103 Wh
+---------RS-Lbel-270425.csv---------
+3202.186020817571 Wh
+---------TP-Bita-290624.csv---------
+3297.8523946712944 Wh
+---------TP-Cbel-230425.csv---------
+2768.9694202402125 Wh
+---------TP-Eita-300624.csv---------
+2965.618157172664 Wh
+---------TP-Lbel-270425.csv---------
+3677.481009259197 Wh
+---------TP-Pita-010724.csv---------
+3201.295298749965 Wh
+---------WA-Bita-290624.csv---------
+3781.321253701241 Wh
+---------WA-Pita-010724.csv---------
+3465.9837116760264 Wh
+---------WE-Eita-300624.csv---------
+3289.7850893540035 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 4006.83 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 3278.82 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 37273408.075659916 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 21519812.186097026 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 70180859.01565441 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 40518937.84464725 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 319.8959961357998 The yield stress 324.0
+The Von Mises Shear Wingbox: 184.69203948168752 The yield stress 283.0
+The Axial stress Wingbox: 0.006975808814692123 The Buckle stress 57.739154361916505
+The Tip Deflection is: 0.00506030784910537 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0029807728805870464 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.040349053996440294 0.03934905399644029 0.0010000000000000009
+----------------------------------------------------
+The Leg Stress: 28604080.25711401 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 7151020.064278503 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 3178231.1396793346 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1787755.0160696257 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 184.85508916633498 The yield stress 150.0
+The Von Mises Shear Sec2: 106.72613549125579 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 5.894558230514097 The yield stress 150.0
+The Von Mises Shear Sec3: 3.403224781141238 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 46.38632429645356 The yield stress 150.0
+The Von Mises Shear Sec2: 26.78115681927474 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.9353414889509404 The yield stress 150.0
+The Von Mises Shear Sec3: 1.6947201988093024 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.6105846613601925
+VTOL POLE MASS: 1.614930062147904
+FUSELAGE MASS: 1.3143569818041834
+LEG MASS: 0.2515284742170132
+WingBox Mass 2.192568820469128
+-------------------------------------------
+THE STRUCTURE MASS: 5.983968999998421
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 10.684887177788436 kg, Structure Mass: 5.983968999998421 kg
+Final Mass for 2 Relay Stations: 22.298856177786856 kg (iteration 2)
+[16.767, 18.63, 22.206744731335917, 22.298856177786856]
+Current Runtime of main: 00:57:24 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 3 for 2 Relay Stations with M_init = 22.30 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 48.56 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         299.49 s
+6) Plotting:          0.16 s
+Total runtime:        348.25 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_2\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+3310.9809866159567 Wh
+---------BMN-Lbel-270425.csv---------
+4082.5789919563977 Wh
+---------FV-Lbel-270425.csv---------
+3458.1263639725307 Wh
+---------JE-Bita-290624.csv---------
+3896.216071169789 Wh
+---------NP-PPita-020724.csv---------
+3039.987136377058 Wh
+---------PS-Bita-290624.csv---------
+3818.462053054949 Wh
+---------PS-Cbel-230425.csv---------
+3012.501039499344 Wh
+---------PS-Eita-300624.csv---------
+3390.3488887500735 Wh
+---------PS-Lbel-270425.csv---------
+3840.402387061412 Wh
+---------PS-Pita-010724.csv---------
+3637.2608698397107 Wh
+---------PS-PPita-020724.csv---------
+2631.6308119858286 Wh
+---------RE-Bita-290624.csv---------
+3349.134799090601 Wh
+---------RE-Cbel-230425.csv---------
+2875.815369785265 Wh
+---------RE-Cbel-270425.csv---------
+3796.2811460746243 Wh
+---------RE-Eita-300624.csv---------
+3082.3489644424535 Wh
+---------RE-Pita-010724.csv---------
+3396.414148934022 Wh
+---------RS-Cbel-230425.csv---------
+2580.869364932683 Wh
+---------RS-Lbel-270425.csv---------
+3251.4503176651338 Wh
+---------TP-Bita-290624.csv---------
+3356.1489596305996 Wh
+---------TP-Cbel-230425.csv---------
+2847.936154901944 Wh
+---------TP-Eita-300624.csv---------
+3109.762528736752 Wh
+---------TP-Lbel-270425.csv---------
+3767.2885021439315 Wh
+---------TP-Pita-010724.csv---------
+3341.8123330090893 Wh
+---------WA-Bita-290624.csv---------
+3829.1386121248274 Wh
+---------WA-Pita-010724.csv---------
+3629.4423706015477 Wh
+---------WE-Eita-300624.csv---------
+3430.0692913310913 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 4082.58 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 3375.48 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 37359859.21408832 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 21569724.774140414 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 70206042.99137245 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 40533477.81980733 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 324.0269721322431 The yield stress 324.0
+The Von Mises Shear Wingbox: 187.07705958524994 The yield stress 283.0
+The Axial stress Wingbox: 0.007022124546291572 The Buckle stress 56.98012697702311
+The Tip Deflection is: 0.005165331647064177 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.003028826883082402 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.04008622213163585 0.03908622213163585 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 168.1855137292656 The yield stress 324.0
+The Von Mises Shear Wingbox: 97.101951625387 The yield stress 283.0
+The Axial stress Wingbox: 0.0035559765943779737 The Buckle stress 55.57731883078385
+The Tip Deflection is: 0.0026817259719409945 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.001514413441541201 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.04008622213163585 0.03808622213163585 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 28722727.237513784 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 7180681.809378446 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 3191414.1375015317 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1795170.4523446115 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 181.44530777782933 The yield stress 150.0
+The Von Mises Shear Sec2: 104.75749728872425 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 5.930039571408508 The yield stress 150.0
+The Von Mises Shear Sec3: 3.4237099428578355 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 45.535694691516866 The yield stress 150.0
+The Von Mises Shear Sec2: 26.290045587883878 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.953009673106603 The yield stress 150.0
+The Von Mises Shear Sec3: 1.7049209296876662 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.6026559291551953
+VTOL POLE MASS: 1.6142529794103129
+FUSELAGE MASS: 1.3193887514490095
+LEG MASS: 0.2515284742170132
+WingBox Mass 4.30119279435896
+-------------------------------------------
+THE STRUCTURE MASS: 8.089018928590491
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 10.886877311883728 kg, Structure Mass: 8.089018928590491 kg
+Final Mass for 2 Relay Stations: 24.60589624047422 kg (iteration 3)
+[16.767, 18.63, 22.206744731335917, 22.298856177786856, 24.60589624047422]
+Current Runtime of main: 01:05:08 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 4 for 2 Relay Stations with M_init = 24.61 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 48.71 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         286.31 s
+6) Plotting:          0.16 s
+Total runtime:        335.22 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_2\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+3594.2957494905477 Wh
+---------BMN-Lbel-270425.csv---------
+4447.159941161473 Wh
+---------FV-Lbel-270425.csv---------
+3740.4293625562127 Wh
+---------JE-Bita-290624.csv---------
+4271.346245060673 Wh
+---------NP-PPita-020724.csv---------
+3387.0088927210545 Wh
+---------PS-Bita-290624.csv---------
+4141.791728113333 Wh
+---------PS-Cbel-230425.csv---------
+3262.168344590352 Wh
+---------PS-Eita-300624.csv---------
+3713.5730440405023 Wh
+---------PS-Lbel-270425.csv---------
+4169.985558873159 Wh
+---------PS-Pita-010724.csv---------
+3954.3479863403118 Wh
+---------PS-PPita-020724.csv---------
+2939.817505585042 Wh
+---------RE-Bita-290624.csv---------
+3614.2662441791053 Wh
+---------RE-Cbel-230425.csv---------
+3109.9851411262225 Wh
+---------RE-Cbel-270425.csv---------
+4114.103452458654 Wh
+---------RE-Eita-300624.csv---------
+3370.6442216875266 Wh
+---------RE-Pita-010724.csv---------
+3690.388247274569 Wh
+---------RS-Cbel-230425.csv---------
+2785.025639332919 Wh
+---------RS-Lbel-270425.csv---------
+3541.3419924968453 Wh
+---------TP-Bita-290624.csv---------
+3618.9784211367732 Wh
+---------TP-Cbel-230425.csv---------
+3084.2044188917816 Wh
+---------TP-Eita-300624.csv---------
+3385.4615075981856 Wh
+---------TP-Lbel-270425.csv---------
+4082.385504402494 Wh
+---------TP-Pita-010724.csv---------
+3635.3664598747 Wh
+---------WA-Bita-290624.csv---------
+4151.573170309979 Wh
+---------WA-Pita-010724.csv---------
+3946.2039222052863 Wh
+---------WE-Eita-300624.csv---------
+3750.3005577173626 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 4447.16 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 3673.16 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 41859901.81545013 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 24167825.581401438 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 82170137.43116787 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 47440950.96523332 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 266.9512356653108 The yield stress 324.0
+The Von Mises Shear Wingbox: 154.1243677718704 The yield stress 283.0
+The Axial stress Wingbox: 0.009333917689012615 The Buckle stress 69.24958895715714
+The Tip Deflection is: 0.003952481153077508 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0031484179282868984 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.04414124067666979 0.04314124067666979 0.0010000000000000009
+----------------------------------------------------
+The Leg Stress: 31694381.116002653 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 7923595.279000663 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 3521597.9017780726 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1980898.8197501658 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 166.66183124004945 The yield stress 150.0
+The Von Mises Shear Sec2: 96.22225313007854 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 6.178144086971473 The yield stress 150.0
+The Von Mises Shear Sec3: 3.566953151705275 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 41.84860600638895 The yield stress 150.0
+The Von Mises Shear Sec2: 24.16130394299925 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 3.0765566487662612 The yield stress 150.0
+The Von Mises Shear Sec3: 1.776250809342334 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.7307490301451063
+VTOL POLE MASS: 1.624699136916737
+FUSELAGE MASS: 1.3436075891529222
+LEG MASS: 0.2515284742170132
+WingBox Mass 2.401221961324418
+-------------------------------------------
+THE STRUCTURE MASS: 6.3518061917561965
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 11.859093176430594 kg, Structure Mass: 6.3518061917561965 kg
+Final Mass for 2 Relay Stations: 23.84089936818679 kg (iteration 4)
+[16.767, 18.63, 22.206744731335917, 22.298856177786856, 24.60589624047422, 23.84089936818679]
+Current Runtime of main: 01:12:39 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 5 for 2 Relay Stations with M_init = 23.84 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 49.56 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         281.36 s
+6) Plotting:          0.16 s
+Total runtime:        331.12 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_2\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+3462.091986234136 Wh
+---------BMN-Lbel-270425.csv---------
+4295.535191148067 Wh
+---------FV-Lbel-270425.csv---------
+3613.5262991969134 Wh
+---------JE-Bita-290624.csv---------
+4088.593122623857 Wh
+---------NP-PPita-020724.csv---------
+3243.850757932685 Wh
+---------PS-Bita-290624.csv---------
+3990.5118106304476 Wh
+---------PS-Cbel-230425.csv---------
+3133.5931613902976 Wh
+---------PS-Eita-300624.csv---------
+3555.990295347525 Wh
+---------PS-Lbel-270425.csv---------
+4029.6031152769965 Wh
+---------PS-Pita-010724.csv---------
+3760.5107155116184 Wh
+---------PS-PPita-020724.csv---------
+2796.1470717441302 Wh
+---------RE-Bita-290624.csv---------
+3486.4110876522645 Wh
+---------RE-Cbel-230425.csv---------
+2994.547205384608 Wh
+---------RE-Cbel-270425.csv---------
+3970.4290476527576 Wh
+---------RE-Eita-300624.csv---------
+3218.4005110660155 Wh
+---------RE-Pita-010724.csv---------
+3513.49251054064 Wh
+---------RS-Cbel-230425.csv---------
+2689.371731206229 Wh
+---------RS-Lbel-270425.csv---------
+3433.5232768881465 Wh
+---------TP-Bita-290624.csv---------
+3503.9677070025205 Wh
+---------TP-Cbel-230425.csv---------
+2968.303408147208 Wh
+---------TP-Eita-300624.csv---------
+3219.444451832722 Wh
+---------TP-Lbel-270425.csv---------
+3938.152488362013 Wh
+---------TP-Pita-010724.csv---------
+3464.4733043945243 Wh
+---------WA-Bita-290624.csv---------
+4029.3105678494385 Wh
+---------WA-Pita-010724.csv---------
+3750.500007378142 Wh
+---------WE-Eita-300624.csv---------
+3577.9522472575954 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 4295.54 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 3528.01 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 40653023.21795634 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 23471033.8982592 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 80003074.33686966 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 46189796.50438934 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 266.53817189298996 The yield stress 324.0
+The Von Mises Shear Wingbox: 153.8858852917285 The yield stress 283.0
+The Axial stress Wingbox: 0.009333274614310189 The Buckle stress 69.2591308060488
+The Tip Deflection is: 0.003914959797729313 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0030187710066142135 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.04414424761464394 0.04314424761464394 0.0010000000000000009
+----------------------------------------------------
+The Leg Stress: 30709003.376217447 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 7677250.844054362 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 3412111.486246383 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1919312.7110135905 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 172.5045735027462 The yield stress 150.0
+The Von Mises Shear Sec2: 99.59556194825213 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 6.104806878624727 The yield stress 150.0
+The Von Mises Shear Sec3: 3.524611894724665 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 43.30563134579782 The yield stress 150.0
+The Von Mises Shear Sec2: 25.002517914923068 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 3.0400376883997917 The yield stress 150.0
+The Von Mises Shear Sec3: 1.7551665777442276 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.7308485919977787
+VTOL POLE MASS: 1.6247068831076215
+FUSELAGE MASS: 1.3335352712754307
+LEG MASS: 0.2515284742170132
+WingBox Mass 2.4013874086258253
+-------------------------------------------
+THE STRUCTURE MASS: 6.342006629223669
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 11.454760509728176 kg, Structure Mass: 6.342006629223669 kg
+Final Mass for 2 Relay Stations: 23.426767138951845 kg (iteration 5)
+[16.767, 18.63, 22.206744731335917, 22.298856177786856, 24.60589624047422, 23.84089936818679, 23.426767138951845]
+Current Runtime of main: 01:20:10 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 1 for 3 Relay Stations with M_init = 18.63 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 46.65 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         282.10 s
+6) Plotting:          0.16 s
+Total runtime:        328.95 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_3\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+2040.4668285698754 Wh
+---------BMN-Lbel-270425.csv---------
+2516.457163059682 Wh
+---------FV-Lbel-270425.csv---------
+1974.2622388463778 Wh
+---------JE-Bita-290624.csv---------
+2368.465838792601 Wh
+---------NP-PPita-020724.csv---------
+1834.5921837020433 Wh
+---------PS-Bita-290624.csv---------
+2210.2900171594847 Wh
+---------PS-Cbel-230425.csv---------
+1821.0423922686982 Wh
+---------PS-Eita-300624.csv---------
+1911.8549574714525 Wh
+---------PS-Lbel-270425.csv---------
+2357.921289628046 Wh
+---------PS-Pita-010724.csv---------
+2065.2980771042717 Wh
+---------PS-PPita-020724.csv---------
+1561.4759517706161 Wh
+---------RE-Bita-290624.csv---------
+1905.1073777366382 Wh
+---------RE-Cbel-230425.csv---------
+1755.717352851876 Wh
+---------RE-Cbel-270425.csv---------
+2340.6827203487064 Wh
+---------RE-Eita-300624.csv---------
+1741.4272251426873 Wh
+---------RE-Pita-010724.csv---------
+1895.5078303955743 Wh
+---------RS-Cbel-230425.csv---------
+1585.896051443667 Wh
+---------RS-Lbel-270425.csv---------
+1990.2255020183652 Wh
+---------TP-Bita-290624.csv---------
+1915.8928745846279 Wh
+---------TP-Cbel-230425.csv---------
+1735.6164326171047 Wh
+---------TP-Eita-300624.csv---------
+1732.9643712320785 Wh
+---------TP-Lbel-270425.csv---------
+2325.531346708025 Wh
+---------TP-Pita-010724.csv---------
+1869.8098811629643 Wh
+---------WA-Bita-290624.csv---------
+2196.5992192413414 Wh
+---------WA-Pita-010724.csv---------
+2059.2513935405836 Wh
+---------WE-Eita-300624.csv---------
+1902.6414450263264 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 2516.46 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 1985.19 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 31193038.85303147 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 18009309.378640175 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 57358470.8976354 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 33115928.613055117 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 381.44642240287493 The yield stress 324.0
+The Von Mises Shear Wingbox: 220.22819465571956 The yield stress 283.0
+The Axial stress Wingbox: 0.006069555047152388 The Buckle stress 48.880936881839624
+The Tip Deflection is: 0.006289499614505507 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0023858503216742807 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03716455105348594 0.03616455105348594 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 198.5813785015761 The yield stress 324.0
+The Von Mises Shear Wingbox: 114.65101233393192 The yield stress 283.0
+The Axial stress Wingbox: 0.003076735427589546 The Buckle stress 47.58434654503189
+The Tip Deflection is: 0.0032751018032919103 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0011929251608371403 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03716455105348594 0.03516455105348594 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 23996944.245415125 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 5999236.061353781 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 2666327.138379458 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1499809.0153384453 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 293.78693772759556 The yield stress 150.0
+The Von Mises Shear Sec2: 169.61796758142313 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 4.929476298117842 The yield stress 150.0
+The Von Mises Shear Sec3: 2.846034467682216 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 73.58402250776743 The yield stress 150.0
+The Von Mises Shear Sec2: 42.483755202915006 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.45477147268137 The yield stress 150.0
+The Von Mises Shear Sec3: 1.4172629705516033 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.5180085857662756
+VTOL POLE MASS: 1.6067264450861491
+FUSELAGE MASS: 1.2153524586001765
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.9796812769116396
+-------------------------------------------
+THE STRUCTURE MASS: 7.571297240581254
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 6.710552434825818 kg, Structure Mass: 7.571297240581254 kg
+Final Mass for 3 Relay Stations: 19.91184967540707 kg (iteration 1)
+[16.767, 18.63, 19.91184967540707]
+Current Runtime of main: 01:27:50 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 2 for 3 Relay Stations with M_init = 19.91 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 45.50 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         281.81 s
+6) Plotting:          0.16 s
+Total runtime:        327.51 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_3\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+2266.4795507530544 Wh
+---------BMN-Lbel-270425.csv---------
+2798.9394494426597 Wh
+---------FV-Lbel-270425.csv---------
+2229.0312820857407 Wh
+---------JE-Bita-290624.csv---------
+2648.3295541377465 Wh
+---------NP-PPita-020724.csv---------
+2021.8959678830288 Wh
+---------PS-Bita-290624.csv---------
+2447.51860644929 Wh
+---------PS-Cbel-230425.csv---------
+2070.2132542480213 Wh
+---------PS-Eita-300624.csv---------
+2302.29333898437 Wh
+---------PS-Lbel-270425.csv---------
+2639.5942478532315 Wh
+---------PS-Pita-010724.csv---------
+2488.151263212577 Wh
+---------PS-PPita-020724.csv---------
+1701.389706408945 Wh
+---------RE-Bita-290624.csv---------
+2162.0358539278163 Wh
+---------RE-Cbel-230425.csv---------
+1987.208460279141 Wh
+---------RE-Cbel-270425.csv---------
+2609.20346872153 Wh
+---------RE-Eita-300624.csv---------
+2098.80776666377 Wh
+---------RE-Pita-010724.csv---------
+2335.963126350931 Wh
+---------RS-Cbel-230425.csv---------
+1892.6767359879575 Wh
+---------RS-Lbel-270425.csv---------
+2197.18001193673 Wh
+---------TP-Bita-290624.csv---------
+2197.221386520581 Wh
+---------TP-Cbel-230425.csv---------
+1966.5251865877726 Wh
+---------TP-Eita-300624.csv---------
+2129.18887284205 Wh
+---------TP-Lbel-270425.csv---------
+2593.9952058567633 Wh
+---------TP-Pita-010724.csv---------
+2290.781587463156 Wh
+---------WA-Bita-290624.csv---------
+2440.451387522653 Wh
+---------WA-Pita-010724.csv---------
+2492.7411477658134 Wh
+---------WE-Eita-300624.csv---------
+2330.179765442391 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 2798.94 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 2282.23 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 32945362.19952652 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 19021013.734446358 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 59453325.601225026 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 34325393.54008574 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 406.2482320102469 The yield stress 324.0
+The Von Mises Shear Wingbox: 234.5475261089256 The yield stress 283.0
+The Axial stress Wingbox: 0.0055249598091212365 The Buckle stress 46.28963438880913
+The Tip Deflection is: 0.006972704421313378 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0027143569351638433 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03617929180715491 0.03517929180715491 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 211.73021937366505 The yield stress 324.0
+The Von Mises Shear Wingbox: 122.24249915096405 The yield stress 283.0
+The Axial stress Wingbox: 0.0028017427743151314 The Buckle stress 45.02886330614328
+The Tip Deflection is: 0.0036349057931090714 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0013571784675819216 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03617929180715491 0.034179291807154906 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 25648070.127956558 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 6412017.5319891395 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 2849785.569772951 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1603004.3829972849 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 264.2186503124057 The yield stress 150.0
+The Von Mises Shear Sec2: 152.54670888278704 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 5.106703419580443 The yield stress 150.0
+The Von Mises Shear Sec3: 2.948356593966351 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 66.19857844155777 The yield stress 150.0
+The Von Mises Shear Sec2: 38.21976708320394 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.5430222757711145 The yield stress 150.0
+The Von Mises Shear Sec3: 1.4682145954716679 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.49090708401981115
+VTOL POLE MASS: 1.6041883128538221
+FUSELAGE MASS: 1.234117544003175
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.871259696626334
+-------------------------------------------
+THE STRUCTURE MASS: 7.452001111720156
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 7.463838531847093 kg, Structure Mass: 7.452001111720156 kg
+Final Mass for 3 Relay Stations: 20.54583964356725 kg (iteration 2)
+[16.767, 18.63, 19.91184967540707, 20.54583964356725]
+Current Runtime of main: 01:35:28 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 3 for 3 Relay Stations with M_init = 20.55 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 46.92 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         279.05 s
+6) Plotting:          0.16 s
+Total runtime:        326.16 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_3\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+2218.787982424142 Wh
+---------BMN-Lbel-270425.csv---------
+2771.339039194927 Wh
+---------FV-Lbel-270425.csv---------
+2184.143339938976 Wh
+---------JE-Bita-290624.csv---------
+2597.3112238525837 Wh
+---------NP-PPita-020724.csv---------
+2031.988112224366 Wh
+---------PS-Bita-290624.csv---------
+2428.4721114697077 Wh
+---------PS-Cbel-230425.csv---------
+2009.721411905066 Wh
+---------PS-Eita-300624.csv---------
+2194.79462681146 Wh
+---------PS-Lbel-270425.csv---------
+2599.325864738048 Wh
+---------PS-Pita-010724.csv---------
+2353.4097813585154 Wh
+---------PS-PPita-020724.csv---------
+1720.090505338596 Wh
+---------RE-Bita-290624.csv---------
+2093.6973777997655 Wh
+---------RE-Cbel-230425.csv---------
+1930.4099959151335 Wh
+---------RE-Cbel-270425.csv---------
+2568.6235742378003 Wh
+---------RE-Eita-300624.csv---------
+1991.7673319528158 Wh
+---------RE-Pita-010724.csv---------
+2180.389733600422 Wh
+---------RS-Cbel-230425.csv---------
+1818.3238242897578 Wh
+---------RS-Lbel-270425.csv---------
+2190.1152664497245 Wh
+---------TP-Bita-290624.csv---------
+2126.9024272750476 Wh
+---------TP-Cbel-230425.csv---------
+1910.3221424575831 Wh
+---------TP-Eita-300624.csv---------
+1992.3168804188717 Wh
+---------TP-Lbel-270425.csv---------
+2546.6600540346517 Wh
+---------TP-Pita-010724.csv---------
+2152.112049937735 Wh
+---------WA-Bita-290624.csv---------
+2423.986903228496 Wh
+---------WA-Pita-010724.csv---------
+2331.274412437851 Wh
+---------WE-Eita-300624.csv---------
+2209.2750674481267 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 2771.34 Wh (Race: BMN-Lbel-270425.csv)
+
+Average battery capacity necessary across all races: 2214.44 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 34064393.99775748 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 19667087.044386756 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 62180380.145850696 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 35899859.215520166 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 385.79994145377333 The yield stress 324.0
+The Von Mises Shear Wingbox: 222.74170005167792 The yield stress 283.0
+The Axial stress Wingbox: 0.006091678686704937 The Buckle stress 48.52659784840583
+The Tip Deflection is: 0.006517895277251482 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0028557020958235937 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03703139345381913 0.03603139345381913 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 200.87802951088813 The yield stress 324.0
+The Von Mises Shear Wingbox: 115.97698441239285 The yield stress 283.0
+The Axial stress Wingbox: 0.00308810580950033 The Buckle stress 47.23484847697958
+The Tip Deflection is: 0.0033945317946788072 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0014278510479117969 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03703139345381913 0.03503139345381913 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 26464700.397312023 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 6616175.099328006 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 2940522.266368002 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1654043.7748320014 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 266.84172763844145 The yield stress 150.0
+The Von Mises Shear Sec2: 154.06114328307896 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 5.100147777370183 The yield stress 150.0
+The Von Mises Shear Sec3: 2.9445716921715466 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 66.85369924733847 The yield stress 150.0
+The Von Mises Shear Sec2: 38.598001256773145 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.5397581162478593 The yield stress 150.0
+The Von Mises Shear Sec3: 1.4663300320922386 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.5143032693393926
+VTOL POLE MASS: 1.6063834169979052
+FUSELAGE MASS: 1.232284069550358
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.965028120966506
+-------------------------------------------
+THE STRUCTURE MASS: 7.569527351071176
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 7.390237437853139 kg, Structure Mass: 7.569527351071176 kg
+Final Mass for 3 Relay Stations: 20.589764788924313 kg (iteration 3)
+[16.767, 18.63, 19.91184967540707, 20.54583964356725, 20.589764788924313]
+Current Runtime of main: 01:43:05 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 1 for 4 Relay Stations with M_init = 18.63 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 46.79 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         282.34 s
+6) Plotting:          0.16 s
+Total runtime:        329.33 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_4\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+1759.4071412636029 Wh
+---------BMN-Lbel-270425.csv---------
+2067.7046070342394 Wh
+---------FV-Lbel-270425.csv---------
+1578.7721626248021 Wh
+---------JE-Bita-290624.csv---------
+2125.6753064357786 Wh
+---------NP-PPita-020724.csv---------
+1446.3008085002602 Wh
+---------PS-Bita-290624.csv---------
+2060.83278021408 Wh
+---------PS-Cbel-230425.csv---------
+1527.9909755158885 Wh
+---------PS-Eita-300624.csv---------
+1529.7002391274245 Wh
+---------PS-Lbel-270425.csv---------
+2020.1626125753758 Wh
+---------PS-Pita-010724.csv---------
+1633.0150990394686 Wh
+---------PS-PPita-020724.csv---------
+1263.0832681520296 Wh
+---------RE-Bita-290624.csv---------
+1826.1881981648519 Wh
+---------RE-Cbel-230425.csv---------
+1477.4323302405849 Wh
+---------RE-Cbel-270425.csv---------
+1909.301394752374 Wh
+---------RE-Eita-300624.csv---------
+1392.8554768836111 Wh
+---------RE-Pita-010724.csv---------
+1530.9740743817983 Wh
+---------RS-Cbel-230425.csv---------
+1163.7857606814405 Wh
+---------RS-Lbel-270425.csv---------
+1578.8643516084976 Wh
+---------TP-Bita-290624.csv---------
+1827.722234203675 Wh
+---------TP-Cbel-230425.csv---------
+1424.8016955578287 Wh
+---------TP-Eita-300624.csv---------
+1386.2807710504394 Wh
+---------TP-Lbel-270425.csv---------
+2022.4524041264833 Wh
+---------TP-Pita-010724.csv---------
+1495.6629297329291 Wh
+---------WA-Bita-290624.csv---------
+1953.446323465031 Wh
+---------WA-Pita-010724.csv---------
+1623.9057337323538 Wh
+---------WE-Eita-300624.csv---------
+1521.9472026508229 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 2125.68 Wh (Race: JE-Bita-290624.csv)
+
+Average battery capacity necessary across all races: 1659.55 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 31193038.85303147 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 18009309.378640175 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 57358470.8976354 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 33115928.613055117 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 381.44642240287493 The yield stress 324.0
+The Von Mises Shear Wingbox: 220.22819465571956 The yield stress 283.0
+The Axial stress Wingbox: 0.006069555047152388 The Buckle stress 48.880936881839624
+The Tip Deflection is: 0.006289499614505507 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0023858503216742807 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03716455105348594 0.03616455105348594 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 198.5813785015761 The yield stress 324.0
+The Von Mises Shear Wingbox: 114.65101233393192 The yield stress 283.0
+The Axial stress Wingbox: 0.003076735427589546 The Buckle stress 47.58434654503189
+The Tip Deflection is: 0.0032751018032919103 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0011929251608371403 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03716455105348594 0.03516455105348594 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 23996944.245415125 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 5999236.061353781 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 2666327.138379458 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1499809.0153384453 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 347.6584323908146 The yield stress 150.0
+The Von Mises Shear Sec2: 200.72068952688014 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 4.6564485601442565 The yield stress 150.0
+The Von Mises Shear Sec3: 2.6884018296669323 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 87.04275919137818 The yield stress 150.0
+The Von Mises Shear Sec2: 50.25416045014997 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.318816418422733 The yield stress 150.0
+The Von Mises Shear Sec3: 1.3387692833776887 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.5180085857662756
+VTOL POLE MASS: 1.6067264450861491
+FUSELAGE MASS: 1.1893931143616918
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.9796812769116396
+-------------------------------------------
+THE STRUCTURE MASS: 7.54533789634277
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 5.668467483828743 kg, Structure Mass: 7.54533789634277 kg
+Final Mass for 4 Relay Stations: 18.843805380171514 kg (iteration 1)
+[16.767, 18.63, 18.843805380171514]
+Current Runtime of main: 01:50:59 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 2 for 4 Relay Stations with M_init = 18.84 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 48.55 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         280.62 s
+6) Plotting:          0.16 s
+Total runtime:        329.37 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_4\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+1839.5372115137884 Wh
+---------BMN-Lbel-270425.csv---------
+2208.589214871176 Wh
+---------FV-Lbel-270425.csv---------
+1750.0231200937183 Wh
+---------JE-Bita-290624.csv---------
+2262.7458450586314 Wh
+---------NP-PPita-020724.csv---------
+1513.9635203166974 Wh
+---------PS-Bita-290624.csv---------
+2150.08517295189 Wh
+---------PS-Cbel-230425.csv---------
+1668.1716553197234 Wh
+---------PS-Eita-300624.csv---------
+1749.9503669980122 Wh
+---------PS-Lbel-270425.csv---------
+2107.2446449693116 Wh
+---------PS-Pita-010724.csv---------
+1898.6982407240403 Wh
+---------PS-PPita-020724.csv---------
+1432.294094089286 Wh
+---------RE-Bita-290624.csv---------
+1843.607398525684 Wh
+---------RE-Cbel-230425.csv---------
+1592.277111835486 Wh
+---------RE-Cbel-270425.csv---------
+2088.479366330365 Wh
+---------RE-Eita-300624.csv---------
+1600.6985145330418 Wh
+---------RE-Pita-010724.csv---------
+1779.2850798844502 Wh
+---------RS-Cbel-230425.csv---------
+1275.0706159917872 Wh
+---------RS-Lbel-270425.csv---------
+1679.1341399823223 Wh
+---------TP-Bita-290624.csv---------
+1855.1362218683041 Wh
+---------TP-Cbel-230425.csv---------
+1572.3105116469374 Wh
+---------TP-Eita-300624.csv---------
+1621.572939618928 Wh
+---------TP-Lbel-270425.csv---------
+2075.945822115385 Wh
+---------TP-Pita-010724.csv---------
+1752.512986638474 Wh
+---------WA-Bita-290624.csv---------
+2008.243184397361 Wh
+---------WA-Pita-010724.csv---------
+1901.4569734239267 Wh
+---------WE-Eita-300624.csv---------
+1773.6312648538506 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 2262.75 Wh (Race: JE-Bita-290624.csv)
+
+Average battery capacity necessary across all races: 1807.72 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 30993042.95426273 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 17893841.692649223 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 54474478.876653604 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 31450855.04340054 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 455.17638415563334 The yield stress 324.0
+The Von Mises Shear Wingbox: 262.7962079210154 The yield stress 283.0
+The Axial stress Wingbox: 0.004473354468633262 The Buckle stress 41.39212037297518
+The Tip Deflection is: 0.00816350728123585 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.002427120695083084 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03423868423677838 0.03323868423677838 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 237.79834408247956 The yield stress 324.0
+The Von Mises Shear Wingbox: 137.29293796886682 The yield stress 283.0
+The Axial stress Wingbox: 0.002270322928869152 The Buckle stress 40.20190038233102
+The Tip Deflection is: 0.004265816777164262 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.001213560347541542 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03423868423677838 0.03223868423677838 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 24272342.838402003 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 6068085.709600501 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 2696926.982044667 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1517021.4274001252 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 326.6423330635974 The yield stress 150.0
+The Von Mises Shear Sec2: 188.58703892299536 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 4.715726309447928 The yield stress 150.0
+The Von Mises Shear Sec3: 2.7226258541843618 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 81.79193542340609 The yield stress 150.0
+The Von Mises Shear Sec2: 47.222595934244 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.348332937283126 The yield stress 150.0
+The Von Mises Shear Sec3: 1.3558106534872771 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.4396563091586447
+VTOL POLE MASS: 1.5991891020948135
+FUSELAGE MASS: 1.1984986069447052
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.657708044837856
+-------------------------------------------
+THE STRUCTURE MASS: 7.146580537253033
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 6.03398892015635 kg, Structure Mass: 7.146580537253033 kg
+Final Mass for 4 Relay Stations: 18.810569457409382 kg (iteration 2)
+[16.767, 18.63, 18.843805380171514, 18.810569457409382]
+Current Runtime of main: 01:58:51 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 3 for 4 Relay Stations with M_init = 18.81 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 137.78 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         279.12 s
+6) Plotting:          0.16 s
+Total runtime:        417.10 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_4\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+1816.7732984667769 Wh
+---------BMN-Lbel-270425.csv---------
+2160.7372919501267 Wh
+---------FV-Lbel-270425.csv---------
+1677.9831274159715 Wh
+---------JE-Bita-290624.csv---------
+2232.1862185501027 Wh
+---------NP-PPita-020724.csv---------
+1493.5629724766463 Wh
+---------PS-Bita-290624.csv---------
+2130.03863562832 Wh
+---------PS-Cbel-230425.csv---------
+1627.6401397032737 Wh
+---------PS-Eita-300624.csv---------
+1702.6832076693918 Wh
+---------PS-Lbel-270425.csv---------
+2095.0304916483155 Wh
+---------PS-Pita-010724.csv---------
+1841.1990281470835 Wh
+---------PS-PPita-020724.csv---------
+1381.840608283886 Wh
+---------RE-Bita-290624.csv---------
+1808.8854161566578 Wh
+---------RE-Cbel-230425.csv---------
+1566.1255625322358 Wh
+---------RE-Cbel-270425.csv---------
+2052.190661915207 Wh
+---------RE-Eita-300624.csv---------
+1554.0868027215965 Wh
+---------RE-Pita-010724.csv---------
+1729.5751393719456 Wh
+---------RS-Cbel-230425.csv---------
+1251.3345916107746 Wh
+---------RS-Lbel-270425.csv---------
+1657.3055613654014 Wh
+---------TP-Bita-290624.csv---------
+1823.5349096551408 Wh
+---------TP-Cbel-230425.csv---------
+1555.196917949344 Wh
+---------TP-Eita-300624.csv---------
+1573.7570554880267 Wh
+---------TP-Lbel-270425.csv---------
+2060.6026216875816 Wh
+---------TP-Pita-010724.csv---------
+1698.3818616559265 Wh
+---------WA-Bita-290624.csv---------
+2006.9837163402267 Wh
+---------WA-Pita-010724.csv---------
+1844.823178827567 Wh
+---------WE-Eita-300624.csv---------
+1724.2074253363635 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 2232.19 Wh (Race: JE-Bita-290624.csv)
+
+Average battery capacity necessary across all races: 1771.79 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 30787158.25751029 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 17774974.107557178 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 53765809.5588004 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 31041704.621971566 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 481.3317294480954 The yield stress 324.0
+The Von Mises Shear Wingbox: 277.89700356636604 The yield stress 283.0
+The Axial stress Wingbox: 0.004592709080492336 The Buckle stress 39.26915752847179
+The Tip Deflection is: 0.00885221315669716 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0024671830655787993 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.033361888539262856 0.032361888539262855 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 251.75761133706078 The yield stress 324.0
+The Von Mises Shear Wingbox: 145.35232467598925 The yield stress 283.0
+The Axial stress Wingbox: 0.002331833843894655 The Buckle stress 38.11081358267245
+The Tip Deflection is: 0.004631097152336988 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0012335915327893996 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.033361888539262856 0.031361888539262854 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 24229532.286310334 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 6057383.071577583 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 2692170.2540344815 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1514345.7678943959 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 331.10412509904353 The yield stress 150.0
+The Von Mises Shear Sec2: 191.16305575572832 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 4.683336891747295 The yield stress 150.0
+The Von Mises Shear Sec3: 2.703925815156006 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 82.90666942151617 The yield stress 150.0
+The Von Mises Shear Sec2: 47.86618790812767 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.3322042419169926 The yield stress 150.0
+The Von Mises Shear Sec3: 1.346498746875963 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.4174268978320253
+VTOL POLE MASS: 1.5969303834587623
+FUSELAGE MASS: 1.1964685539857778
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.5612221955895507
+-------------------------------------------
+THE STRUCTURE MASS: 7.023576505083129
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 5.952496582800274 kg, Structure Mass: 7.023576505083129 kg
+Final Mass for 4 Relay Stations: 18.606073087883402 kg (iteration 3)
+[16.767, 18.63, 18.843805380171514, 18.810569457409382, 18.606073087883402]
+Current Runtime of main: 02:08:09 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 1 for 5 Relay Stations with M_init = 18.63 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 45.85 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         279.38 s
+6) Plotting:          0.18 s
+Total runtime:        325.45 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_5\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+1333.0431752052564 Wh
+---------BMN-Lbel-270425.csv---------
+1677.0844901428554 Wh
+---------FV-Lbel-270425.csv---------
+1558.2076076123853 Wh
+---------JE-Bita-290624.csv---------
+1795.30035173746 Wh
+---------NP-PPita-020724.csv---------
+1231.9738607500126 Wh
+---------PS-Bita-290624.csv---------
+1757.4583706250278 Wh
+---------PS-Cbel-230425.csv---------
+1218.4239815789458 Wh
+---------PS-Eita-300624.csv---------
+1359.3148895723677 Wh
+---------PS-Lbel-270425.csv---------
+1571.737464602651 Wh
+---------PS-Pita-010724.csv---------
+1484.1230155000735 Wh
+---------PS-PPita-020724.csv---------
+1034.2585813376763 Wh
+---------RE-Bita-290624.csv---------
+1557.347683273527 Wh
+---------RE-Cbel-230425.csv---------
+1195.0225208203724 Wh
+---------RE-Cbel-270425.csv---------
+1555.277376348261 Wh
+---------RE-Eita-300624.csv---------
+1448.022163137647 Wh
+---------RE-Pita-010724.csv---------
+1300.2811366619296 Wh
+---------RS-Cbel-230425.csv---------
+1107.3948298890823 Wh
+---------RS-Lbel-270425.csv---------
+1387.1160619760446 Wh
+---------TP-Bita-290624.csv---------
+1562.5671966355676 Wh
+---------TP-Cbel-230425.csv---------
+1156.2099267653875 Wh
+---------TP-Eita-300624.csv---------
+1442.7929888043516 Wh
+---------TP-Lbel-270425.csv---------
+1550.144836673634 Wh
+---------TP-Pita-010724.csv---------
+1349.7077065587955 Wh
+---------WA-Bita-290624.csv---------
+1743.3866742632624 Wh
+---------WA-Pita-010724.csv---------
+1465.8979971854415 Wh
+---------WE-Eita-300624.csv---------
+1267.8014409493771 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 1795.30 Wh (Race: JE-Bita-290624.csv)
+
+Average battery capacity necessary across all races: 1427.30 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 31193038.85303147 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 18009309.378640175 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 57358470.8976354 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 33115928.613055117 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 381.44642240287493 The yield stress 324.0
+The Von Mises Shear Wingbox: 220.22819465571956 The yield stress 283.0
+The Axial stress Wingbox: 0.006069555047152388 The Buckle stress 48.880936881839624
+The Tip Deflection is: 0.006289499614505507 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0023858503216742807 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03716455105348594 0.03616455105348594 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 198.5813785015761 The yield stress 324.0
+The Von Mises Shear Wingbox: 114.65101233393192 The yield stress 283.0
+The Axial stress Wingbox: 0.003076735427589546 The Buckle stress 47.58434654503189
+The Tip Deflection is: 0.0032751018032919103 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0011929251608371403 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03716455105348594 0.03516455105348594 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 23996944.245415125 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 5999236.061353781 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 2666327.138379458 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1499809.0153384453 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 411.50950617022187 The yield stress 150.0
+The Von Mises Shear Sec2: 237.58512416146758 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 4.420853972208978 The yield stress 150.0
+The Von Mises Shear Sec3: 2.5523812309028804 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 102.99782708493441 The yield stress 150.0
+The Von Mises Shear Sec2: 59.46582319343341 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.2015018207699595 The yield stress 150.0
+The Von Mises Shear Sec3: 1.2710376688429874 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.5180085857662756
+VTOL POLE MASS: 1.6067264450861491
+FUSELAGE MASS: 1.1674465550948896
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.9796812769116396
+-------------------------------------------
+THE STRUCTURE MASS: 7.523391337075967
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 4.7874676046332265 kg, Structure Mass: 7.523391337075967 kg
+Final Mass for 5 Relay Stations: 17.940858941709195 kg (iteration 1)
+[16.767, 18.63, 17.940858941709195]
+Current Runtime of main: 02:16:09 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 2 for 5 Relay Stations with M_init = 17.94 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 139.36 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         280.74 s
+6) Plotting:          0.18 s
+Total runtime:        420.32 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_5\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+1334.019097521299 Wh
+---------BMN-Lbel-270425.csv---------
+1668.8519979594403 Wh
+---------FV-Lbel-270425.csv---------
+1538.9529099891492 Wh
+---------JE-Bita-290624.csv---------
+1706.8483300821479 Wh
+---------NP-PPita-020724.csv---------
+1185.2241379073212 Wh
+---------PS-Bita-290624.csv---------
+1762.851936911851 Wh
+---------PS-Cbel-230425.csv---------
+1228.5095039978262 Wh
+---------PS-Eita-300624.csv---------
+1546.6598020909803 Wh
+---------PS-Lbel-270425.csv---------
+1571.5756086979363 Wh
+---------PS-Pita-010724.csv---------
+1511.4472599589237 Wh
+---------PS-PPita-020724.csv---------
+1004.2919512633198 Wh
+---------RE-Bita-290624.csv---------
+1545.0464867013598 Wh
+---------RE-Cbel-230425.csv---------
+1176.597963953768 Wh
+---------RE-Cbel-270425.csv---------
+1552.993883266994 Wh
+---------RE-Eita-300624.csv---------
+1452.7988965714221 Wh
+---------RE-Pita-010724.csv---------
+1392.3444966672023 Wh
+---------RS-Cbel-230425.csv---------
+1146.7161436480806 Wh
+---------RS-Lbel-270425.csv---------
+1374.4317819534663 Wh
+---------TP-Bita-290624.csv---------
+1550.548562972445 Wh
+---------TP-Cbel-230425.csv---------
+1158.5887193807093 Wh
+---------TP-Eita-300624.csv---------
+1462.0298200653301 Wh
+---------TP-Lbel-270425.csv---------
+1540.8851783912933 Wh
+---------TP-Pita-010724.csv---------
+1423.5134066215976 Wh
+---------WA-Bita-290624.csv---------
+1733.2726931504847 Wh
+---------WA-Pita-010724.csv---------
+1522.6412868472646 Wh
+---------WE-Eita-300624.csv---------
+1332.1015387406064 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 1762.85 Wh (Race: PS-Bita-290624.csv)
+
+Average battery capacity necessary across all races: 1439.37 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 29373208.17477463 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 16958629.646669053 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 50707126.056188785 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 29275772.87837288 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 504.48517425494117 The yield stress 324.0
+The Von Mises Shear Wingbox: 291.2646511582655 The yield stress 283.0
+The Axial stress Wingbox: 0.004054276565215606 The Buckle stress 37.465266160674794
+The Tip Deflection is: 0.009407882252323457 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.002146219106354302 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03259805500263409 0.03159805500263409 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 264.15061473862903 The yield stress 324.0
+The Von Mises Shear Wingbox: 152.5074285259526 The yield stress 283.0
+The Axial stress Wingbox: 0.002059215229787602 The Buckle stress 36.33469150267717
+The Tip Deflection is: 0.004927057025240155 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.001073109553177151 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03259805500263409 0.030598055002634086 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 23109274.918897096 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 5777318.729724274 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 2567697.2132107886 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1444329.6824310685 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 419.07210932855673 The yield stress 150.0
+The Von Mises Shear Sec2: 241.95139513070652 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 4.343773261559558 The yield stress 150.0
+The Von Mises Shear Sec3: 2.5078786618601097 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 104.8877225723385 The yield stress 150.0
+The Von Mises Shear Sec2: 60.556954861826426 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.1631177977996545 The yield stress 150.0
+The Von Mises Shear Sec3: 1.248876642848501 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.39853140716429886
+VTOL POLE MASS: 1.5949626673204267
+FUSELAGE MASS: 1.1652910313514684
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.4771671213290474
+-------------------------------------------
+THE STRUCTURE MASS: 6.8874807013822545
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 4.7009384984316025 kg, Structure Mass: 6.8874807013822545 kg
+Final Mass for 5 Relay Stations: 17.21841919981386 kg (iteration 2)
+[16.767, 18.63, 17.940858941709195, 17.21841919981386]
+Current Runtime of main: 02:25:45 (h:m:s)
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Iteration 3 for 5 Relay Stations with M_init = 17.22 kg
+------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Wing Sizing
+1) Wing setup:        0.03 s
+2) Section calc:      0.00 s
+3) 2D stall database: 43.66 s
+4) Interpolation:     0.01 s
+5) VLM sweep:         282.78 s
+6) Plotting:          0.17 s
+Total runtime:        326.65 s
+Saved alpha–CL–CD sweep to 'Final_UAV_Sizing/Input/WingData/aero.csv' and 'Final_UAV_Sizing/Output/Test/Test_Run_on_06-17_19-24\RS_5\Wing_Sizing\aero.csv'
+--------------------------------------------------
+Propeller Sizing
+--------------------------------------------------
+Battery Sizing
+---------Plot Race Results---------
+---------BMN-Cbel-230425.csv---------
+1298.21806196349 Wh
+---------BMN-Lbel-270425.csv---------
+1620.0293956207206 Wh
+---------FV-Lbel-270425.csv---------
+1503.2171726578676 Wh
+---------JE-Bita-290624.csv---------
+1641.9177043153597 Wh
+---------NP-PPita-020724.csv---------
+1141.7244826912083 Wh
+---------PS-Bita-290624.csv---------
+1713.5104912921465 Wh
+---------PS-Cbel-230425.csv---------
+1213.5570686281267 Wh
+---------PS-Eita-300624.csv---------
+1425.5785672684474 Wh
+---------PS-Lbel-270425.csv---------
+1528.8023742574796 Wh
+---------PS-Pita-010724.csv---------
+1450.385338114273 Wh
+---------PS-PPita-020724.csv---------
+967.7103699524014 Wh
+---------RE-Bita-290624.csv---------
+1512.6419503477564 Wh
+---------RE-Cbel-230425.csv---------
+1154.5009085346799 Wh
+---------RE-Cbel-270425.csv---------
+1515.168341340781 Wh
+---------RE-Eita-300624.csv---------
+1433.6868674664977 Wh
+---------RE-Pita-010724.csv---------
+1320.4960075682109 Wh
+---------RS-Cbel-230425.csv---------
+1122.318502418937 Wh
+---------RS-Lbel-270425.csv---------
+1343.2413489940102 Wh
+---------TP-Bita-290624.csv---------
+1518.7915696736761 Wh
+---------TP-Cbel-230425.csv---------
+1130.0316445679491 Wh
+---------TP-Eita-300624.csv---------
+1442.615258447395 Wh
+---------TP-Lbel-270425.csv---------
+1502.2597576265462 Wh
+---------TP-Pita-010724.csv---------
+1377.2685639330618 Wh
+---------WA-Bita-290624.csv---------
+1691.5643905438105 Wh
+---------WA-Pita-010724.csv---------
+1470.2956279476966 Wh
+---------WE-Eita-300624.csv---------
+1278.2636507393245 Wh
+
+
+------------------------------------------------------------------------------------
+
+---------Summary--------------------------------------------------------------------
+
+Maximum battery capacity necessary: 1713.51 Wh (Race: PS-Bita-290624.csv)
+
+Average battery capacity necessary across all races: 1396.84 Wh
+
+Done
+--------------------------------------------------
+Tail Sizing
+
+--------------------------------------------------
+Structure Sizing
+----------------------------------------------------
+The Max Shear FRONT VTOL: 27906611.562204372 The Yield Shear: 330000000.0
+The Max Stress FRONT VTOL: 16111889.697609019 The yield stress 480000000.0
+The FRONT VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Max Shear BACK VTOL: 46525444.7288207 The Yield Shear: 330000000.0
+The Max Stress BACK VTOL: 26861478.038351685 The yield stress 480000000.0
+The BACK VTOL Thickness: 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 599.731715027441 The yield stress 324.0
+The Von Mises Shear Wingbox: 346.25526711264905 The yield stress 283.0
+The Axial stress Wingbox: 0.003145861396550689 The Buckle stress 31.90010499105956
+The Tip Deflection is: 0.011994327238184405 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0016868542327732419 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03011768907031604 0.02911768907031604 0.0010000000000000009
+----------------------------------------------------
+The Von Mises Stress Wingbox: 315.23557216685754 The yield stress 324.0
+The Von Mises Shear Wingbox: 182.0013424486809 The yield stress 283.0
+The Axial stress Wingbox: 0.0015999405803864715 The Buckle stress 30.859704424830806
+The Tip Deflection is: 0.006305804665244202 And the Max allowable deflection is: 0.1575
+The Twist Angle: -0.0008434271163866209 And the allowable angle is: 0.0174
+The Wingbox Thickness: 0.03011768907031604 0.02811768907031604 0.0020000000000000018
+----------------------------------------------------
+The Leg Stress: 22178714.19925488 The buckle 222675.3338640841 The yield stress 324000000.0
+The Leg: 0.001
+----------------------------------------------------
+The Leg Stress: 5544678.54981372 The buckle 890701.3354563364 The yield stress 324000000.0
+The Leg: 0.002
+----------------------------------------------------
+The Leg Stress: 2464301.5776949865 The buckle 2004078.0047767558 The yield stress 324000000.0
+The Leg: 0.003
+----------------------------------------------------
+The Leg Stress: 1386169.63745343 The buckle 3562805.3418253455 The yield stress 324000000.0
+The Leg: 0.004
+-------------------------------------------
+The Von Mises Stress Sec1: 0.352559838919218 The yield stress 150.0
+The Von Mises Shear Sec1: 0.2035505179054616 The yield stress 70.0
+The Axial stress Sec1: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec2: 431.12102399018306 The yield stress 150.0
+The Von Mises Shear Sec2: 248.90783925403932 The yield stress 70.0
+The Axial stress Sec2: 0.5326300884350257 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Von Mises Stress Sec3: 4.2803494001940425 The yield stress 150.0
+The Von Mises Shear Sec3: 2.471260878427684 The yield stress 70.0
+The Axial stress Sec3: 0.26631504421751284 The Buckle stress 6800.990180221873
+-------------------------------------------
+The Fuselage Thickness 0.126 0.125 0.0010000000000000009
+-------------------------------------------
+Passes Section 1
+-------------------------------------------
+The Von Mises Stress Sec1: 0.17557628878174586 The yield stress 150.0
+The Von Mises Shear Sec1: 0.10136901759145645 The yield stress 70.0
+The Axial stress Sec1: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec2: 107.89880303711746 The yield stress 150.0
+The Von Mises Shear Sec2: 62.29540297871819 The yield stress 70.0
+The Axial stress Sec2: 0.2652582384864917 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Von Mises Stress Sec3: 2.131534999081382 The yield stress 150.0
+The Von Mises Shear Sec3: 1.2306423055067446 The yield stress 70.0
+The Axial stress Sec3: 0.13262911924324586 The Buckle stress 6855.612272079177
+-------------------------------------------
+The Fuselage Thickness 0.127 0.125 0.0020000000000000018
+-------------------------------------------
+Passes Section 1
+Passes Section 2
+Passes Section 3
+-------------------------------------------
+Wing Skin MASS: 0.34019072362792335
+VTOL POLE MASS: 1.5885729818196552
+FUSELAGE MASS: 1.1620133163031487
+LEG MASS: 0.2515284742170132
+WingBox Mass 3.2042184582546236
+-------------------------------------------
+THE STRUCTURE MASS: 6.546523954222364
+-------------------------------------------
+Payload Mass: 1.88 kg, Propeller Mass: 3.75 kg, Battery Mass: 4.56936131011239 kg, Structure Mass: 6.546523954222364 kg
+Final Mass for 5 Relay Stations: 16.745885264334753 kg (iteration 3)
+[16.767, 18.63, 17.940858941709195, 17.21841919981386, 16.745885264334753]
+Current Runtime of main: 02:33:46 (h:m:s)
+{1: [16.767, 18.63, 26.79346365456272, 29.876722035749868, 32.66162590330749, 35.258784603290025, 37.97664478515107, 41.32241761860031], 2: [16.767, 18.63, 22.206744731335917, 22.298856177786856, 24.60589624047422, 23.84089936818679, 23.426767138951845], 3: [16.767, 18.63, 19.91184967540707, 20.54583964356725, 20.589764788924313], 4: [16.767, 18.63, 18.843805380171514, 18.810569457409382, 18.606073087883402], 5: [16.767, 18.63, 17.940858941709195, 17.21841919981386, 16.745885264334753]}
+Final mass for 1 Relay Stations: 41.32241761860031 kg
+Final mass for 2 Relay Stations: 23.426767138951845 kg
+Final mass for 3 Relay Stations: 20.589764788924313 kg
+Final mass for 4 Relay Stations: 18.606073087883402 kg
+Final mass for 5 Relay Stations: 16.745885264334753 kg
+Total Runtime of main: 02:33:46 (h:m:s)

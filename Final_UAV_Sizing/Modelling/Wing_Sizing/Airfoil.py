@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 import aerosandbox as asb
 import pandas as pd
 import os
+from Input import fixed_input_values as input
 
 #put span in inputs, line 15 here
 def setup_wing_and_airplane(chosen_airfoil, num_spanwise_sections, r_chord, t_chord, r_twist, t_twist, sweep):
@@ -14,7 +15,7 @@ def setup_wing_and_airplane(chosen_airfoil, num_spanwise_sections, r_chord, t_ch
                 xyz_le=[0 , 0, 0], chord=r_chord, twist=r_twist, airfoil=chosen_airfoil,
             ),
             asb.WingXSec(
-                xyz_le=[sweep, 1.5, 0], chord=t_chord, twist=t_twist, airfoil=chosen_airfoil,
+                xyz_le=[sweep, input.b/2, 0], chord=t_chord, twist=t_twist, airfoil=chosen_airfoil,
             ),
         ],
         symmetric=True,

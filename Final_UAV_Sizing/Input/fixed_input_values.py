@@ -17,8 +17,8 @@ show_plots = False
 M_init = 18.63 # [kg] initial mass of UAV for iteration
 min_delta_mass = 0.03 # [-], convergence ratio between the difference in mass between two previous iterations and the mass of the previous iteration
 max_delta_mass = 0.2 # [-], divergence ratio between the difference in mass between two previous iterations and the mass of the previous iteration
-min_RS = 1 # [-] minimum number of relay stations
-max_RS = 5 # [-] maximum number of relay stations
+min_RS = 2 # [-] minimum number of relay stations
+max_RS = 2 # [-] maximum number of relay stations
 
 ##1. Wing Sizing Parameters
 xfoil = r"Final_UAV_Sizing\XFOIL6.99\xfoil.exe"#"Final_UAV_Sizing/Xfoil" # [str] path to xfoil executable
@@ -44,12 +44,14 @@ propeller_wake_efficiency = 0.7
 V_vert_prop = V_stall * V_stall_safety_margin
 L_blade = 0.7366
 w_blade = 0.075
+L_Hor_prop = 0.66
+L_landing_leg = 0.45 
 L_stab= 0.6
 w_stab= 0.5
 L_poles= 3.6*L_blade/2 + 0.5
 w_poles= 0.04
 L_motor = 0.3
-L_gimbal = 0.12
+L_gimbal = 0.18
 L_speaker = 0.1
 L_n = 0.2
 L_c = 0.6
@@ -72,6 +74,8 @@ lh = 1 # [m] tail length from CG, positive if AC_tail is behind CG
 l = -0.1 # [m] distance between CG and AC, negative if AC_wing is in front of CG
 Iy = 14 # [kgm^2] Mass Moment of Inertia
 Clhmax = 1.5 # [-] Clmax of tail
+tail_span = 1.55 # [m] tail span
+stability_margin = 0.05 # [-] stability margin for tail sizing
 ##5. Structure Sizing
 ##6. Final Mass Calculation
 M_PL = 1.88 # [kg] mass of mission equipment

@@ -11,7 +11,7 @@ c = 0.36
 lh = 0.5
 ARh = 6
 show = True
-def get_tail(show,Clalpha,Clhalpha,Clmax,Clhmax,Cmac,S,c,lh,ARh):
+def get_tail(show,Clalpha,Clhalpha,Clmax,Clhmax,Cmac,S,c,lh,tail_span):
     Vmax = 120/3.6
     rho = 1.225
     def stability_curve(Sh):
@@ -40,8 +40,8 @@ def get_tail(show,Clalpha,Clhalpha,Clmax,Clhmax,Cmac,S,c,lh,ARh):
         margin = stab[i] - contr[i]
         if margin > 0:
             break
-    bh = (ARh*surface[i])**0.5
+    bh = tail_span
     ch = surface[i]/bh
     max_tail_load = 0.5*surface[i]*rho*Vmax**2*Clhmax
-    return margin*c, surface[i], bh, ch, max_tail_load
-print(get_tail(True,Clalpha,Clhalpha,Clmax,Clhmax,Cmac,S,c,lh,ARh))
+    return surface[i], 0,bh, ch, max_tail_load
+print(get_tail(True,Clalpha,Clhalpha,Clmax,Clhmax,Cmac,S,c,lh,1))

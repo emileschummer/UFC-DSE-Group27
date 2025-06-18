@@ -37,7 +37,7 @@ def get_Cmy(alpha, V, Vz, q, Clh0, Sh,Clalpha,Cl0,Cd0,piAe,Clhalpha,lh,l,c,Cmac,
     Cmy =  Cm + Cmh
     return Cmy
 
-def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing, output_folder):
+def old_get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span,Clhmax,Cd0_wing, output_folder):
     output_folder_tail = os.path.join(output_folder, "Tail_Sizing")
     os.makedirs(output_folder, exist_ok=True)
     rho = 1.2
@@ -126,6 +126,47 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span
         cord = 0
         max_tail_force = 0.5*rho*Sh*Clhmax*33**2
     return Sh, Clh0, span, cord,lh,max_tail_force#alpha_result*180/np.pi,pitch_result*180/np.pi
+
+def get_tail(show,Clalpha,Clhalpha,Clmax,Clhmax,Cmac,S,c,lh,tail_span,stability_margin):
+    Vmax = 120/3.6
+    rho = 1.225
+    def stability_curve(Sh):
+        l_c = (Clhalpha/Clalpha)*(Sh*(lh))/(S*c) - stability_margin
+        return l_c
+    def control_curve(Sh):
+        l_c = - Cmac/Clmax - Clhmax/Clmax*(Sh*(lh))/(S*c)
+        return l_c
+
+
+    surface = np.linspace(0,1,100)
+    stab = []
+    contr = []
+
+    for Sh in surface:
+        stab.append(stability_curve(Sh))
+        contr.append(control_curve(Sh))
+        
+    
+    plt.plot(stab,surface)
+    plt.plot(contr,surface)
+    plt.xlabel('(Xcg - Xac)/c')       # X-axis label
+    plt.ylabel('Sh/S')   # Y-axis label
+    if show: plt.show()
+    for i in range(len(surface)):
+        margin = stab[i] - contr[i]
+        if margin > 0:
+            break
+    bh = tail_span
+    ch = surface[i]/bh
+    max_tail_load = 0.5*surface[i]*rho*Vmax**2*Clhmax
+
+    Sh = surface[i]
+    Clh0 = 0
+    tail_span_loop = bh
+    tail_chord_loop = ch
+    lh = input.lh
+    max_tail_force = max_tail_load
+    return Sh, Clh0, tail_span_loop, tail_chord_loop,lh,max_tail_force
 
 #print(get_tail_size(200,30,4.635,4,0.7,2,0.05,-0.5,1,0,14,0.36,True,0.7366,1.5))
 #plt.show()
