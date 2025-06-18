@@ -129,53 +129,5 @@ def analyze_race_thrust():
         ax4.legend()
         
         plt.tight_layout()
-        plt.show()
-    
-
-
-def CD_alpha():
-    velocity_smooth = [15, 11]
-    rho, altitude = 1.225, 0
-
-    for velocity in velocity_smooth:
-        Cf_blade = flat_plate_drag_coefficient(velocity, rho, altitude, S_wing, L_blade, w_blade)
-        Cf_stab = flat_plate_drag_coefficient(velocity, rho, altitude, S_wing, L_stab, w_stab)
-        Cf_poles = flat_plate_drag_coefficient(velocity, rho, altitude, S_wing, L_poles, w_poles)
-        Cf_fus = flat_plate_drag_coefficient(velocity, rho, altitude, S_wing, L_fus, w_fus)
-        CD_speaker = cube_drag_coefficient(velocity, rho, altitude, S_wing, L_speaker)
-        CD_gimbal = cube_drag_coefficient(velocity, rho, altitude, S_wing, L_gimbal)
-        CD_motor = cube_drag_coefficient(velocity, rho, altitude, S_wing, L_motor)
-        CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing)
-
-        alpha = aero_df["Alpha_deg"].values  # ensure it's a NumPy array
-        CD_wing = aero_df["CD_vlm"].values
-
-        # Compute UAV CD including CD_wing (vector) + components (scalars)
-        CD_UAV = CD_fus + CD_wing + 4 * Cf_blade + 3 * Cf_stab + 2 * Cf_poles + 4 * CD_motor  # + CD_gimbal + CD_speaker
-
-        # Compute reference curve
-        if velocity == 15:
-            CD_ref = 0.2398 + 0.0016 * alpha + 0.001496 * alpha**2
-        elif velocity == 11:
-            CD_ref = 0.3127 - 0.002008 * alpha + 0.001483 * alpha**2
-        else:
-            CD_ref = np.full_like(alpha, np.nan)
-
-        # Mask and plot
-        alpha_mask = alpha >= 0
-        plt.figure(figsize=(10, 6))
-        plt.plot(alpha[alpha_mask], CD_UAV[alpha_mask], label=f'UAV CD at V = {velocity} m/s')
-        plt.plot(alpha[alpha_mask], CD_ref[alpha_mask], linestyle='--', label=f'Reference CD at V = {velocity} m/s')
-        plt.xlabel('Angle of Attack (degrees)')
-        plt.ylabel('Drag Coefficient (CD)')
-        plt.title('Drag Coefficient vs Angle of Attack')
-        plt.grid(True)
-
-        error = np.mean(np.abs(CD_UAV[alpha_mask] - CD_ref[alpha_mask]))
-        plt.text(0.02, 0.98, f'Average Error: {error:.4f}', transform=plt.gca().transAxes, verticalalignment='top')
-        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper right')
-        plt.tight_layout()
-        plt.show()
-
-#analyze_race_thrust()
-CD_alpha()
+        #plt.show()
+print(analyze_race_thrust())
