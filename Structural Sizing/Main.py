@@ -14,7 +14,7 @@ from scipy.optimize import curve_fit
 #TODO ASK ALEX FOR FEEDBACK
 #TODO CHECK VON MISES FOR ALL, ITS FOR CROSS SECTION POINT, NOT ENTIRE CROSS SECTION 
 #------------------------------------------------------
-
+SummonTheCouncil()
 def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,Fuselage_Input,SF,BigG):
 # def Structures_Main():
     #--------------------------------------------------
@@ -202,7 +202,7 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
         WingBox_I = Circle_Moment_of_Inertia(R_Out=R_out_WingBox,R_in=R_in_WingBox)
         WingBox_Q = First_Area_Q_Circle(R_out=R_out_WingBox,R_in=R_in_WingBox,t=WingBox_t)
         WingBox_J = Circle_Polar_Moment_of_Inertia(R_out=R_out_WingBox,R_in=R_in_WingBox)
-        WingBox_J2 = Circle_Polar_Moment_of_Inertia2(t=WingBox_t, R_out=R_out_WingBox)
+        WingBox_J2 = Circle_Polar_Moment_of_Inertia2(t=WingBox_t, R_out=R_out_WingBox)# For comparison of thin walled
         WingBox_A = Tube_Area(R_in=R_in_WingBox,R_out=R_out_WingBox)
 
         #Bending
