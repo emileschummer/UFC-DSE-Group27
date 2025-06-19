@@ -23,7 +23,7 @@ def load_distribution_halfspan(wing_geom, lift_distribution, alpha, half_span=1.
     if plot == True: 
         plt.figure()
         plt.plot(y_midpoints / half_span, lift_distribution["CLs"][index], label=f'alpha {lift_distribution["alpha"][index]}')
-        plt.xlabel("x/b/2")
+        plt.xlabel("y/b/2")
         plt.ylabel("Lift")
         plt.legend()
         plt.grid(True)

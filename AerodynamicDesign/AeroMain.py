@@ -15,7 +15,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     xfoil_path: str = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe",
     operational_velocity: float = 9.16,
     num_spanwise_sections: int = 200,
-    vlm_chordwise_resolution = 10,
+    vlm_chordwise_resolution = 8,
     delta_alpha_3D_correction: float = 1.0,
     alpha_range2D: np.ndarray = np.linspace(-10, 25, 36),
     alpha_range3D: np.ndarray = np.linspace(-10, 30, 41),
@@ -95,9 +95,9 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     print(f"6) Plotting:          {t6 - t5:.2f} s")
     print(f"Total runtime:        {t6 - t0:.2f} s")
 
-
+    for i in range(1,30): 
     #returns distribution at angle of attack where CL is max
-    distribution = load_distribution_halfspan(wing_geom, lift_distribution, alpha_at_max_cl, plot = False)
+        distribution = load_distribution_halfspan(wing_geom, lift_distribution, i, plot = True)
 
     # if csv_path:
     #     df = pd.DataFrame({
@@ -202,7 +202,7 @@ if __name__ == "__main__":
         velocity_op = 9.16
         CL = 2
         altitude = 0
-        taper_ratio = 0.4
+        taper_ratio = 0.5
         b = 3.15
         op_point_for_atmo = asb.OperatingPoint(velocity=velocity_op, atmosphere=asb.Atmosphere(altitude=altitude))
         rho = op_point_for_atmo.atmosphere.density()

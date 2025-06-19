@@ -28,7 +28,7 @@ def wing_geometry_calculator(InputWeight, aero_df, velocity_op, altitude, taper_
 
     S = InputWeight/(0.5*rho*velocity_op**2*CL)
     
-    cr = 4*S/(b*(1 + taper_ratio))
+    cr = 2*S/(b*(1 + taper_ratio))
 
     ct = cr*taper_ratio
 
