@@ -12,7 +12,7 @@ vlm_chordwise_resolution = input.vlm_chordwise_resolution
 delta_alpha_3D_correction = input.delta_alpha_3D_correction
 alpha_range2D= input.alpha_range2D
 alpha_range3D = input.alpha_range3D
-S=1
+S=1.85
 r_chord = 4*S/(input.b*(1 + input.taper_ratio))
 t_chord = r_chord*input.taper_ratio
 r_twist = input.r_twist
@@ -20,9 +20,9 @@ t_twist = input.t_twist
 sweep = no_quarterchord_sweep(r_chord,t_chord) # [deg] quarter-chord sweep angle
 operational_altitude = input.altitude
 Re_numbers = input.Re_numbers
-Plot = input.show_plots
+Plot = True
 csv_path = input.aero_csv
-output_folder = "Final_UAV_Sizing/Output"
+output_folder = "Final_UAV_Sizing/Output/OG_Aero_Plots"
 ##Run
 """aero_values_dic={
 "wing_geom": wing_geom,

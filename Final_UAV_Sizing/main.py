@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 from scipy.optimize import curve_fit
+from datetime import datetime
 import gc
 #import functions
 from Input import fixed_input_values as input
@@ -21,15 +22,17 @@ from Modelling.Structural_Sizing.Main import Structure_Main
 from Modelling.Structural_Sizing.Materials import Aluminum7075T6, Aluminum2024T4, NaturalFibre
 
 def main_iteration(outputs,number_relay_stations, M_list,start_time):
-    M_init = M_list[-1]  # Initial mass for the iteration
     i=0
+    results_dict = {}
+    aero_values_dic = {}
     #0. Open General Files
     """Check OG_aero file is correct. It is never edited during iterations. only aero.csv is edited"""
     aero_df = pd.read_csv(input.OG_aero_csv)
-    while abs(M_list[-1] - M_list[-2]) > input.min_delta_mass and abs(M_list[-1] - M_list[-2]) < input.max_delta_mass :
+    while M_list[-1] < 40 and ( i<3 or (abs(M_list[-1] - M_list[-2])/M_list[-1] > input.min_delta_mass and abs(M_list[-1] - M_list[-2])/M_list[-1] < input.max_delta_mass) ):
+        M_init = M_list[-1] # Initial mass for the iteration
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
-        print(f"Iteration {i+1} for {number_relay_stations} Relay Stations with M_init = {M_init:.2f} kg")
+        print(f"Iteration {i+1} for {number_relay_stations} Relay Stations with M_init = {M_list[-1]:.2f} kg")
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
         i+=1
 #1. Wing Sizing
@@ -223,8 +226,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         # 1.38746043, 1.33755172, 1.28234897, 1.2202937, 1.15152066, 1.06339069,
         # 0.9975445, 0.78979516])
 
-        # cl_distrib_max = cl_values
-        cl_distrib_max = max_distrib[1]
+        cl_distrib_max = max_distrib[1]#cl_values
         #print(max_distrib)
 
         # Assume these are at equally spaced spanwise stations from 0 to b/2
@@ -250,6 +252,10 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         drag_distrib = elliptical_cd
 
     #5.2 Run Structure_Main
+        L_fus1 = 0.1
+        L_fus2 = battery_volume/((input.d_fus-0.02)**2/4*np.pi)#2cm extra for accessibility and cables)
+        L_fus3 = 0.4
+       
 
         Struc_mass_list, Thickness_list, Materials_list =  Structure_Main(
                 Materials_Input=[Aluminum7075T6(), # VTOL Pole Material
@@ -278,9 +284,9 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
                            drag_distrib],  #Drag Distribution [N/m] # TODO
 
                Fuselage_Input=[input.d_fus/2,   #Fuselage Inner Radius [m],
-                               0.1,     #Fuselage Section 1 Length [m], TODO
-                               0.3,     #Fuselage Section 2 Length [m], TODO
-                               0.4,     #Fuselage Section 3 Length [m], TODO
+                               L_fus1,     #Fuselage Section 1 Length [m], TODO
+                               L_fus2,     #Fuselage Section 2 Length [m], TODO
+                               L_fus3,     #Fuselage Section 3 Length [m], TODO
                                0.4,     #Payload Location [m], TODO
                                0.6,     #Wing Hole Location [m], TODO
                                140,      #Main Engine Thrust [N], TODO depends on total mass
@@ -299,6 +305,7 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
         M_list.append(M_final)
         print(f"Payload Mass: {input.M_PL} kg, Propeller Mass: {M_prop} kg, Battery Mass: {M_battery} kg, Structure Mass: {M_struc} kg")
         print(f"Final Mass for {number_relay_stations} Relay Stations: {M_final} kg (iteration {i})")
+        print(M_list)
         runtime = time.time() - start_time
         hours, rem = divmod(runtime, 3600)
         minutes, seconds = divmod(rem, 60)
@@ -315,7 +322,9 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
             "Propeller Mass[kg]": M_prop,
             # Battery values
             "Battery Mass[kg]": M_battery,
-            "Battery Volume": battery_volume,
+            "Battery Volume": battery_volume,\
+            #Fuselage values
+            "Fuselage Length[m]": L_fus1 + L_fus2 + L_fus3,
             # Tail values
             "Horizontal Tail Area[m2]": Sh,
             "Horizontal Tail Chord[m]": tail_chord_loop,
@@ -337,15 +346,35 @@ We also need CD0 and tail_span for Tijn's Tail Sizing. As well as the propeller 
             # Final mass
             "Final Mass": M_final
         }
+        timestamp = datetime.now().strftime("%m-%d_%H-%M")
+        with open(os.path.join(outputs, f"iteration{i}_results{timestamp}.txt"), "w") as f:
+            f.write("result_dict:\n")
+            f.write(str(results_dict))
+            f.write("\n\naero_values_dict:\n")
+            f.write(str(aero_values_dic))
+            # Save a copy of all input values from fixed_input_values.py
+            f.write("\n\nfixed_input_values:\n")
+            try:
+                fixed_input_path = input.__file__
+                f.write("\n\n# Exact contents of fixed_input_values.py:\n")
+                with open(fixed_input_path, "r") as fin:
+                    f.write(fin.read())
+            except Exception as e:
+                f.write(f"\n\n# Could not copy fixed_input_values.py: {e}\n")
 
     return M_list, results_dict, aero_values_dic
 
 def plot_results(M_dict):
-    fig, axs = plt.subplots(1, 4, figsize=(20, 5), sharey=True)
     relay_station_counts = list(M_dict.keys())
+    n_relays = len(relay_station_counts)
+    fig, axs = plt.subplots(1, n_relays, figsize=(5 * n_relays, 5), sharey=True)
 
-    for idx, number_relay_stations in enumerate(relay_station_counts[:4]):
-        axs[idx].plot(M_dict[number_relay_stations], marker='o')
+    # If only one relay station, axs is not a list
+    if n_relays == 1:
+        axs = [axs]
+
+    for idx, number_relay_stations in enumerate(relay_station_counts):
+        axs[idx].plot(M_dict[number_relay_stations][1:], marker='o')
         axs[idx].set_title(f"{number_relay_stations} Relay Stations")
         axs[idx].set_xlabel("Iteration")
         axs[idx].set_ylabel("Mass (kg)")
@@ -355,6 +384,7 @@ def plot_results(M_dict):
     output_dir = input.output_folder
     os.makedirs(output_dir, exist_ok=True)
     plt.savefig(os.path.join(output_dir, "mass_through_iterations.png"))
+    
     if input.show_plots: plt.show()
     plt.close()
 class Tee(object):
@@ -379,12 +409,13 @@ def main():
     M_dict = {}
     start_time = time.time()
     for number_relay_stations in range(input.min_RS,input.max_RS+1):
-        M_list = [input.M_init+2*input.min_delta_mass]
+        M_list = [0.9*input.M_init]
         M_list.append(input.M_init)
         # Create output folder for this relay station
         outputs = os.path.join(input.output_folder, f"RS_{number_relay_stations}")
         os.makedirs(outputs, exist_ok=True)
         M_list,result_dict,aero_values_dict = main_iteration(outputs,number_relay_stations, M_list, start_time)
+        #M_list,result_dict = main_iteration(outputs,number_relay_stations, M_list, start_time)
         # Save result_dict and aero_values_dict to a txt file in outputs
         with open(os.path.join(outputs, "final_iteration_results.txt"), "w") as f:
             f.write("result_dict:\n")

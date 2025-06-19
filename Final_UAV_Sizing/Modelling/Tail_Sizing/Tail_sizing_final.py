@@ -105,7 +105,9 @@ def get_tail_size(W, piAe, Clalpha, Clhalpha,Cl0,S,Cmac,lh,l,Iy,c,plot,tail_span
         plt.show()
     plt.close()
     try:
-        Sh = min(Sh_results)
+        # Take minimum Sh that is not 0
+        Sh_nonzero = [sh for sh in Sh_results if sh > 0]
+        Sh = min(Sh_nonzero)
         min_index = Sh_results.index(Sh)
         Clh0 = Clh0_results[min_index]
         alpha_result = alpha_results[min_index]

@@ -58,7 +58,7 @@ def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, 
         CD_wing = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
         CD= CD_fus + CD_gimbal + CD_speaker + CD_wing + 4 * CD_motor + 2 * Cf_poles+ 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
         D = 0.5*rho*CD*S_wing*V**2
-        T_horizontal = ((D + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
+        T_horizontal = ((D + np.sin(incline)*W) )#+ W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         L_wing = 0.5*rho*CL*S_wing*V**2 * propeller_wake_efficiency  #Lifting force of the wing, parameter for wake of propellers
         L_prop = L_req - L_wing
         T_vertical = L_prop/numberengines_vertical #Thrust per vertical propeller
@@ -82,14 +82,18 @@ def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W,
 
     T_vertical, T_horizontal, CD = calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, Cf_blade, Cf_stab, Cf_poles)
     
+    T_vertical, T_horizontal = abs(T_vertical), abs(T_horizontal)  # Ensure thrust values are non-negative
     #Vertical power
     max_thrust = df_vertical['Thrust_N'].max()
     if T_vertical > max_thrust:
-        print(f"{T_vertical-max_thrust} Vertical thrust exceeded")
+        #print(f"{T_vertical-max_thrust} Vertical thrust exceeded")
         T_vertical = max_thrust
         #raise ValueError(f"T_vertical ({T_vertical:.2f} N) exceeds the maximum thrust in the CSV ({max_thrust:.2f} N).")
     
-    P_vertical = np.interp(T_vertical, df_vertical['Thrust_N'], df_vertical[' Power (W) '])*numberengines_vertical
+    if T_vertical < df_vertical['Thrust_N'].min():
+        P_vertical = np.interp(T_vertical, [0, df_vertical['Thrust_N'].min()], [0, df_vertical[' Power (W) '].iloc[df_vertical['Thrust_N'].idxmin()]]) * numberengines_vertical
+    else:
+        P_vertical = np.interp(T_vertical, df_vertical['Thrust_N'], df_vertical[' Power (W) ']) * numberengines_vertical
     
     # Horizontal power
     max_thrust = df_horizontal['Thrust_N'].max()
@@ -98,6 +102,9 @@ def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W,
         T_horizontal = max_thrust
         #raise ValueError(f"T_horizontal ({T_horizontal:.2f} N) exceeds the maximum thrust in the CSV ({max_thrust:.2f} N).")
     
-    P_horizontal = np.interp(T_horizontal, df_horizontal['Thrust_N'], df_horizontal[' Power (W) ']) * numberengines_horizontal
-    P = P_vertical + P_horizontal
-    return P
+    if T_horizontal < df_horizontal['Thrust_N'].min():
+        P_horizontal = np.interp(T_horizontal, [0, df_horizontal['Thrust_N'].min()], [0, df_horizontal[' Power (W) '].iloc[df_horizontal['Thrust_N'].idxmin()]]) * numberengines_horizontal
+    else:
+        P_horizontal = np.interp(T_horizontal, df_horizontal['Thrust_N'], df_horizontal[' Power (W) ']) * numberengines_horizontal
+    P = P_horizontal + P_vertical
+    return P,P_horizontal,P_vertical
