@@ -19,17 +19,19 @@ L_blade = 0.2413
 w_blade = 0.025
 L_stab= 0.1016
 w_stab= 0.1778
-L_poles= 0.4826 #0.016
-w_poles= 0.016# 0.4826
+L_poles=0.4826 
+w_poles= 0.016 
 L_motor = 0.1
 L_gimbal = 0.12
 L_speaker = 0.1
+L_wing= 0.1524
+w_wing = 1.2192
 
-L_n = 0.15
-L_c = 0.6
+L_n = 0
+L_c = 0.8966
 L_fus = 0.8966
 w_fus = S_wing / L_fus
-d_fus = 0.08
+d_fus = 0.15
 import matplotlib.pyplot as plt
 
 aero_df = pd.read_csv('Propeller_sizing/Input/Validation_data.csv')
@@ -48,40 +50,36 @@ def CD_alpha():
         CD_gimbal = cube_drag_coefficient(velocity, rho, altitude, S_wing, L_gimbal)
         CD_motor = cube_drag_coefficient(velocity, rho, altitude, S_wing, L_motor)
         CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d_fus, S_wing)
+        Cf_wing = flat_plate_drag_coefficient(velocity, rho, altitude, S_wing, L_wing, w_wing)
 
         alpha_w = np.array([
-        -4.000, -3.500, -3.000, -2.500, -2.000,
-        1.000,  1.500,  2.000,  2.500,  3.000,  3.500,  4.000,  4.500,
-        5.000,  5.500,  6.000,  6.500,  7.000,  7.500,  8.000,  8.500,
-        9.000,  9.500, 10.000, 10.500, 11.000, 11.500, 12.000, 12.500,
-        13.000, 13.500, 14.000, 14.500, 15.000, 15.500, 16.000, 16.500,
-        17.000, 17.500, 18.000, 18.500, 19.000, 19.500, 20.000
-        ])
+        -5.0, -4.0, -3.0, -2.0, -1.0,
+        0.0,  1.0,  2.0,  3.0,  4.0,
+        5.0,  6.0,  7.0,  8.0,  9.0,
+        10.0, 11.0, 12.0, 13.0, 14.0,
+        15.0])
 
         CD_wing = np.array([
-        0.01043, 0.01175, 0.01245, 0.01297, 0.01342,
-        0.01626, 0.01678, 0.01735, 0.01797, 0.01863, 0.01934, 0.02009, 0.02088,
-        0.02173, 0.02267, 0.02371, 0.02486, 0.02614, 0.02786, 0.02964, 0.03162,
-        0.03383, 0.03635, 0.03918, 0.04239, 0.04597, 0.04996, 0.05440, 0.05925,
-        0.06455, 0.07028, 0.07643, 0.08295, 0.08986, 0.09706, 0.10460, 0.11243,
-        0.12059, 0.12894, 0.13747, 0.14618, 0.15513, 0.16430, 0.17371
-        ])
+        0.0079, 0.0050, 0.0027, 0.0012, 0.0003,
+        0.0000, 0.0004, 0.0015, 0.0033, 0.0057,
+        0.0087, 0.0124, 0.0168, 0.0217, 0.0273,
+        0.0334, 0.0401, 0.0473, 0.0551, 0.0634,
+        0.0721])
+        
         ai=5
 
         alpha = alpha_w-ai
 
         # Compute UAV CD including CD_wing (vector) + components (scalars)
-        CD_UAV = CD_fus + CD_wing + 4 * Cf_blade + 3 * Cf_stab + 2 * Cf_poles + 4 * CD_motor  # + CD_gimbal + CD_speaker
+        CD_UAV = CD_fus + CD_wing + 4 * Cf_blade + 3 * Cf_stab + 2 * Cf_poles + 4 * CD_motor + Cf_wing # + CD_gimbal + CD_speaker
 
         # Compute reference curve
         if velocity == 15:
             CD_ref = 0.2398 + 0.0016 * alpha + 0.001496 * alpha**2
-        elif velocity == 11:
-            CD_ref = 0.3127 - 0.002008 * alpha + 0.001483 * alpha**2
         else:
-            CD_ref = np.full_like(alpha, np.nan)
-        
-        mask = alpha >= 0
+            CD_ref = 0.3127 - 0.002008 * alpha + 0.001483 * alpha**2
+        d_CD= CD_ref-CD_UAV
+        mask = (alpha >= 0) & (alpha <= 10)
         alpha_filtered = alpha[mask]
         CD_UAV_filtered = CD_UAV[mask]
         CD_ref_filtered = CD_ref[mask]
@@ -94,7 +92,7 @@ def CD_alpha():
         plt.title('Drag Coefficient vs Angle of Attack')
         plt.grid(True)
 
-        error = np.mean(np.abs(CD_UAV - CD_ref))
+        error = np.mean(np.abs(CD_UAV_filtered - CD_ref_filtered))
         plt.text(0.02, 0.98, f'Average Error: {error:.4f}', transform=plt.gca().transAxes, verticalalignment='top')
         plt.legend(bbox_to_anchor=(1.05, 1), loc='upper right')
         plt.tight_layout()
