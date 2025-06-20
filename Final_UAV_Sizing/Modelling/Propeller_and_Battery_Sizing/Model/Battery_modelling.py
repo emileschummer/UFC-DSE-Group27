@@ -238,7 +238,7 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
     print("Done")
     return max_battery_energy
 
-def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, aero_df, numberengines_vertical,PL_power):
+def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, aero_df, PL_power):
     # Prepare arrays
     time_plot, distance_plot, power_plot, speed_plot = [], [], [], []
     power_v_plot, power_h_plot = [], []
