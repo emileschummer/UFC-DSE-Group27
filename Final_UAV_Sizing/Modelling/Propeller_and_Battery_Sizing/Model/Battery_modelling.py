@@ -9,6 +9,7 @@ import os
 from datetime import datetime
 from Final_UAV_Sizing.Modelling.Propeller_and_Battery_Sizing.Model.UFC_FC_YEAH import calculate_power_FC
 from Final_UAV_Sizing.Input.RaceData import Strava_input_csv as sva
+from Final_UAV_Sizing.Input.fixed_input_values import *
 import numpy as np
 import pandas as pd
 
@@ -237,7 +238,7 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
     print("Done")
     return max_battery_energy
 
-def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker):
+def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, aero_df, numberengines_vertical,PL_power):
     # Prepare arrays
     time_plot, distance_plot, power_plot, speed_plot = [], [], [], []
     power_v_plot, power_h_plot = [], []
@@ -260,7 +261,7 @@ def simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, 
                 pitch_rate = 0
             prev_velocity = velocity_smooth
             prev_grade_smooth = grade_smooth
-            P,P_horizontal,P_vertical = calculate_power(df_vertical,df_horizontal,grade_smooth,velocity_smooth,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, d_fus, w_fus, L_blade, w_blade, L_stab, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
+            P,P_horizontal,P_vertical = calculate_power(df_vertical,df_horizontal,grade_smooth,velocity_smooth,rho, acceleration, pitch_rate, W, aero_df)
             P+= PL_power  # Add power for payload
             energy += time_diff * P/3600  # Convert J to Wh
             t = time
