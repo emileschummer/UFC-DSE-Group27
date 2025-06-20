@@ -10,17 +10,9 @@ from scipy.interpolate import interp1d
 
 from Propeller_sizing.Model.UFC_FC_YEAH import calculate_power_FC
 import Propeller_sizing.Input.Strava_input_csv as sva
+from Final_UAV_Sizing.Input.fixed_input_values import *
 
-g = 9.81  # gravity m/s^2
-# Aircraft parameters
-W = 250
-S_wing = 2
-CLmax = 2
-V_vert_prop = 11
-numberengines_vertical = 4
-numberengines_horizontal = 1
-propeller_wake_efficiency = 0.7
-
+W= 25*g
 
 aero_df = pd.read_csv('Propeller_sizing/Model/aero.csv')
 
@@ -53,16 +45,7 @@ def power_V():
             else:
                 accel = pitch_rate = 0
 
-            P = calculate_power_FC(
-                df_vertical, df_horizontal, g_smooth, v, rho,
-                accel, pitch_rate, W, V_vert_prop, CLmax,
-                S_wing, aero_df, numberengines_vertical,
-                numberengines_horizontal, propeller_wake_efficiency,
-                L_fus, L_n, L_c, w_fus, d_fus,
-                L_blade, L_stab, L_poles, w_poles,
-                L_speaker, L_gimbal, L_motor
-            )
-
+            P = calculate_power_FC(df_vertical,df_horizontal,g_smooth,v,rho, accel, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, w_fus, d_fus,L_blade,L_stab, L_poles, w_poles,L_speaker, L_gimbal, L_motor)
             v_list.append(v)
             P_list.append(P)
             t_prev, v_prev, g_prev = t, v, g_smooth
@@ -136,15 +119,7 @@ def power_V_sensitivity(n_iters=5, variation_pct=0.10, random_seed=None):
 
                 prev_velocity, prev_grade, t = velocity_smooth, grade_smooth, time
 
-                P = calculate_power_FC(
-                    df_vertical, df_horizontal, grade_smooth, velocity_smooth,
-                    rho, acceleration, pitch_rate, W, V_vert_prop, CLmax,
-                    S_wing, aero_df, numberengines_vertical,
-                    numberengines_horizontal, propeller_wake_efficiency,
-                    L_fus, L_n, L_c, w_fus, d_fus,
-                    L_blade, L_stab, L_poles, w_poles,
-                    L_speaker, L_gimbal, L_motor
-                )
+                P = calculate_power_FC(df_vertical,df_horizontal,grade_smooth,velocity_smooth,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, w_fus, d_fus,L_blade,L_stab, L_poles, w_poles,L_speaker, L_gimbal, L_motor)
                 velocity_list.append(velocity_smooth)
                 P_list.append(P)
 

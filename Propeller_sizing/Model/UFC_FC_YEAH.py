@@ -71,20 +71,22 @@ def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, 
 
     if T_horizontal < 0:
         T_horizontal = 0       
-    return T_vertical,T_horizontal, CD, CL
+    return T_vertical,T_horizontal, CD
 
 def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, w_fus, d_fus,L_blade,L_stab, L_poles, w_poles,L_speaker, L_gimbal, L_motor):
     altitude = sva.altitude_from_density(rho)
-    Cf_blade= flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_blade, w_blade)
+    CD_blade= flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_blade, w_blade)
     Cf_stab = flat_plate_drag_coefficient(V, rho, altitude,S_wing,L_stab, w_stab)
-    Cf_poles = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_poles, w_poles)
+    CD_poles = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_poles, w_poles)
     Cf_fus = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_fus, w_fus)
     CD_speaker = cube_drag_coefficient(V, rho, altitude, S_wing, L_speaker)
     CD_gimbal = cube_drag_coefficient(V, rho, altitude, S_wing, L_gimbal)
     CD_motor = cube_drag_coefficient(V, rho, altitude, S_wing, L_motor)
     CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d_fus, S_wing)
-
-    T_vertical, T_horizontal, CD = calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, Cf_blade, Cf_stab, Cf_poles)
+    Cf_wing = flat_plate_drag_coefficient(V, rho, altitude, S_wing, MAC, b)
+    Cf_hor = flat_plate_drag_coefficient(V, rho, altitude, S_wing, tail_chord, tail_span)
+    CD_ver = flat_plate_drag_coefficient(V, rho, altitude, S_wing, tail_chord_v, tail_chord_v)
+    T_vertical,T_horizontal, CD= calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, CD_blade, Cf_hor, CD_poles, Cf_wing, CD_ver)
     
     #Vertical power
     max_thrust = df_vertical['Thrust_N'].max()
