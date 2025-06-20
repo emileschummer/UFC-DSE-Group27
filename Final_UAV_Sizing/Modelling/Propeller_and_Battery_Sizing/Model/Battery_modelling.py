@@ -284,9 +284,10 @@ def plot(time_plot, power_plot,power_h_plot,power_v_plot, speed_plot, gradient_p
     fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True) if axs is None else (plt.gcf(), axs)
     if multiple_RS:
         label = 'Multiple Relay Stations'
-        axs[0].plot(time_plot, power_plot, label=label)
-        #axs[0].plot(time_plot, power_v_plot, label=label + ' Vertical',color='orange')
         #axs[0].plot(time_plot, power_h_plot, label=label + ' Horizontal', color='green')
+        #axs[0].plot(time_plot, power_v_plot, label=label + ' Vertical',color='orange')
+        axs[0].plot(time_plot, power_plot, label=label)
+
         axs[1].plot(time_plot, speed_plot, label='UAV Speed', color='black')
         axs[2].plot(time_plot, gradient_plot, label='UAV Gradient', color='black')
         axs[3].plot(time_plot, (1 - np.array(battery_energy_plot)/battery_usable_capacity)*100, label='UAV Battery Usage', color='blue')
@@ -319,10 +320,6 @@ def plot(time_plot, power_plot,power_h_plot,power_v_plot, speed_plot, gradient_p
     axs[3].set_xlabel("Time [s]")
     axs[3].set_ylabel("Battery Energy [%]")
     axs[3].grid()
-
-
-
-   
 
 
 def get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot, altitude_plot):

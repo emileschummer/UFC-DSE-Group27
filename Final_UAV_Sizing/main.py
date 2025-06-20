@@ -1,5 +1,6 @@
 #DSE Group 27 - UAV For Cycling
 #import packages
+
 import numpy as np
 import os
 import sys
@@ -10,6 +11,7 @@ from scipy.optimize import curve_fit
 from datetime import datetime
 import gc
 #import functions
+
 from Input import fixed_input_values as input
 from Modelling.Wing_Sizing.Functions import wing_geometry_calculator
 from Modelling.Wing_Sizing.AeroMain import run_full_aero
@@ -389,7 +391,7 @@ def plot_results(M_dict):
 
     for idx, number_relay_stations in enumerate(relay_station_counts):
         axs[idx].plot(M_dict[number_relay_stations][1:], marker='o')
-        axs[idx].set_title(f"{number_relay_stations} Relay Stations")
+        axs[idx].set_title(f"{round(7/(number_relay_stations+1), 2)}h Endurance")
         axs[idx].set_xlabel("Iteration")
         axs[idx].set_ylabel("Mass (kg)")
         axs[idx].grid(True)
@@ -449,7 +451,7 @@ def main():
         M_dict[number_relay_stations] = M_list
     print(M_dict)
     for number_relay_stations in M_dict.keys():
-        print(f"Final mass for {number_relay_stations} Relay Stations: {M_dict[number_relay_stations][-1]} kg")
+        print(f"Final mass for {number_relay_stations} Relay Stations: {round(M_dict[number_relay_stations][-1], 2)} kg")
     plot_results(M_dict)
     end_time = time.time()
     runtime = end_time - start_time

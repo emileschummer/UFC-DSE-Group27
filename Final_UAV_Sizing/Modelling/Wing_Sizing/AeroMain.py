@@ -91,7 +91,7 @@ def run_full_aero( airfoil_dat_path: str = r"Final_UAV_Sizing/Input/AirfoilData/
         "Cm_vlm": CM_vlm
     })
     try:
-        timestamp = time.strftime("%m-%d_%H-%M", time.localtime())
+        timestamp = time.strftime("%m_%d_%H_%M", time.localtime())
         df.to_csv(csv_path, index=False, encoding="utf-8")
         df.to_csv(os.path.join(output_folder, "aero_specific.csv"), index=False, encoding="utf-8")
         print(f"Saved alpha–CL–CD sweep to '{csv_path}' and '{os.path.join(output_folder, 'aero.csv')}'")
