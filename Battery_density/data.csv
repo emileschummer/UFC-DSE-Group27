@@ -1,0 +1,34 @@
+Researcher(s),Year,Battery Type,Energy Density (Wh/kg)
+Chen et al.,2021,Solid-State,300
+Kriegler et al.,2023,Solid-State,272
+Scaltrito et al.,2024,Solid-State,400
+Plumeyer et al.,2025,Solid-State,263
+Zhao et al.,2025,Solid-State,345
+Han et al.,2025,Solid-State,403
+Whittingham,2004,Li-ion,100
+Hitz et al.,2019,Li-ion,200
+Westchester Clean Energy (RMI),2024,Li-ion,280
+Battery University,2000,NiMH,70
+Battery University,1990,NiCd,35
+CATL,2028,Solid-State,500
+Bye Aerospace,2021,Li-ion,270
+Pipistrel,2020,Li-ion,200
+NASA SABERS,2022,Solid-State,500
+Oxis Energy,2020,Li-ion,400
+Generic Source,1980,NiCd,30
+Generic Source,1985,NiCd,35
+Generic Source,1990,NiCd,35
+Generic Source,1995,NiCd,38
+Generic Source,2000,NiCd,45
+Generic Source,2005,NiCd,50
+Generic Source,1995,NiMH,60
+Generic Source,2000,NiMH,70
+Generic Source,2005,NiMH,80
+Generic Source,2010,NiMH,90
+Generic Source,2015,NiMH,95
+Generic Source,1991,Li-ion,100
+Generic Source,2000,Li-ion,150
+Generic Source,2005,Li-ion,180
+Generic Source,2010,Li-ion,200
+Generic Source,2015,Li-ion,220
+Generic Source,2020,Li-ion,250

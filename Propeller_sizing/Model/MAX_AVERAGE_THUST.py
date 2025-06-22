@@ -49,42 +49,40 @@ def analyze_race_thrust():
         
         for index, row in race_data.iterrows():
             time = row[" time"]  
-            velocity_smooth = row[" velocity_smooth"]
-            grade_smooth = np.arctan(row[" grade_smooth"] / 100)
+            V = row[" velocity_smooth"]
+            incline = np.arctan(row[" grade_smooth"] / 100)
             altitude = row[" altitude"]
             rho = sva.air_density_isa(altitude)
             
             # Calculate drag coefficients
-            Cf_blade = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_blade, w_blade)
-            Cf_stab = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_stab, w_stab)
-            Cf_poles = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_poles, w_poles)
-            Cf_fus = flat_plate_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_fus, w_fus)
-            CD_speaker = cube_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_speaker)
-            CD_gimbal = cube_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_gimbal)
-            CD_motor = cube_drag_coefficient(velocity_smooth, rho, altitude, S_wing, L_motor)
-            CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d, S_wing)
+            CD_blade= flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_blade, w_blade)
+            Cf_stab = flat_plate_drag_coefficient(V, rho, altitude,S_wing,L_stab, w_stab)
+            CD_poles = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_poles, w_poles)
+            Cf_fus = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_fus, w_fus)
+            CD_speaker = cube_drag_coefficient(V, rho, altitude, S_wing, L_speaker)
+            CD_gimbal = cube_drag_coefficient(V, rho, altitude, S_wing, L_gimbal)
+            CD_motor = cube_drag_coefficient(V, rho, altitude, S_wing, L_motor)
+            CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d_fus, S_wing)
+            Cf_wing = flat_plate_drag_coefficient(V, rho, altitude, S_wing, 0.736, 3.15)
+            Cf_hor = flat_plate_drag_coefficient(V, rho, altitude, S_wing, 0.15, tail_span)
+            CD_ver = flat_plate_drag_coefficient(V, rho, altitude, S_wing, 0.07, 0.3)
             
             # Calculate acceleration
             time_diff = time - t
             if t > 0:
-                acceleration = (velocity_smooth - prev_velocity) / time_diff
-                pitch_rate = (grade_smooth - prev_grade_smooth) / time_diff
+                acceleration = (V - prev_velocity) / time_diff
+                pitch_rate = (incline - prev_grade_smooth) / time_diff
             else:
                 acceleration = 0
                 pitch_rate = 0
             
             acceleration_list.append(acceleration)
-            prev_velocity = velocity_smooth
-            prev_grade_smooth = grade_smooth
+            prev_velocity = V
+            prev_grade_smooth = incline
             t = time
             
             # Calculate thrust
-            Tvertical, Thorizontal, CD = calculate_thrust_UFC_FC(
-                grade_smooth, velocity_smooth, rho, acceleration, pitch_rate, W, 
-                V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,
-                numberengines_horizontal, propeller_wake_efficiency, CD_fus, 
-                CD_gimbal, CD_speaker, CD_motor, Cf_blade, Cf_stab, Cf_poles
-            )
+            Tvertical, Thorizontal, CD, CL = calculate_thrust_UFC_FC(incline,V,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, CD_blade, Cf_hor, CD_poles, Cf_wing, CD_ver)
             
             Tvertical_list.append(Tvertical)
             Thorizontal_list.append(Thorizontal)
@@ -129,5 +127,5 @@ def analyze_race_thrust():
         ax4.legend()
         
         plt.tight_layout()
-        #plt.show()
+        plt.show()
 print(analyze_race_thrust())
