@@ -13,7 +13,7 @@ from Final_UAV_Sizing.Input.fixed_input_values import *
 import numpy as np
 import pandas as pd
 
-def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizing/Input/RaceData", V_vert_prop=5, W=250, CLmax=2.2, S_wing=1.5, numberengines_vertical=4, numberengines_horizontal=1, propeller_wake_efficiency=0.8, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5,PL_power = 189,  show=False,show_all=False,L_fus = 0.8,L_n = 0.2,L_c= 0.6,L_blade=0.7366,L_stab=0.6, d_fus = 0.25, w_fus = 2.5, w_blade = 0.075, w_stab = 0.5, L_poles = 1.5, w_poles = 0.34, L_motor = 0.3, L_gimbal = 0.12, L_speaker = 0.1):
+def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizing/Input/RaceData",  W=250, number_relay_stations=3, UAV_off_for_recharge_time_min =15,battery_recharge_time_min =5, show=False,show_all=False):
     output_folder = os.path.join(output_folder, "Battery_Sizing")
     os.makedirs(output_folder, exist_ok=True)
     print("---------Plot Race Results---------")
@@ -35,7 +35,7 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
 
         calculate_power = calculate_power_FC
         # 1. Follow a cyclist with 1 battery, no relay station
-        time_plot, distance_plot, power_plot,power_h_plot,power_v_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot = simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
+        time_plot, distance_plot, power_plot,power_h_plot,power_v_plot, speed_plot, gradient_plot, acceleration_plot, pitch_rate_plot, rho_plot, battery_energy_plot, altitude_plot = simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, aero_df, PL_power)
         
         # 2. Calculate battery capacity and threshold
         total_battery_energy = battery_energy_plot[-1]
@@ -118,7 +118,7 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
             previous_pitch = go_charge_prev_pitch
             energy = go_charge_energy
             for j in range(go_charge_idx, reached_RS_idx + 1):
-                if new_distance[j-1] < RS_location:
+                if distance_plot[j-1] < RS_location:
                     time_now = time_plot[j]
                     dt = (time_now - time_plot[j-1])
                     velocity = VCr
@@ -129,22 +129,26 @@ def Battery_Model(input_folder,output_folder,aero_df,data_folder="Final_UAV_Sizi
                     acceleration = 0
                     pitch_rate = (gradient - previous_pitch) / dt
                     previous_pitch = pitch_rate
-                    P,P_horizontal,P_vertical = calculate_power(df_vertical,df_horizontal,gradient,velocity,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, d_fus, w_fus, L_blade, w_blade, L_stab, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
+                    P,P_horizontal,P_vertical = calculate_power(df_vertical,df_horizontal,gradient,velocity,rho, acceleration, pitch_rate, W, aero_df)
                     P+= PL_power  # Add power for payload
                     energy +=  P*dt/3600  # Convert J to Wh
                 else: 
                     time_now = time_plot[j]
-                    dt = (time_now - time_plot[j-1])
+                    dt = time_now - time_plot[j-1]
                     velocity = 0
-                    distance += 0
-                    gradient_for_plot, altitude = get_gradient_and_altitude_at_distance(distance, distance_plot, gradient_plot, altitude_plot)
-                    gradient = np.arctan(gradient_for_plot / 100)  # Convert percentage to radians
+                    # no change in distance
+                    gradient_for_plot, altitude = get_gradient_and_altitude_at_distance(
+                    distance, distance_plot, gradient_plot, altitude_plot)
+                    gradient = np.arctan(gradient_for_plot / 100)
                     rho = sva.air_density_isa(altitude)
                     acceleration = 0
                     pitch_rate = 0
                     previous_pitch = 0
-                    P = PL_power
-                    energy +=  0
+                    P = PL_power          # payload‐only power  
+                    P_horizontal = 0      # no propeller drag/power
+                    P_vertical = 0        # no propeller thrust/power
+                    # energy gain is zero here
+                    energy += 0
                 new_time.append(time_now)
                 new_distance.append(distance)
                 new_power.append(P)
