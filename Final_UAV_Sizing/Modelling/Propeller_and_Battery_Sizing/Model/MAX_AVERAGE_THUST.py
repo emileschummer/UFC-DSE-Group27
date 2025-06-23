@@ -1,40 +1,19 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
 import pandas as pd
-from Propeller_sizing.Model.UFC_FC_YEAH import *
-import Propeller_sizing.Input.Strava_input_csv as sva
+from Final_UAV_Sizing.Modelling.Propeller_and_Battery_Sizing.Model.UFC_FC_YEAH import *
+import Final_UAV_Sizing.Input.RaceData.Strava_input_csv as sva
 from statistics import mode, StatisticsError
-W= 250
-S_wing = 2
-CLmax = 2
-V_vert_prop = 11
-numberengines_vertical = 4
-numberengines_horizontal = 1
-propeller_wake_efficiency = 0.7
-L_blade = 0.7366
-w_blade = 0.075
-L_stab= 0.6
-w_stab= 0.5
-L_poles= 3.6*L_blade/2 + 0.5
-w_poles= 0.34
-L_motor = 0.3
-L_gimbal = 0.12
-L_speaker = 0.1
+from Final_UAV_Sizing.Input.fixed_input_values import *
+W= 25*g
+aero_df = pd.read_csv(aero_csv)
 
-L_n = 0.2
-L_c = 0.6
-L_fus = 2*L_n + L_c
-w_fus = S_wing / L_fus
-d = 0.25
-
-aero_df = pd.read_csv('Propeller_sizing/Model/aero.csv')
-
-races = sva.make_race_dictionnary()
-df_vertical = pd.read_csv('Propeller_sizing/Input/Prop_Engine_Data/UAV_Propellers_and_Motor_Specs_Vertical.csv')
-df_vertical['Thrust_N']= df_vertical[' Thrust_g '] * g /1000
-df_horizontal = pd.read_csv('Propeller_sizing/Input/Prop_Engine_Data/UAV_Propellers_and_Motor_Specs_Horizontal.csv')
-df_horizontal['Thrust_N']= df_horizontal[' Thrust_g '] * g /1000
+races = sva.make_race_dictionnary('Final_UAV_Sizing/Input/PropRaceData')
+df_vertical = pd.read_csv('Final_UAV_Sizing/Input/Prop_Engine_Data/UAV_Propellers_and_Motor_Specs_Vertical.csv')
+df_vertical['Thrust_N']= df_vertical[' Thrust (g) '] * g /1000
+df_horizontal = pd.read_csv('Final_UAV_Sizing/Input/Prop_Engine_Data/UAV_Propellers_and_Motor_Specs_Horizontal.csv')
+df_horizontal['Thrust_N']= df_horizontal[' Thrust (g) '] * g /1000
 
 def analyze_race_thrust():
     
@@ -56,16 +35,15 @@ def analyze_race_thrust():
             
             # Calculate drag coefficients
             CD_blade= flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_blade, w_blade)
-            Cf_stab = flat_plate_drag_coefficient(V, rho, altitude,S_wing,L_stab, w_stab)
             CD_poles = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_poles, w_poles)
             Cf_fus = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_fus, w_fus)
             CD_speaker = cube_drag_coefficient(V, rho, altitude, S_wing, L_speaker)
             CD_gimbal = cube_drag_coefficient(V, rho, altitude, S_wing, L_gimbal)
             CD_motor = cube_drag_coefficient(V, rho, altitude, S_wing, L_motor)
             CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d_fus, S_wing)
-            Cf_wing = flat_plate_drag_coefficient(V, rho, altitude, S_wing, 0.736, 3.15)
-            Cf_hor = flat_plate_drag_coefficient(V, rho, altitude, S_wing, 0.15, tail_span)
-            CD_ver = flat_plate_drag_coefficient(V, rho, altitude, S_wing, 0.07, 0.3)
+            Cf_wing = flat_plate_drag_coefficient(V, rho, altitude, S_wing, MAC, b)
+            Cf_hor = flat_plate_drag_coefficient(V, rho, altitude, S_wing, tail_chord, tail_span)
+            CD_ver = flat_plate_drag_coefficient(V, rho, altitude, S_wing, tail_chord_v, tail_span_v)
             
             # Calculate acceleration
             time_diff = time - t
@@ -82,7 +60,7 @@ def analyze_race_thrust():
             t = time
             
             # Calculate thrust
-            Tvertical, Thorizontal, CD, CL = calculate_thrust_UFC_FC(incline,V,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, CD_blade, Cf_hor, CD_poles, Cf_wing, CD_ver)
+            Tvertical, Thorizontal, CD = calculate_thrust_UFC_FC(incline,V,rho, acceleration, pitch_rate, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, CD_blade, Cf_hor, CD_poles, Cf_wing, CD_ver)
             
             Tvertical_list.append(Tvertical)
             Thorizontal_list.append(Thorizontal)

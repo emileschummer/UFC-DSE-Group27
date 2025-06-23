@@ -1,4 +1,4 @@
-﻿Throttle (%) , Thrust_g , Torque (N*m) , Current (A) , RPM , Power (W) , Efficiency (g/W) (%)
+﻿Throttle (%) , Thrust (g) , Torque (N*m) , Current (A) , RPM , Power (W) , Efficiency (g/W) (%)
 40,8585,3.5,11.7,2485,1161,7.4
 45,9671,3.9,13.8,2639,1374,7.0
 50,10714,4.3,16.0,2777,1589,6.7

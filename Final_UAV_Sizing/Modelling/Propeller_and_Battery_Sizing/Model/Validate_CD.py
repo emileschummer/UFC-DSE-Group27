@@ -1,10 +1,7 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-import pandas as pd
-from Propeller_sizing.Model.UFC_FC_YEAH import *
-import Propeller_sizing.Input.Strava_input_csv as sva
-from statistics import mode, StatisticsError
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
+from Final_UAV_Sizing.Modelling.Propeller_and_Battery_Sizing.Model.UFC_FC_YEAH import *
 import numpy as np
 
 #Values from reference paper
