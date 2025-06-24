@@ -20,18 +20,18 @@ def load_distribution_halfspan(wing_geom, lift_distribution, alpha, half_span=1.
     div = y_midpoints / float(half_span)
     distribution = [div, lift_distribution["CLs"][index]]
 
-    plt.figure()
-    plt.plot(div, lift_distribution["CLs"][index], label=f'alpha {lift_distribution["alpha"][index]}')
-    plt.xlabel("x/b/2")
-    plt.ylabel("Lift")
-    plt.legend()
-    plt.grid(True)
-    plt.title(f"Lift Distribution alpha {lift_distribution['alpha'][index]}")
-    plot_path = os.path.join(output_folder, f"lift_distribution_alpha_{lift_distribution['alpha'][index]}.png")
-    plt.savefig(plot_path)
     if plot:
+        plt.figure()
+        plt.plot(div, lift_distribution["CLs"][index], label=f'alpha {lift_distribution["alpha"][index]}')
+        plt.xlabel("x/b/2")
+        plt.ylabel("Lift")
+        plt.legend()
+        plt.grid(True)
+        plt.title(f"Lift Distribution alpha {lift_distribution['alpha'][index]}")
+        plot_path = os.path.join(output_folder, f"lift_distribution_alpha_{lift_distribution['alpha'][index]}.png")
+        plt.savefig(plot_path)
         plt.show()
-    plt.close()
+        plt.close()
     
 
     return distribution

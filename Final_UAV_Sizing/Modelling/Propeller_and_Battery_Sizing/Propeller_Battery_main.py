@@ -49,6 +49,12 @@ def main():
         L_motor =  input.L_motor
         L_gimbal =  input.L_gimbal
         L_speaker = input.L_speaker
+        MAC= input.MAC
+        tail_chord= input.tail_chord
+        tail_span = input.tail_span
+        tail_chord_v = input.tail_chord_v
+        b= input.b
+        tail_span_v = input.tail_span_v
         ##Run
         altitude = 1500
         V= 120/3.6
@@ -56,15 +62,18 @@ def main():
         incline = 0
         a = 0
         gamma_dot = 0
-        Cf_blade= flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_blade, w_blade)
+        CD_blade= flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_blade, w_blade)
         Cf_stab = flat_plate_drag_coefficient(V, rho, altitude,S_wing,L_stab, w_stab)
-        Cf_poles = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_poles, w_poles)
+        CD_poles = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_poles, w_poles)
         Cf_fus = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_fus, w_fus)
         CD_speaker = cube_drag_coefficient(V, rho, altitude, S_wing, L_speaker)
         CD_gimbal = cube_drag_coefficient(V, rho, altitude, S_wing, L_gimbal)
         CD_motor = cube_drag_coefficient(V, rho, altitude, S_wing, L_motor)
         CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d_fus, S_wing)
-        print(calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, Cf_blade, Cf_stab, Cf_poles))
+        Cf_wing = flat_plate_drag_coefficient(V, rho, altitude, S_wing, MAC, b)
+        Cf_hor = flat_plate_drag_coefficient(V, rho, altitude, S_wing, tail_chord, tail_span)
+        CD_ver = flat_plate_drag_coefficient(V, rho, altitude, S_wing, tail_chord_v, tail_chord_v)
+        print(calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, CD_blade, Cf_hor, CD_poles, Cf_wing, CD_ver))
         #print(Battery_Model(input_folder,output_folder,aero_df,data_folder,V_vert_prop,W,CLmax,S_wing,numberengines_vertical,numberengines_horizontal,propeller_wake_efficiency,number_relay_stations,UAV_off_for_recharge_time_min,battery_recharge_time_min,PL_power,show,show_all,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker))
 
 if __name__ == "__main__":

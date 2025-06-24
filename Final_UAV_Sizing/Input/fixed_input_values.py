@@ -34,13 +34,14 @@ r_twist = 0.0 # [deg] root twist angle
 t_twist = 0.0 # [deg] tip twist angle
 sweep = 0.0 # [deg] wing sweep angle
 Re_numbers = 8 # [-] number of Reynolds numbers for stall database
+MAC= 0.736 # [m] mean aerodynamic chord
 
 ##2. Propeller Sizing
 numberengines_vertical = 4
 numberengines_horizontal = 1
 propeller_wake_efficiency = 0.7
-#S_wing = 2
-#CLmax = 2
+S_wing = 2.23
+CLmax = 2
 V_vert_prop = V_stall * V_stall_safety_margin
 L_blade = 0.7366
 w_blade = 0.075
@@ -48,15 +49,15 @@ L_Hor_prop = 0.66
 L_landing_leg = 0.45 
 L_stab= 0.6
 w_stab= 0.5
-L_poles= 3.6*L_blade/2 + 0.5
-w_poles= 0.04
+L_poles= 2.29 
+w_poles= 0.042
 L_motor = 0.3
 L_gimbal = 0.18
 L_speaker = 0.1
 L_n = 0.2
 L_c = 0.6
 L_fus = 2*L_n + L_c
-#w_fus = S_wing / L_fus
+w_fus = S_wing / L_fus
 d_fus = 0.25
 
 ##3. Battery Sizing
@@ -74,8 +75,11 @@ lh = 1 # [m] tail length from CG, positive if AC_tail is behind CG
 l = -0.1 # [m] distance between CG and AC, negative if AC_wing is in front of CG
 Iy = 14 # [kgm^2] Mass Moment of Inertia
 Clhmax = 1.5 # [-] Clmax of tail
-tail_span = 1.55 # [m] tail span
+tail_span = 1.55 # [m] tail span horizontal
+tail_chord = 0.15 # [m] tail chord
 stability_margin = 0.05 # [-] stability margin for tail sizing
+tail_span_v= 0.3 # [m] tail span vertical
+tail_chord_v = 0.07 # [m] tail chord vertical
 ##5. Structure Sizing
 ##6. Final Mass Calculation
 M_PL = 1.88 # [kg] mass of mission equipment

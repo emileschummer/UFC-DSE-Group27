@@ -16,14 +16,16 @@ num_spanwise_sections_h = 50
 # Load and build Airfoil for the main wing
 airfoil_coordinates = load_airfoil_dat(airfoil_dat_path)
 my_airfoil = asb.Airfoil(name=name, coordinates=airfoil_coordinates)
+# my_airfoil = asb.Airfoil("naca4412")
+
 
 # 1. Geometry Definition
 # Define Main Wing
 main_wing_half_span = 1.575
-r_chord = 1.659 # Main wing root chord
-t_chord = 0.8297 # Main wing tip chord
-r_twist = 0.0  # Main wing root twist
-t_twist = 0.0  # Main wing tip twist
+r_chord = 0.981# Main wing root chord
+t_chord = 0.490  # Main wing tip chord
+r_twist = 0 # Main wing root twist
+t_twist = 0  # Main wing tip twist
 sweep = no_quarterchord_sweep(r_chord, t_chord)    # Main wing sweep
 
 main_wing = asb.Wing(
@@ -62,54 +64,58 @@ main_wing = asb.Wing(
 
 # Define Horizontal Stabilizer
 h_stab_airfoil = asb.Airfoil("naca0012")
-h_stab_x_le_root = 3 # Positioned aft of the main wing
-h_stab_half_span = 1
-h_stab_root_chord = 0.3
-h_stab_tip_chord = 0.3
-h_stab_twist = -3 # Typical for stability
+h_stab_x_le_root = 1.5333 # Positioned aft of the main wing
+# h_stab_x_le_root = 3 # Positioned aft of the main wing
+h_stab_half_span = 0.775
+h_stab_root_chord = 0.150
+h_stab_tip_chord = 0.150
+h_stab_twist = -14 # Typical for stability
 h_stab_sweep = 0 # Slight sweep for the H-stab
 
-# h_stab = asb.Wing(
-#     name="HorizontalStabilizer",
-#     xsecs=[
-#         asb.WingXSec(
-#             xyz_le=[h_stab_x_le_root, 0, 0.05],  # Slightly above fuselage centerline
-#             chord=h_stab_root_chord,
-#             twist=h_stab_twist,
-#             airfoil=h_stab_airfoil,
-#             control_surfaces=[
-#                 asb.ControlSurface(
-#                     name="elevator",
-#                     symmetric=True,
-#                     hinge_point=0.75,
-#                     deflection=0.0
-#                 )
-#             ]
-#         ),
-#         asb.WingXSec(
-#             xyz_le=[
-#                 h_stab_x_le_root + h_stab_half_span * np.tan(np.deg2rad(h_stab_sweep)),
-#                 h_stab_half_span,
-#                 0.05
-#             ],
-#             chord=h_stab_tip_chord,
-#             twist=h_stab_twist,
-#             airfoil=h_stab_airfoil,
-#         ),
-#     ],
-#     symmetric=True,
-# ).subdivide_sections(num_spanwise_sections_h)
+h_stab = asb.Wing(
+    name="HorizontalStabilizer",
+    xsecs=[
+        asb.WingXSec(
+            xyz_le=[h_stab_x_le_root, 0, 0],  # Slightly above fuselage centerline
+            chord=h_stab_root_chord,
+            twist=h_stab_twist,
+            airfoil=h_stab_airfoil,
+            control_surfaces=[
+                asb.ControlSurface(
+                    name="elevator",
+                    symmetric=True,
+                    hinge_point=0.75,
+                    deflection=0.0
+                )
+            ]
+        ),
+        asb.WingXSec(
+            xyz_le=[
+                h_stab_x_le_root + h_stab_half_span * np.tan(np.deg2rad(h_stab_sweep)),
+                h_stab_half_span,
+                0.05
+            ],
+            chord=h_stab_tip_chord,
+            twist=h_stab_twist,
+            airfoil=h_stab_airfoil,
+        ),
+    ],
+    symmetric=True,
+).subdivide_sections(num_spanwise_sections_h)
 
 
-cg_location = [0.33 * r_chord, 0, 0]
-
+c = 0.509
+# c= 0.2
+print(c)
+cg_location = [c, 0, 0]
+print(0.33*r_chord)
 # Assemble the Airplane
 airplane_geom = asb.Airplane(
     name="CompleteAircraft",
     xyz_ref=cg_location,
-    wings=[main_wing], #h_stab],
+    wings=[main_wing, h_stab],  # Added horizontal stabilizer back to the geometry
     # fuselages=[fuselage],
-    s_ref=main_wing.area(), # Explicitly set reference values
+    s_ref=main_wing.area(),  # Explicitly set reference values
     c_ref=main_wing.mean_aerodynamic_chord(),
     b_ref=main_wing.span()
 )
@@ -126,7 +132,7 @@ airplane_geom.draw() # This will render the aircraft
 def run_full_plane_analysis( # Renamed and simplified parameters
     full_airplane: asb.Airplane,
     alpha_range: list, # Changed from alpha_range3D
-    operational_velocity: float = 10.0,
+    operational_velocity: float = 9.16,
     operational_altitude: float = 0.0,
     vlm_spanwise_resolution: int = 1, # Added for clarity, was hardcoded
     vlm_chordwise_resolution: int = 1,
@@ -169,7 +175,7 @@ def run_full_plane_analysis( # Renamed and simplified parameters
         )
         vlm_results_plane = vlm_instance.run()
 
-        """
+        
         # Draw VLM results if the current alpha matches the specified one
         if draw_vlm_at_alpha is not None and np.isclose(alpha_val, draw_vlm_at_alpha):
             print(f"\nDrawing VLM analysis for alpha = {alpha_val:.2f} deg...")
@@ -177,7 +183,7 @@ def run_full_plane_analysis( # Renamed and simplified parameters
                 show=True,
                 draw_streamlines=True,
             )
-            print("VLM drawing displayed. Close the window to continue analysis.")"""
+            print("VLM drawing displayed. Close the window to continue analysis.")
 
         CL_vlm_plane_total = vlm_results_plane.get("CL", np.nan)
         CD_vlm_plane_total = vlm_results_plane.get("CD", np.nan)
@@ -215,11 +221,11 @@ if __name__ == "__main__":
     # 1. Geometry and Airfoil Setup is done above
 
     # 2. Define analysis parameters
-    analysis_alphas = np.linspace(-5, 15, 21) # Define AoA range for the analysis
-    analysis_velocity = 10.0
+    analysis_alphas = np.linspace(-5, 25, 31) # Define AoA range for the analysis
+    analysis_velocity = 9.81
     analysis_altitude = 0.0
     analysis_vlm_span_res = 1 # Spanwise panels per pre-defined wing section
-    analysis_vlm_chord_res = 1
+    analysis_vlm_chord_res = 10
     analysis_draw_vlm_at_alpha = 10.0 # Example: Draw VLM when alpha is 5.0 degrees
 
     # 3. Run the full analysis
