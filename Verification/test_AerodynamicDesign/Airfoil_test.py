@@ -6,7 +6,6 @@ import types
 import sys
 import os
 
-# Add the project root to the Python path to resolve the ModuleNotFoundError
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 
@@ -30,19 +29,32 @@ mock_asb_global.Atmosphere = MagicMock()
 mock_asb_global.VortexLatticeMethod = MagicMock()
 
 
+#######################################################################################
+#######################################################################################
+#######################################################################################
+
+                        # TESTING #
+
+
+#######################################################################################
+#######################################################################################
+#######################################################################################
+
+
+
 @patch('Final_UAV_Sizing.Modelling.Wing_Sizing.Airfoil.asb', new=mock_asb_global)
 def test_AW_1():
     #test_setup_wing_and_airplane
-    # Reset mocks for this specific test to ensure isolation
+    # Reset mocks for specific test to ensure isolation
     mock_asb_global.Wing.reset_mock()
     mock_asb_global.Airplane.reset_mock()
     mock_asb_global.WingXSec.reset_mock()
-    # Configure specific return values if they are dynamic per test
+    # Configure specific return values per test
     mock_asb_global.Wing.return_value = types.SimpleNamespace(
         xsecs=[], symmetric=True, subdivide_sections=MagicMock(return_value="subdivided_wing_instance")
     )
     mock_asb_global.Airplane.return_value = "test_airplane_instance"
-    # Re-assign WingXSec mock if its behavior needs to be fresh for this test
+
     mock_asb_global.WingXSec = MagicMock(return_value=types.SimpleNamespace(chord=1, twist=0, airfoil=None, xyz_le=[0,0,0]))
 
 
@@ -101,30 +113,30 @@ def test_AW_2():
     assert section_data[0]['chord'] == pt.approx(0.9)
     assert section_data[0]['span_segment'] == pt.approx(0.5)
     assert section_data[0]['area'] == pt.approx(0.9 * 0.5)
-    expected_re0 = (10 * 0.9) / (1.81e-5 / 1.225)
-    assert section_data[0]['Re'] == pt.approx(expected_re0, rel=1e-3)
+    expected_re0 = (10 * 0.9) / (1.81*10**-5 / 1.225)
+    assert section_data[0]['Re'] == pt.approx(expected_re0, rel=1*10**-3)
 
     assert section_data[1]['y_mid'] == pt.approx(0.75)
     assert section_data[1]['chord'] == pt.approx(0.7)
     assert section_data[1]['span_segment'] == pt.approx(0.5)
     assert section_data[1]['area'] == pt.approx(0.7 * 0.5)
-    expected_re1 = (10 * 0.7) / (1.81e-5 / 1.225)
-    assert section_data[1]['Re'] == pt.approx(expected_re1, rel=1e-3)
+    expected_re1 = (10 * 0.7) / (1.81*10**-5 / 1.225)
+    assert section_data[1]['Re'] == pt.approx(expected_re1, rel=1*10**-3)
 
 @patch('Final_UAV_Sizing.Modelling.Wing_Sizing.Airfoil.asb', new=mock_asb_global)
 def test_AW_3():
     #test_generate_2d_stall_database_simple_case
     mock_asb_global.Airfoil.reset_mock()
 
-    mock_airfoil_profile = types.SimpleNamespace(name="test_af", coordinates="dummy_coords")
+    mock_airfoil_profile = types.SimpleNamespace(name="test_af", coordinates="temp_coords")
     
     mock_internal_af = MagicMock()
     mock_internal_af.generate_polars = MagicMock()
     
     def mock_cl_function(alpha, Re):
-        if Re == pt.approx(100000, rel=0.1): # Allow some flexibility for Re matching
+        if Re == pt.approx(100000, rel=0.1): 
             if alpha == 10: return 1.0
-            if alpha == 12: return 1.2 # Stall CL
+            if alpha == 12: return 1.2 
             if alpha == 14: return 1.1
             if alpha == 16: return 1.0
         return 0.0
@@ -147,13 +159,13 @@ def test_AW_3():
     mock_internal_af.generate_polars.assert_called_once()
     called_Re_arg = mock_internal_af.generate_polars.call_args[1]['Res']
     assert len(called_Re_arg) == 1
-    assert called_Re_arg[0] == pt.approx(100000, rel=0.1) # Check the Re value used for polar generation
+    assert called_Re_arg[0] == pt.approx(100000, rel=0.1) 
 
     assert stall_df['Re_polar'].iloc[0] == pt.approx(100000)
     assert stall_df['alpha_stall_2D'].iloc[0] == pt.approx(12)
     assert stall_df['Cl_max_2D'].iloc[0] == pt.approx(1.2)
     # FIX: The calculated K_post from the mock data is -0.05
-    assert stall_df['K_post'].iloc[0] == pt.approx(-0.05, abs=1e-4)
+    assert stall_df['K_post'].iloc[0] == pt.approx(-0.05, abs=1*10**-4)
 
 
 def test_AW_4():
@@ -192,7 +204,7 @@ def test_AW_5():
     mock_asb_global.OperatingPoint.reset_mock()
     mock_asb_global.Atmosphere.reset_mock()
 
-    # --- Test Parameters ---
+
     alpha_range3D = np.array([0, 10, 15])
     mock_vlm_airplane = "mock_airplane_for_vlm"
     operational_velocity = 20
@@ -205,68 +217,61 @@ def test_AW_5():
         'alpha_stall_3D': 12.0, 'Cl_max_2D_interp': 1.2, 'K_post_interp': -0.05
     }]
 
-    # --- Mock Configuration ---
-    # This data simulates the sequence of results from calling vlm.run() multiple times.
+    # Sequence of results from calling vlm.run() multiple times
     run_results_sequence = [
         {"CL": 0.0, "CD": 0.01, "Cm": -0.01},
         {"CL": 1.0, "CD": 0.05, "Cm": -0.05},
         {"CL": 1.3, "CD": 0.08, "Cm": -0.08}
     ]
-    # This data simulates the `vortex_strengths` attribute that should exist on the
-    # vlm object *after* each corresponding call to vlm.run().
+    # Simulates vortex_strengths attribute on the vlm object after call to vlm.run().
     vortex_strengths_sequence = [
         np.array([0.0] * 4),
         np.array([2.5] * 4),
         np.array([3.0] * 4)
     ]
 
-    # Create a mock VLM instance that will be reused in the loop
+
     mock_vlm_instance = MagicMock()
 
-    # Define a stateful side effect for the run() method.
-    # This simulates how the real VLM object behaves: calling run() updates
-    # the vortex_strengths attribute on the instance.
+    # simulates how the real VLM object behaves
     run_call_iterator = iter(zip(run_results_sequence, vortex_strengths_sequence))
     def vlm_run_side_effect():
         results, strengths = next(run_call_iterator)
-        mock_vlm_instance.vortex_strengths = strengths  # Set the attribute on the instance
-        return results  # Return the dictionary
+        mock_vlm_instance.vortex_strengths = strengths  
+        return results  # dictionary
 
     mock_vlm_instance.run.side_effect = vlm_run_side_effect
 
-    # Configure the global mock to always return our stateful instance
     mock_asb_global.VortexLatticeMethod.return_value = mock_vlm_instance
     mock_asb_global.Atmosphere.return_value = types.SimpleNamespace()
     mock_asb_global.OperatingPoint.return_value = types.SimpleNamespace()
 
-    # --- Execute Function ---
+
     CLs_vlm, CDs_vlm, CLs_corrected, lift_dist, Cms = run_vlm_sweep_with_stall_correction(
         alpha_range3D, mock_vlm_airplane, operational_velocity,
         section_data_list, num_spanwise_sections, mock_wing, operational_altitude,
         vlm_chordwise_resolution
     )
 
-    # --- Assertions ---
-    # Check that the VLM was instantiated and run once for each alpha
+
+    # Check VLM instantiated and run once for each alpha
     assert mock_asb_global.VortexLatticeMethod.call_count == 3
     assert mock_vlm_instance.run.call_count == 3
 
-    # Alpha = 0 deg (pre-stall)
+    # Alpha = 0 deg, pre stall
     assert CLs_vlm[0] == pt.approx(0.0)
     assert CDs_vlm[0] == pt.approx(0.01)
     assert CLs_corrected[0] == pt.approx(0.0)
     assert np.allclose(lift_dist["CLs"][0], [0.0])
 
-    # Alpha = 10 deg (pre-stall)
-    # Sectional CL from gamma is 1.0. Corrected CL is (2 * 1.0 * 0.25) / 1.0 = 0.5
+    # Alpha = 10 deg, pre stall
     assert CLs_vlm[1] == pt.approx(1.0)
     assert CDs_vlm[1] == pt.approx(0.05)
-    assert CLs_corrected[1] == pt.approx(0.5)
+    assert CLs_corrected[1] == pt.approx(0.5) #Sectional CL from gamma: 1.0. Corrected CL is (2 * 1.0 * 0.25) / 1.0 = 0.5
     assert np.allclose(lift_dist["CLs"][1], [1.0])
 
     # Alpha = 15 deg (post-stall)
-    # Corrected sectional CL is 1.05. Corrected CL is (2 * 1.05 * 0.25) / 1.0 = 0.525
     assert CLs_vlm[2] == pt.approx(1.3)
     assert CDs_vlm[2] == pt.approx(0.08)
-    assert CLs_corrected[2] == pt.approx(0.525, abs=1e-4)
+    assert CLs_corrected[2] == pt.approx(0.525, abs=1*10**-4)# Corrected CL is (2 * 1.05 * 0.25) / 1.0 = 0.525
     assert np.allclose(lift_dist["CLs"][2], [1.05])

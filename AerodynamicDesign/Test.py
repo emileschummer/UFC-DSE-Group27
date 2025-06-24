@@ -67,8 +67,8 @@ h_stab_airfoil = asb.Airfoil("naca0012")
 h_stab_x_le_root = 1.5333 # Positioned aft of the main wing
 # h_stab_x_le_root = 3 # Positioned aft of the main wing
 h_stab_half_span = 0.775
-h_stab_root_chord = 0.150
-h_stab_tip_chord = 0.150
+h_stab_root_chord = 0.286
+h_stab_tip_chord = 0.286
 h_stab_twist = -14 # Typical for stability
 h_stab_sweep = 0 # Slight sweep for the H-stab
 

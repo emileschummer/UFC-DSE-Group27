@@ -15,17 +15,17 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
     xfoil_path: str = r"C:\Users\marco\Downloads\xfoil\XFOIL6.99\xfoil.exe",
     operational_velocity: float = 9.16,
     num_spanwise_sections: int = 200,
-    vlm_chordwise_resolution = 8,
+    vlm_chordwise_resolution = 10,
     delta_alpha_3D_correction: float = 1.0,
     alpha_range2D: np.ndarray = np.linspace(-10, 25, 36),
-    alpha_range3D: np.ndarray = np.linspace(-10, 30, 41),
+    alpha_range3D: np.ndarray = np.linspace(-5, 20, 26),
     r_chord: float = 0.91,
     t_chord: float = 0.36,
     r_twist: float = 0.0,
     t_twist: float = 0.0,
     sweep: float = 0.0,
     operational_altitude: float = 0.0,
-    Re_numbers: int = 8,
+    Re_numbers: int =2,
     Plot = True,
     csv_path: str = "C:\\Users\\marco\\Documents\\GitHub\\UFC-DSE-Group27\\AerodynamicDesign\\aero.csv") -> dict:
 
@@ -190,7 +190,7 @@ def run_full_aero( airfoil_dat_path: str = r"C:\Users\marco\Documents\GitHub\UFC
 
 
 if __name__ == "__main__":
-    for i in [r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\S1223.dat", 
+    for i in [r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\S8036 (16%).dat", 
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\FX 74-Cl5-140 MOD  (smoothed).txt",
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\CH10 (smoothed).txt",
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\CLARKY.dat", 
@@ -199,18 +199,20 @@ if __name__ == "__main__":
             #   r"C:\Users\marco\Documents\GitHub\UFC-DSE-Group27\AerodynamicDesign\AirfoilData\NACA23012.dat"
             ]:
     # Run with all defaults (just adjust paths if needed):
-        velocity_op = 9.16
+        velocity_op = 10
         CL = 2
         altitude = 0
-        taper_ratio = 0.5
-        b = 3.15
+        taper_ratio = 0.6
+        b = 1.255
         op_point_for_atmo = asb.OperatingPoint(velocity=velocity_op, atmosphere=asb.Atmosphere(altitude=altitude))
         rho = op_point_for_atmo.atmosphere.density()
 
-        S = 250/(0.5*rho*velocity_op**2*CL)
+        # S = 250/(0.5*rho*velocity_op**2*CL)
+        S = 0.221
         
         
-    
+        # cr = 0.221
+        # ct = 0.221
         cr = 2*S/(b*(1 + taper_ratio))
 
         ct = cr*taper_ratio
