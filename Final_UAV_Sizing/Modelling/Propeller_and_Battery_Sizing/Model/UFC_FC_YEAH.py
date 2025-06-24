@@ -47,9 +47,13 @@ def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, 
     L_req = np.cos(incline)*W + W/g * V * gamma_dot #vertical force required for flight (stationary or not)
     if V > V_vert_prop:
         CL = 2*L_req/(rho*S_wing*V**2)
+        print(f"CL: {CL}")
         CD_wing = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
+        print(f"CD_wing: {CD_wing}")
         CD= CD_fus + CD_gimbal + CD_speaker + CD_wing + 4 * CD_motor + 2 * Cf_poles+ 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
+        print(f"CD: {CD}")
         D = 0.5*rho*CD*S_wing*V**2
+        print(f"D: {D}")
         T_horizontal = ((D + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         T_vertical = 0
         

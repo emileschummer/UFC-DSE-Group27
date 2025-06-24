@@ -41,7 +41,7 @@ def air_density_isa(h):
 
 def plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms=True, percentile_value_input=10, adjust_velocity=True):
     print("---------Plot Race Results---------")
-    races = make_race_dictionnary()
+    races = make_race_dictionnary('StravaFiles')
 
     all_adjusted_velocities = []
     percentile_value = 100 - percentile_value_input
@@ -77,13 +77,13 @@ def plot_race_velocities(output_folder="StravaFiles/Output", show=False, unit_ms
 
     # Plot combined histogram for all races
     fig, ax = plt.subplots(figsize=(8, 5))
-    counts, bins, patches = ax.hist(all_adjusted_velocities, bins=bin_edges, alpha=0.7, color='green', density=False)
+    counts, bins, patches = ax.hist(all_adjusted_velocities, bins=bin_edges, alpha=0.7, color= '#00A6D6', density=False)
     total = np.sum(counts)
     bin_width = bins[1] - bins[0] if len(bins) > 1 else 1
     percentages = (counts / total) * 100 if total > 0 else counts
     ax.clear()
     bar_width = bin_width * (1 - bar_gap)
-    bars = ax.bar(bins[:-1] + bar_width/2, percentages, width=bar_width, alpha=0.7, color='green', align='center')
+    bars = ax.bar(bins[:-1] + bar_width/2, percentages, width=bar_width, alpha=0.7, color='#00A6D6', align='center')
     title_unit = "m/s" if unit_ms else "km/h"
     # ax.set_title(f"Combined {'Adjusted ' if adjust_velocity else ''}Velocity Distribution for All Races [{title_unit}]")
     ax.set_xlabel(f"{'Adjusted ' if adjust_velocity else ''}Velocity [{title_unit}]")
