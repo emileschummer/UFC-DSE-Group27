@@ -46,15 +46,21 @@ def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, 
     L_req = np.cos(incline)*W + W/g * V * gamma_dot #vertical force required for flight (stationary or not)
     if V > V_vert_prop:
         CL = 2*L_req/(rho*S_wing*V**2)
-        CD_lift = np.interp(CL, aero_df["CL"], aero_df["CD"])
+        print(f"CL: {CL}")
+        CD_wing = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
+        print(f"CD_wing: {CD_wing}")
+        CD= CD_fus + CD_gimbal + CD_speaker + CD_wing + 4 * CD_motor + 2 * Cf_poles+ 4 * Cf_blade + 3 * Cf_stab #Total drag coefficient
+        print(f"CD: {CD}")
+        CD_lift = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
         CD= CD_fus + CD_gimbal + CD_lift + 4 * CD_motor + 2 * CD_poles+ 4 * CD_blade + Cf_hor + 2*CD_ver + Cf_wing #Total drag coefficient
         D = 0.5*rho*CD*S_wing*V**2
+        print(f"D: {D}")
         T_horizontal = ((D + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
         T_vertical = 0
         
     else:
         CL = CLmax
-        CD_lift = np.interp(CL, aero_df["CL"], aero_df["CD"])
+        CD_lift = np.interp(CL, aero_df["CL_corrected"], aero_df["CD_vlm"])
         CD= CD_fus + CD_gimbal+ CD_lift + 4 * CD_motor + 2 * CD_poles+ 4 * CD_blade + Cf_hor + 2*CD_ver + Cf_wing
         D = 0.5*rho*CD*S_wing*V**2
         T_horizontal = ((D + np.sin(incline)*W) + W/g * a)/ numberengines_horizontal #Thrust per horizontal propeller
@@ -69,7 +75,6 @@ def calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, 
 def calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W, aero_df):
     altitude = sva.altitude_from_density(rho)
     CD_blade= flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_blade, w_blade)
-    Cf_stab = flat_plate_drag_coefficient(V, rho, altitude,S_wing,L_stab, w_stab)
     CD_poles = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_poles, w_poles)
     Cf_fus = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_fus, w_fus)
     CD_speaker = cube_drag_coefficient(V, rho, altitude, S_wing, L_speaker)

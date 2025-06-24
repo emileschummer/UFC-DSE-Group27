@@ -5,8 +5,8 @@ from InertiaCalcs import *
 from ForceAndStressCals import *
 from Materials import *
 
-Big_Owie_VTOL_front = True
-Big_Owie_VTOL_back = False
+VTOL_front_Failure = True
+VTOL_back_Failure = False
 
 Material_VTOL = AL()
 Yield_shear_VTOL= Material_VTOL.Yield_Shear
@@ -31,7 +31,7 @@ M_y = F_Vtol*Vtol_Pole_Length_front
 M_z = T_Vtol
 
 
-while Big_Owie_VTOL_front:
+while VTOL_front_Failure:
     Iy = Circle_Moment_of_Inertia(R_out_VTOL_front,R_in_VTOL_front)
     Iz=Iy
     VTOL_stress = Bending(M_y, Iy, R_out_VTOL_front, M_z, Iz, R_out_VTOL_front)
@@ -44,7 +44,7 @@ while Big_Owie_VTOL_front:
     print("The VTOL Thickness:",R_out_VTOL_front-R_in_VTOL_front)
 
     if VTOL_stress <= Yield_Stress_VTOL and VTOL_Trans_Shear <=Yield_shear_VTOL:
-        Big_Owie_VTOL_front = False
+        VTOL_front_Failure = False
     else:
         R_out_VTOL_front +=0.001
 
@@ -59,7 +59,7 @@ Vtol_Pole_Length_back = 1.1*R_prop+ 0.24*MAC
 M_y = F_Vtol*Vtol_Pole_Length_front
 M_z = T_Vtol
 
-while Big_Owie_VTOL_back:
+while VTOL_back_Failure:
     Iy = Circle_Moment_of_Inertia(R_out_VTOL_back,R_in_VTOL_back)
     Iz=Iy
     VTOL_stress = Bending(M_y, Iy, R_out_VTOL_back, M_z, Iz, R_out_VTOL_back)
@@ -72,7 +72,7 @@ while Big_Owie_VTOL_back:
     print("The VTOL Thickness:",R_out_VTOL_back-R_in_VTOL_back)
 
     if VTOL_stress <= Yield_Stress_VTOL and VTOL_Trans_Shear <=Yield_shear_VTOL:
-        Big_Owie_VTOL_front = False
+        VTOL_front_Failure = False
     else:
         R_out_VTOL_back +=0.001
 

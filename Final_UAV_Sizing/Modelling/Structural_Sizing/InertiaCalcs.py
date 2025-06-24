@@ -102,27 +102,6 @@ def Spring_Constant(E,A,L):
     return K
 
 
-def TheSuperSecretFunction():
-    import time
-    import webbrowser
-    ImportantStressThing = "https://youtube.com/shorts/41iWg91yFv0?si=3yS7CuMoRXtxr3bn"
-    webbrowser.open(ImportantStressThing)
-    time.sleep(1.5) 
-
-
-def SummonTheCouncil():
-    import time
-    import webbrowser
-    Member1 = "https://chat.deepseek.com/"
-    Member2 = "https://chat.mistral.ai/chat?q="
-    Member3 = "https://gemini.google.com/app"
-    Member4 = "https://chatgpt.com/?model=gpt-4o"
-    webbrowser.open(Member1)
-    webbrowser.open(Member2)
-    webbrowser.open(Member3)
-    webbrowser.open(Member4)
-
-
 
 #-----------------------------------------------------------------------
 #AREA AND VOLUME

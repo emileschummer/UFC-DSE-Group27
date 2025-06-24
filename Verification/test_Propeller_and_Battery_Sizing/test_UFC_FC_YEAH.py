@@ -17,12 +17,8 @@ a= 5
 gamma_dot = 2
 aero_df = pd.read_csv(aero_csv)
 
-S_wing = 2
-CLmax = 2
-w_fus = S_wing / L_fus
-
 # UFC 1
-expected_CD_flat= 0.00014110307
+expected_CD_flat= 0.00012654984427
 def test_flat_plate_drag_coefficient():
 
     result= flat_plate_drag_coefficient(V, rho, h, S_wing, L_blade, w_blade)
@@ -30,7 +26,7 @@ def test_flat_plate_drag_coefficient():
     assert pt.approx(result, rel=1e-6) == expected_CD_flat
 
 #UFC 2
-expected_CD_cube = 0.008426384
+expected_CD_cube = 0.0168167809
 def test_cube_drag_coefficient():
 
     result= cube_drag_coefficient(V, rho, h, S_wing, L_gimbal)
@@ -39,7 +35,7 @@ def test_cube_drag_coefficient():
 
 
 # UFC 3
-expected_CD_fus = 0.004261856
+expected_CD_fus = 0.0038222928
 def test_fuselage_drag_coefficient():
 
     Cf_fus = flat_plate_drag_coefficient(V, rho, h, S_wing, L_fus, w_fus)
@@ -48,23 +44,25 @@ def test_fuselage_drag_coefficient():
     assert pt.approx(result, rel=1e-6) == expected_CD_fus
 
 # UFC 4
-CF_fus = flat_plate_drag_coefficient(V, rho, h, S_wing, L_fus, w_fus)
-CD_fus = fuselage_drag_coefficient(L_n, L_c, CF_fus, d_fus, S_wing)
-CD_gimbal = cube_drag_coefficient(V, rho, h, S_wing, L_gimbal)
-CD_speaker = cube_drag_coefficient(V, rho, h, S_wing, L_speaker)
-CD_motor = flat_plate_drag_coefficient(V, rho, h, S_wing, L_motor, w_blade)
-Cf_blade = flat_plate_drag_coefficient(V, rho, h, S_wing, L_blade, w_blade)
-Cf_stab = flat_plate_drag_coefficient(V, rho, h, S_wing, L_stab, w_stab)
-Cf_poles = flat_plate_drag_coefficient(V, rho, h, S_wing, L_poles, w_poles)
+CD_blade= flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_blade, w_blade)
+CD_poles = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_poles, w_poles)
+Cf_fus = flat_plate_drag_coefficient(V, rho, altitude, S_wing, L_fus, w_fus)
+CD_speaker = cube_drag_coefficient(V, rho, altitude, S_wing, L_speaker)
+CD_gimbal = cube_drag_coefficient(V, rho, altitude, S_wing, L_gimbal)
+CD_motor = cube_drag_coefficient(V, rho, altitude, S_wing, L_motor)
+CD_fus = fuselage_drag_coefficient(L_n, L_c, Cf_fus, d_fus, S_wing)
+Cf_wing = flat_plate_drag_coefficient(V, rho, altitude, S_wing, MAC, b)
+Cf_hor = flat_plate_drag_coefficient(V, rho, altitude, S_wing, tail_chord, tail_span)
+CD_ver = flat_plate_drag_coefficient(V, rho, altitude, S_wing, tail_chord_v, tail_chord_v)
 
-expected_thrust_vert = 32.10402841
-expected_thrust_hor = 44.89200872
-expected_CD= 0.43654112
+expected_thrust_vert = 27.1734034133
+expected_thrust_hor = 61.712662001
+expected_CD= 0.51466598878
 expected_result= expected_thrust_vert, expected_thrust_hor, expected_CD
 
 def test_calculate_thrust_UFC_FC():
 
-    result = calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing,aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, Cf_blade, Cf_stab, Cf_poles)
+    result = calculate_thrust_UFC_FC(incline,V,rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency, CD_fus, CD_gimbal, CD_speaker, CD_motor, CD_blade, Cf_hor, CD_poles, Cf_wing, CD_ver)
 
     assert pt.approx(result, rel=1e-6) == expected_result
 
@@ -77,9 +75,12 @@ df_vertical['Thrust_N'] = df_vertical[' Thrust (g) '] * 9.81 / 1000
 df_horizontal = pd.read_csv(hor_folder)
 df_horizontal['Thrust_N'] = df_horizontal[' Thrust (g) '] * 9.81 / 1000
 
-expected_power =  2217.57185454
+expected_power_hor = 850.73956962
+expected_power_vert =  889.5369868
+expected_power = expected_power_hor + expected_power_vert
+results = expected_power, expected_power_hor, expected_power_vert
 def test_calculate_power_FC():
 
-    result = calculate_power_FC(df_vertical, df_horizontal, incline, V, rho, a, gamma_dot, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical, numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, d_fus, w_fus, L_blade, w_blade, L_stab, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
+    result = calculate_power_FC(df_vertical,df_horizontal,incline,V,rho, a, gamma_dot, W, aero_df)
 
-    assert pt.approx(result, rel=1e-6) == expected_power
+    assert pt.approx(result, rel=1e-6) == results

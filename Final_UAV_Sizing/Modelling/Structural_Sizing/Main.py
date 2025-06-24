@@ -14,19 +14,19 @@ import os
 #TODO CHECK VON MISES FOR ALL, ITS FOR CROSS SECTION POINT, NOT ENTIRE CROSS SECTION 
 #------------------------------------------------------
 
-def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,Fuselage_Input,SF,BigG):
+def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,Fuselage_Input,SF,G):
 # def Structures_Main():
     #--------------------------------------------------
     #FUNCTIONS
     #--------------------------------------------------
-    Big_owie_WingBox = True 
-    Big_Owie_VTOL_front = True
-    Big_Owie_VTOL_back = True
-    Big_Owie_Fuselage_Flying = True
-    Big_Owie_Leg = True
+    WingBox_Failure = True 
+    VTOL_Front_Failure = True
+    VTOL_Back_Failure = True
+    Fuselage_Flying_Failure = True
+    Leg_Failure = True
     MAC= Wing_Input[1] #0.64
     Safety_Factor = SF
-    G_factor = BigG
+    G_factor = G
 
 
     #--------------------------------------------------
@@ -150,7 +150,7 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
     #--------------------------------------------------
     #THE MODEL
     #--------------------------------------------------
-    while Big_Owie_VTOL_front:
+    while VTOL_Front_Failure:
         VTOL_I_Front = Circle_Moment_of_Inertia(R_out_VTOL_front,R_in_VTOL_front)
 
         VTOL_stress_Front = Bending(Mx=(T_Vtol),Ix=VTOL_I_Front,X=R_out_VTOL_front,My=(F_Vtol*Vtol_Pole_Length_front),Iy=VTOL_I_Front,Y=R_out_VTOL_front)
@@ -164,14 +164,14 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
         print("The FRONT VTOL Thickness:",R_out_VTOL_front-R_in_VTOL_front)
 
         if VTOL_VonMises_Front_Stress < Yield_Stress_VTOL and VTOL_VonMises_Front_Shear <Yield_shear_VTOL:
-            Big_Owie_VTOL_front = False
+            VTOL_Front_Failure = False
         else:
             R_out_VTOL_front +=0.001
 
 
 
 
-    while Big_Owie_VTOL_back:
+    while VTOL_Back_Failure:
         VTOL_I_Back = Circle_Moment_of_Inertia(R_out_VTOL_back,R_in_VTOL_back)
         VTOL_J_Back = Circle_Polar_Moment_of_Inertia(R_out=R_out_VTOL_back,R_in=R_in_VTOL_back)
 
@@ -190,13 +190,13 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
         print("The BACK VTOL Thickness:",R_out_VTOL_back-R_in_VTOL_back)
 
         if VTOL_VonMises_Back_Stress < Yield_Stress_VTOL and VTOL_VonMises_Back_Shear <Yield_shear_VTOL:
-            Big_Owie_VTOL_back = False
+            VTOL_Back_Failure = False
         else:
             R_out_VTOL_back +=0.001
 
 
 
-    while Big_owie_WingBox:
+    while WingBox_Failure:
         WingBox_t = R_out_WingBox - R_in_WingBox
         WingBox_I = Circle_Moment_of_Inertia(R_Out=R_out_WingBox,R_in=R_in_WingBox)
         WingBox_Q = First_Area_Q_Circle(R_out=R_out_WingBox,R_in=R_in_WingBox,t=WingBox_t)
@@ -248,13 +248,13 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
             Von_Mises_Wingbox_Shear < Yield_shear_WingBox and 
             WingBox_Total_Deflection < 0.1*WingBox_length and 
             (WingBox_Twist_Angle) < 0.0174532925):
-            Big_owie_WingBox = False
+            WingBox_Failure = False
         else:
             R_in_WingBox -=0.001
 
 
 
-    while Big_Owie_Leg:
+    while Leg_Failure:
         # Leg_Ix = Circle_Moment_of_Inertia(R_Out=R_out_Leg,R_in=R_in_Leg)
         # Leg_Bending = Bending_Simple(M=(Leg_Length*Leg_Force_X), Y=R_out_Leg, I=Leg_Ix)
         # Leg_Transverse_Shear = Shear_Transverse_Circle(R_in=R_in_Leg,R_out=R_out_Leg,F=Leg_Force_X)
@@ -269,13 +269,13 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
         print("The Leg:",R_leg)
 
         if Leg_Stress < Leg_Buckle and Leg_Stress < Yield_Stress_Leg:
-            Big_Owie_Leg = False
+            Leg_Failure = False
         else:
             R_leg +=(1/1000)
 
     
 
-    while Big_Owie_Fuselage_Flying:
+    while Fuselage_Flying_Failure:
         #SECTION 1:
         Fuselage_t = R_out_fuselage-R_in_fuselage
         
@@ -354,16 +354,16 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
                     Fuselage_Axial_Stress_sec3 < Fuselage_Buckle_sec3 and
                     Fuselage_VonMises_Sec3_Shear < Yield_shear_Fuselage):
                     print("Passes Section 3")
-                    Big_Owie_Fuselage_Flying = False 
+                    Fuselage_Flying_Failure = False 
                 else:
                     R_out_fuselage +=1/1000
-                    Big_Owie_Fuselage_Flying = True 
+                    Fuselage_Flying_Failure = True 
             else:
                 R_out_fuselage +=1/1000
-                Big_Owie_Fuselage_Flying = True 
+                Fuselage_Flying_Failure = True 
         else:
             R_out_fuselage +=1/1000
-            Big_Owie_Fuselage_Flying = True 
+            Fuselage_Flying_Failure = True 
 
 
 
@@ -422,7 +422,7 @@ def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,F
 #                Legs_Input=[0.25,25],
 #                Wing_Input=[3,0.65,18,Lift_Thing,Drag_Thing],
 #                Fuselage_Input=[0.125,0.1,0.3,0.4,0.4,0.6,150,10,2,5,0.8,10],
-#                SF=1.5,BigG=1.1)
+#                SF=1.5,G=1.1)
 
 # print(Lift_Thing)
 # print(Drag_Thing)

@@ -24,8 +24,8 @@ def main():
         data_folder = "Final_UAV_Sizing/Input/ExtraRaceData"
         V_vert_prop = input.V_stall*input.V_stall_safety_margin
         W = 23.43*input.g
-        CLmax = aero_df["CL_corrected"].max()
         S_wing = 2.31757
+        CLmax = aero_df.loc[aero_df["CL_corrected"].idxmax()]
         numberengines_vertical = input.numberengines_vertical
         numberengines_horizontal = input.numberengines_horizontal
         propeller_wake_efficiency = input.propeller_wake_efficiency

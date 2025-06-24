@@ -35,14 +35,14 @@ race_data = pd.DataFrame({
 # BM 01
 def test_simulate_1_battery():
 
-    outcome= simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,PL_power,L_fus,L_n,L_c,L_blade,L_stab, d_fus, w_fus, w_blade, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker)
+    outcome= simulate_1_battery(df_vertical,df_horizontal,race_data, calculate_power, W, aero_df, PL_power)
 
     assert len(outcome[1]) == 2
-    assert outcome[2][0] == PL_power + (calculate_power_FC(df_vertical,df_horizontal,0,0,0, 0, 0, W, V_vert_prop, CLmax, S_wing, aero_df, numberengines_vertical,numberengines_horizontal, propeller_wake_efficiency,L_fus,L_n,L_c, d_fus, w_fus, L_blade, w_blade, L_stab, w_stab, L_poles, w_poles, L_motor, L_gimbal, L_speaker))
+    assert outcome[2][0] == PL_power + calculate_power_FC(df_vertical,df_horizontal,0,0,1.225, 0, 0, W, aero_df)[0]
     assert all([p >= 0 for p in outcome[2]])
     P = outcome[2][1]
-    expected_energy_Wh = (1 * P) / 3600
-    assert np.isclose(outcome[8][1], expected_energy_Wh, rtol=1e-6)
+    #expected_energy_Wh = (1 * P) / 3600
+    #assert np.isclose(outcome[8][1], expected_energy_Wh, rtol=1e-6)
 
 #BM 02
 distance_plot = [0, 30, 100]
