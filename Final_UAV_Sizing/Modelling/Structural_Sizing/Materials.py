@@ -42,7 +42,7 @@ class Steel(Material):
 
 
 
-class DogshitTestMaterial(Material):
+class TestMaterial(Material):
     def __init__(self):
         super().__init__(
             E=200e6,             # Young's modulus for steel in Pascals
