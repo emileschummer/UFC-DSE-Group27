@@ -6,14 +6,9 @@ from ForceAndStressCals import *
 from Materials import *
 from AirFoilDataExtraction import *
 from scipy.integrate import quad
-
 import os
 from scipy.optimize import curve_fit
 
-#------------------------------------------------------
-#TODO ASK ALEX FOR FEEDBACK
-#TODO CHECK VON MISES FOR ALL, ITS FOR CROSS SECTION POINT, NOT ENTIRE CROSS SECTION 
-#------------------------------------------------------
 
 def Structure_Main(Materials_Input,VTOL_Input,Tail_Input,Legs_Input,Wing_Input,Fuselage_Input,SF,BigG):
 # def Structures_Main():
